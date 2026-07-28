@@ -1,23 +1,22 @@
-# Research Gaps: eBPF Securing in Multi-Tenant Environments
+# Research Gaps Candidates: eBPF in Multi-Tenant Environments
 
-This document tracks identified open research gaps in the literature.
+This document tracks identified recurring open problems and challenges in Linux-based eBPF systems security.
 
-## Gap 1: CPU Architecture Portability of Hardware-Assisted eBPF Isolation (MTE vs MPK)
-* **Problem:** HIVE and SafeBPF target ARM's MTE and PAC. Currently, x86_64 has no exact equal, meaning these hardware isolation models are locked to ARM architectures.
-* **Existing Solutions:** Software Fault Isolation (slow, ~10% overhead) or ARM MTE/PAC. Intel MPK (Memory Protection Keys) has been used in other contexts but not extensively explored for dynamic eBPF context switches.
-* **Limitations:** CPU-dependent instructions prevent standard cloud deployments (which typically run mixed x86_64 nodes).
-* **Open Questions:** Can Intel MPK or AMD equivalent features (like SEV, or Page Table Isolation) achieve under 5% overhead for eBPF JIT runtime isolation?
-* **Difficulty:** Medium-High (requires kernel changes on x86_64 page tables).
+---
 
-## Gap 2: Fine-Grained Multitenancy in Shared eBPF Maps
-* **Problem:** Tenant BPF programs share the same system memory or map structures. A malicious tenant could read/write to a shared map of another tenant.
-* **Existing Solutions:** Isolating BPF programs into separate processes (bpfbox), but maps are globally registered in BPF filesystem pin paths.
-* **Limitations:** The kernel lacks namespace isolation for the BPF directory or maps natively until recently.
-* **Opportunity:** Proposing a namespaces isolation model for eBPF objects (BPF-NS) that mirrors pid/net namespaces.
-* **References:** LF eBPF Threat Model (Recommendation on Map namespacing).
+## Gap 1: Safe Verification of Dynamic, Runtime-Generated eBPF Code
+* **Problem:** Currently, BPF verification is a *one-shot, load-time* process. If a cloud application needs to update policies, it must unload and reload programs, which introduces performance hiccups and verifier workload peaks.
+* **Open Queries:** How can we construct a JIT-compiler runtime that dynamically verifies small delta policy changes in-kernel without full program re-auditing?
+* **Research Priority:** High
+* **References:** Validating the eBPF Verifier (OSDI '24), The eBPF Runtime in the Linux Kernel (2024).
 
-## Gap 3: Concurrency Bypasses of Static Verifiers (Time-of-Check to Time-of-Use - TOCTOU)
-* **Problem:** Verifiers audit the code blocks at compile/load time, but during host runtime, concurrent kernel-context modification of double-checked pointers can lead to policy bypasses.
-* **Existing Solution:** Static bounds checks or copying volatile memory fields.
-* **Limitations:** Copy overhead is high for large telemetry context structs.
-* **References:** Validating the eBPF Verifier (USENIX OSDI '24).
+## Gap 2: eBPF Namespace Isolation (BPF-NS)
+* **Problem:** In multi-tenant Kubernetes grids, BPF-Maps and BPF links reside in shared kernel spaces. A container with basic permissions can list maps, interfere with network rules, or eavesdrop. The Linux kernel misses namespace divisions (similar to MNT, PID, NET) for namespace-aware BPF isolation.
+* **Current Solutions:** BPFContain attempts to hook BPF link generation via LSM to check calling container namespaces, but this is a policy patch rather than a kernel native separation.
+* **Gaps:** Native kernel implementation of BPF namespaces to cleanly isolate maps.
+* **References:** BPFContain (2021), Cross Container Attacks (USENIX Security '23).
+
+## Gap 3: Time-of-Check to Time-of-Use (TOCTOU) in Helper Call Probes
+* **Problem:** When eBPF security tools monitor system call arguments (e.g. file paths in `execve`), it reads pointers from user space memory. A concurrent process can swap this memory after eBPF reads it but before the system call consumes it, bypassing security policies.
+* **Gaps:** Complete containment of volatile registers and user memory mapping checks inside the BPF helper framework without affecting page tables.
+* **References:** eBPF-PATROL (2025).

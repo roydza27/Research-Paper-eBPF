@@ -1,0 +1,3 @@
+Title,Authors,Year,Venue,Topic,Keywords,Path,Notes
+bpfbox: Simple Precise Process Confinement with eBPF,"William Findlay, Anil Somayaji, David Barrera",2020,ACM CCSW,Confinement,"Linux LSM, Process Confinement, Access Control",papers/acm/2020_ACM_bpfbox.pdf,Early LSM hook enforcement prototype.
+eBPF-PATROL: Protective Agent for Threat Recognition and Overreach Limitation,"Sangam Ghimire, Nirjal Bhurtel, Roshan Sahani, Sudan Jha",2025,arXiv Preprint,Runtime Confinement Agent,"Kubernetes, Container Security, Context-Aware Security",papers/arxiv/2025_arXiv_eBPFPatrol.pdf,Combines syscall arg filtering with runtime context checks.

@@ -1,0 +1,3 @@
+Title,Authors,Year,Venue,Topic,Keywords,Path,Notes
+Validating the eBPF Verifier via State Embedding,"Hao Sun, Zhendong Su",2024,USENIX OSDI,Verifier correctness,"Verifier, Logic Bugs, Abstract Interpretation, Fuzzing",papers/osdi/2024_OSDI_StateEmbedding.pdf,Finds register-state divergence bugs.
+The eBPF Runtime in the Linux Kernel,"Bolaji Gbadamosi, Luigi Leonardi, Tobias Pulls, Toke Høiland-Jørgensen, Simone Ferlin-Reiter, Simo Sorce, Anna Brunström",2024,arXiv Preprint,eBPF Engine Survey,"eBPF Runtime, Safety Properties, Verification Passes",papers/arxiv/2024_arXiv_eBPFRuntimeLinux.pdf,Deep qualitative audit of BPF verification modules.

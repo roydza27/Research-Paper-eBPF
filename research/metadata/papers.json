@@ -1,0 +1,182 @@
+[
+  {
+    "id": "lim2023sandbpf",
+    "title": "Unleashing Unprivileged eBPF Potential with Dynamic Sandboxing",
+    "authors": "Soo Yee Lim, Xueyuan Han, Thomas Pasquier",
+    "year": "2023",
+    "venue": "SIGCOMM Workshop on eBPF and Kernel Extensions",
+    "url": "https://arxiv.org/abs/2308.01983",
+    "doi": "10.1145/3607062.3607111",
+    "tags": [
+      "eBPF",
+      "Isolation",
+      "Runtime Security",
+      "SFI",
+      "Multi-Tenant"
+    ],
+    "relevance": 9.0,
+    "path": "papers/arxiv/2023_arXiv_SandBPF.pdf",
+    "summary_link": "summaries/2023_arXiv_SandBPF.md",
+    "bibtex_link": "metadata/bibtex/lim2023sandbpf.bib",
+    "status": "Read",
+    "priority": "Must Read First"
+  },
+  {
+    "id": "findlay2020bpfbox",
+    "title": "bpfbox: Simple Precise Process Confinement with eBPF",
+    "authors": "William Findlay, Anil Somayaji, David Barrera",
+    "year": "2020",
+    "venue": "ACM CCSW",
+    "url": "https://arxiv.org/abs/2009.09635",
+    "doi": "10.1145/3411495.3421358",
+    "tags": [
+      "eBPF",
+      "Runtime Security",
+      "Process Confinement",
+      "LSM",
+      "Linux"
+    ],
+    "relevance": 8.5,
+    "path": "papers/acm/2020_ACM_bpfbox.pdf",
+    "summary_link": "summaries/2020_ACM_bpfbox.md",
+    "bibtex_link": "metadata/bibtex/findlay2020bpfbox.bib",
+    "status": "Read",
+    "priority": "Must Read First"
+  },
+  {
+    "id": "findlay2021bpfcontain",
+    "title": "BPFContain: Fixing the Soft Underbelly of Container Security",
+    "authors": "William Findlay, David Barrera, Anil Somayaji",
+    "year": "2021",
+    "venue": "arXiv Preprint",
+    "url": "https://arxiv.org/abs/2102.06972",
+    "doi": "arXiv:2102.06972",
+    "tags": [
+      "eBPF",
+      "Runtime Security",
+      "Container Isolation",
+      "LSM",
+      "Linux",
+      "Multi-Tenant"
+    ],
+    "relevance": 9.5,
+    "path": "papers/arxiv/2021_arXiv_BPFContain.pdf",
+    "summary_link": "summaries/2021_arXiv_BPFContain.md",
+    "bibtex_link": "metadata/bibtex/findlay2021bpfcontain.bib",
+    "status": "Read",
+    "priority": "Must Read First"
+  },
+  {
+    "id": "sun2024validating",
+    "title": "Validating the eBPF Verifier via State Embedding",
+    "authors": "Hao Sun, Zhendong Su",
+    "year": "2024",
+    "venue": "USENIX OSDI",
+    "url": "https://www.usenix.org/conference/osdi24/presentation/sun-hao",
+    "doi": "N/A",
+    "tags": [
+      "eBPF",
+      "eBPF Verifier",
+      "Fuzzing",
+      "Linux",
+      "Security Verification"
+    ],
+    "relevance": 8.5,
+    "path": "papers/osdi/2024_OSDI_StateEmbedding.pdf",
+    "summary_link": "summaries/2024_OSDI_StateEmbedding.md",
+    "bibtex_link": "metadata/bibtex/sun2024validating.bib",
+    "status": "Read",
+    "priority": "Must Read First"
+  },
+  {
+    "id": "ghimire2025ebpfpatrol",
+    "title": "eBPF-PATROL: Protective Agent for Threat Recognition and Overreach Limitation using eBPF in Containerized and Virtualized Environments",
+    "authors": "Sangam Ghimire, Nirjal Bhurtel, Roshan Sahani, Sudan Jha",
+    "year": "2025",
+    "venue": "arXiv Preprint",
+    "url": "https://arxiv.org/abs/2511.18155",
+    "doi": "arXiv:2511.18155",
+    "tags": [
+      "eBPF",
+      "Runtime Security",
+      "Kubernetes",
+      "Containers",
+      "Cloud",
+      "Observability"
+    ],
+    "relevance": 8.0,
+    "path": "papers/arxiv/2025_arXiv_eBPFPatrol.pdf",
+    "summary_link": "summaries/2025_arXiv_eBPFPatrol.md",
+    "bibtex_link": "metadata/bibtex/ghimire2025ebpfpatrol.bib",
+    "status": "Read",
+    "priority": "Useful"
+  },
+  {
+    "id": "controlplane2024threatmodel",
+    "title": "eBPF Security Threat Model",
+    "authors": "Jack Kelly, James Callaghan, Andrew Martin",
+    "year": "2024",
+    "venue": "Linux Foundation Whitepaper",
+    "url": "https://github.com/ebpffoundation/publications/blob/main/2024/ControlPlane_eBPF_Security_Threat_Model.pdf",
+    "doi": "N/A",
+    "tags": [
+      "eBPF",
+      "Threat Model",
+      "Kubernetes",
+      "Cloud-Native",
+      "Container Security",
+      "Linux"
+    ],
+    "relevance": 9.0,
+    "path": "papers/arxiv/2024_LF_eBPFThreatModel.pdf",
+    "summary_link": "summaries/2024_LF_eBPFThreatModel.md",
+    "bibtex_link": "metadata/bibtex/controlplane2024threatmodel.bib",
+    "status": "Read",
+    "priority": "Must Read First"
+  },
+  {
+    "id": "gbadamosi2024ebpfruntime",
+    "title": "The eBPF Runtime in the Linux Kernel",
+    "authors": "Bolaji Gbadamosi, Luigi Leonardi, Tobias Pulls, Toke H\u00f8iland-J\u00f8rgensen, Simone Ferlin-Reiter, Simo Sorce, Anna Brunstr\u00f6m",
+    "year": "2024",
+    "venue": "arXiv Preprint",
+    "url": "https://arxiv.org/abs/2410.00026",
+    "doi": "arXiv:2410.00026",
+    "tags": [
+      "eBPF",
+      "Linux Kernel",
+      "eBPF Runtime",
+      "Safety Properties",
+      "Verifier"
+    ],
+    "relevance": 9.0,
+    "path": "papers/arxiv/2024_arXiv_eBPFRuntimeLinux.pdf",
+    "summary_link": "summaries/2024_arXiv_eBPFRuntimeLinux.md",
+    "bibtex_link": "metadata/bibtex/gbadamosi2024ebpfruntime.bib",
+    "status": "Read",
+    "priority": "Must Read First"
+  },
+  {
+    "id": "he2023crosscontainer",
+    "title": "Cross Container Attacks: The Bewildered eBPF on Clouds",
+    "authors": "Yi He, Roland Guo, Yunlong Xing, Xijia Che, Kun Sun, Zhuotao Liu, Ke Xu, Qi Li",
+    "year": "2023",
+    "venue": "USENIX Security Symposium",
+    "url": "https://www.usenix.org/conference/usenixsecurity23/presentation/he",
+    "doi": "N/A",
+    "tags": [
+      "eBPF",
+      "Container Escape",
+      "Multi-Tenant",
+      "Kubernetes",
+      "Cloud Security",
+      "Offensive Security"
+    ],
+    "relevance": 9.5,
+    "path": "papers/usenix/2023_USENIX_CrossContainerAttacks.pdf",
+    "summary_link": "summaries/2023_USENIX_CrossContainerAttacks.md",
+    "bibtex_link": "metadata/bibtex/he2023crosscontainer.bib",
+    "status": "Read",
+    "priority": "Must Read First"
+  }
+]

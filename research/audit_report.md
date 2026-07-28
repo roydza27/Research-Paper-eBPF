@@ -1,0 +1,79 @@
+# Repository Audit Report
+
+## 1. Directory Structure Audit
+- **research/** (subdirs: 15, files: 0)
+- **research/metadata** (subdirs: 1, files: 2)
+  - `papers.csv` (2852 bytes)
+  - `papers.json` (4465 bytes)
+- **research/metadata/bibtex** (subdirs: 0, files: 8)
+  - `findlay2021bpfcontain.bib` (303 bytes)
+  - `findlay2020bpfbox.bib` (401 bytes)
+  - `sun2024validating.bib` (360 bytes)
+  - `he2023crosscontainer.bib` (407 bytes)
+  - `lim2023sandbpf.bib` (401 bytes)
+  - `controlplane2024threatmodel.bib` (298 bytes)
+  - `ghimire2025ebpfpatrol.bib` (392 bytes)
+  - `gbadamosi2024ebpfruntime.bib` (382 bytes)
+- **research/reports** (subdirs: 0, files: 1)
+  - `2026-07-28.md` (1520 bytes)
+- **research/notes** (subdirs: 0, files: 3)
+  - `chronology.md` (1652 bytes)
+  - `research_gaps.md` (2006 bytes)
+  - `citation_graph.md` (1278 bytes)
+- **research/literature-review** (subdirs: 0, files: 1)
+  - `literature_matrix.csv` (3420 bytes)
+- **research/implementations** (subdirs: 0, files: 0)
+- **research/indexes** (subdirs: 0, files: 1)
+  - `index.md` (1990 bytes)
+- **research/papers** (subdirs: 8, files: 0)
+- **research/papers/usenix** (subdirs: 0, files: 1)
+  - `2023_Cross_Container_Attacks_eBPF_Escape.pdf` (2091270 bytes)
+- **research/papers/ndss** (subdirs: 0, files: 0)
+- **research/papers/acm** (subdirs: 0, files: 1)
+  - `2020_bpfbox_Simple_Precise_Confinement.pdf` (889443 bytes)
+- **research/papers/nsdi** (subdirs: 0, files: 0)
+- **research/papers/springer** (subdirs: 0, files: 0)
+- **research/papers/ieee** (subdirs: 0, files: 0)
+- **research/papers/osdi** (subdirs: 0, files: 1)
+  - `2024_Verifier_State_Embedding.pdf` (1456372 bytes)
+- **research/papers/arxiv** (subdirs: 0, files: 5)
+  - `2024_eBPF_Runtime_Linux_Kernel.pdf` (6045756 bytes)
+  - `2025_eBPF_PATROL.pdf` (1147577 bytes)
+  - `2024_eBPF_Security_Threat_Model.pdf` (1601596 bytes)
+  - `2023_SandBPF_Dynamic_Sandboxing.pdf` (735567 bytes)
+  - `2021_BPFContain.pdf` (659750 bytes)
+- **research/datasets** (subdirs: 0, files: 0)
+- **research/github** (subdirs: 0, files: 1)
+  - `repositories.md` (1098 bytes)
+- **research/summaries** (subdirs: 0, files: 10)
+  - `SafeBPF.md` (4208 bytes)
+  - `State_Embedding.md` (2600 bytes)
+  - `BPFContain.md` (3020 bytes)
+  - `eBPF_PATROL.md` (2460 bytes)
+  - `SandBPF.md` (3299 bytes)
+  - `eBPF_Runtime_Linux_Kernel.md` (2094 bytes)
+  - `Threat_Model.md` (2360 bytes)
+  - `HIVE.md` (5105 bytes)
+  - `Cross_Container_Attacks.md` (2916 bytes)
+  - `bpfbox.md` (2857 bytes)
+- **research/experiments** (subdirs: 0, files: 0)
+- **research/reading-list** (subdirs: 0, files: 1)
+  - `priority.md` (5894 bytes)
+- **research/references** (subdirs: 0, files: 1)
+  - `references.bib` (2958 bytes)
+- **research/architectures** (subdirs: 0, files: 1)
+  - `descriptions.md` (1862 bytes)
+- **research/figures** (subdirs: 0, files: 0)
+
+## 2. Identified Inconsistencies & Issues
+- **Folder Organization:**
+  - Research materials are split between the root `README.md` and scattered markdown files in `research/notes/`, `research/reading-list/`, etc.
+  - `research/notes/` contains `citation_graph.md` and `chronology.md`, which are more aligned with literature taxonomy and metadata indexes.
+- **File Naming Conventions:**
+  - PDFs under `research/papers/` use inconsistent formats (e.g. `2023_Cross_Container_Attacks_eBPF_Escape.pdf` vs `2024_Verifier_State_Embedding.pdf` vs `2021_BPFContain.pdf`).
+  - Summaries under `research/summaries/` use names like `State_Embedding.md` vs `eBPF_Runtime_Linux_Kernel.md` vs `Cross_Container_Attacks.md` which mismatch the PDF names.
+- **Clutter & Inactive Folders:**
+  - `papers/springer`, `papers/ndss`, `papers/nsdi`, `papers/ieee` exist but are empty.
+- **Repository Documentation:**
+  - Missing a central `docs/` folder for workflow, guidelines, naming policies, and selection criteria.
+  - Missing a central agent-facing state-tracking file (`MEMORY.md`).

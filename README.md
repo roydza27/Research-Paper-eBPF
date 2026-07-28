@@ -1,317 +1,130 @@
-# eBPF-Based Multi-Tenant Cloud Security Research
+# eBPF-Based Multi-Tenant Cloud Security Research Workspace
 
-> **Research Domain:** Linux Kernel, eBPF, Cloud Computing, Kubernetes, Runtime Security, Observability
-
----
-
-# Overview
-
-This repository contains my research work on **eBPF-based security for multi-tenant cloud-native systems**.
-
-The primary objective of this research is to understand how **eBPF can be securely deployed in shared Linux environments**, where multiple applications, containers, or organizations execute on the same physical infrastructure.
-
-Modern cloud platforms heavily rely on Linux and Kubernetes. While eBPF provides powerful capabilities for networking, observability, and runtime security, it also introduces new security challenges because eBPF programs execute inside the Linux kernel.
-
-This research focuses on identifying these challenges, studying existing solutions, discovering research gaps, and proposing improvements for secure and efficient eBPF deployment.
+> **Research Workspace for Master's Thesis and Cloud-Native Kernel Protection Systems**
 
 ---
 
-# Research Area
+## 1. Project Overview & Motivation
 
-- Linux Kernel
-- eBPF
-- Cloud Computing
-- Kubernetes
-- Runtime Security
-- Container Security
-- Observability
-- Performance Monitoring
+This repository serves as the central hub for academic research on **eBPF-Based Multi-Tenant Cloud Security**. 
+
+eBPF (extended Berkeley Packet Filter) has evolved from a simple packet-filtering tool into a highly performant virtual machine execution runtime integrated directly into the Linux kernel. It enables userspace processes to inject custom bytecode at dynamically instrumented host hooks (e.g. system calls, cgroups boundary transitions, network drivers via XDP, and Linux Security Modules - LSM).
+
+While eBPF provides unparalleled advantages for networking, tracing, and container auditing, it runs directly in the kernel space. As cloud infrastructures scale up and workloads from multiple tenants are co-scheduled on shared physical hardware running a single shared Linux kernel, executing unprivileged or over-privileged BPF bytecode introduces critical vulnerabilities. This research evaluates how eBPF can be safely deployed and isolated in multi-tenant environments.
 
 ---
 
-# Research Focus
+## 2. Research Problem & Scope
 
-## Primary Focus
+### The Problem Statement
+Cloud-native container engines partition user processes using generic control primitives (`cgroups`, namespaces, capabilities). However, the underlying kernel remains shared. If a containerized sidecar or tenant process compromises or exploits mathematical range tracker verification bugs in the kernel verifier:
+1. It bypasses load-time validation routines entirely.
+2. It can execute malicious pointer arithmetic to read out-of-bounds kernel memory or write to general system regions.
+3. Because eBPF lacks native namespace boundaries matching PID or NET architectures, maps and hooks remain global assets, exposing systems to **container escape** vectors and cross-tenant eavesdropping.
 
-**eBPF-Based Multi-Tenant Cloud Security**
-
-The main research investigates how eBPF can be safely used in environments where multiple tenants share the same Linux kernel.
-
-Examples include:
-
-- Kubernetes clusters
-- Cloud infrastructure
-- Multi-tenant servers
-- Shared container platforms
+### Scope limits
+* **IN-SCOPE:** Linux systems security, container isolation architectures (cgroups, PID/MNT namespaces), eBPF verifier correctness, software-only SFI bounds checks, dynamic BPFLSM policy engines.
+* **OUT-OF-SCOPE:** Hardware-assisted isolated enclaves (Intel SGX, AMD SEV, ARM TrustZone/MTE/PAC), microarchitectural side-channels (Spectre, Meltdown), hypervisor/VM design, hardware secure boot, cryptoprocessors (TPM).
 
 ---
 
-## Secondary Focus
+## 3. Repository Structure
 
-The research also studies how security mechanisms affect:
+This workspace is designed to scale to hundreds of papers and maintain absolute reproducibility.
 
-- System performance
-- Runtime observability
-- Resource isolation
-- Scalability
-
-These aspects will be evaluated alongside the proposed security solution.
-
----
-
-# Problem Statement
-
-Cloud-native platforms execute workloads from multiple users on shared Linux infrastructure.
-
-Although containers provide process isolation, they still share the same Linux kernel.
-
-Since eBPF programs execute inside the kernel, improper isolation or coarse permission models may introduce security risks.
-
-Examples include:
-
-- Unauthorized access to kernel information
-- Cross-tenant interference
-- Shared eBPF resource misuse
-- Excessive privileges
-- Runtime policy bypass
-
-The challenge is to enable secure eBPF deployment while maintaining its high performance and flexibility.
-
----
-
-# Motivation
-
-eBPF has become one of the most important technologies in modern Linux systems.
-
-It powers many production tools including:
-
-- Runtime security
-- Network observability
-- Performance monitoring
-- Kubernetes networking
-- Cloud-native infrastructure
-
-As cloud adoption grows, ensuring that eBPF remains secure in multi-tenant environments becomes increasingly important.
-
----
-
-# Research Questions
-
-This research aims to answer questions such as:
-
-1. How is eBPF currently secured in Linux?
-
-2. What are the limitations of existing eBPF security mechanisms?
-
-3. How does multi-tenancy affect eBPF deployment?
-
-4. Can eBPF programs be isolated more effectively between tenants?
-
-5. How can runtime security be improved without sacrificing performance?
-
-6. What performance overhead is introduced by stronger security mechanisms?
-
-7. How can Kubernetes environments safely leverage eBPF at scale?
-
----
-
-# Research Scope
-
-This work focuses on:
-
-- Linux Kernel
-- eBPF Runtime
-- Kubernetes
-- Containerized workloads
-- Cloud-native infrastructure
-- Multi-tenant security
-- Runtime isolation
-- Security policy enforcement
-- Performance evaluation
-- Observability
-
----
-
-# Out of Scope
-
-The following topics are outside the initial scope:
-
-- eBPF compiler development
-- Linux scheduler modifications
-- Hardware security
-- Hypervisor security
-- Distributed systems design
-- General cloud networking
-
-These may be explored later if they directly support the research.
-
----
-
-# Target Environment
-
-```
-Cloud Infrastructure
-        │
-        ▼
- Kubernetes Cluster
-        │
-        ▼
- Linux Worker Node
-        │
-        ▼
- Shared Linux Kernel
-        │
-        ▼
- eBPF Programs
-        │
-        ▼
- Security + Observability
+```text
+eBPF/
+│
+├── README.md                 # Primary index, overview, and workflow guide
+├── MEMORY.md                 # Persistent context cache for AI agents
+│
+└── research/
+    ├── papers/               # Categorized reference PDFs sorted by venue
+    │   ├── usenix/
+    │   ├── acm/
+    │   ├── ieee/
+    │   ├── arxiv/
+    │   ├── springer/
+    │   ├── ndss/
+    │   ├── osdi/
+    │   └── nsdi/
+    ├── metadata/             # Structured search matrices and bib databases
+    │   ├── papers.json
+    │   ├── papers.csv
+    │   └── bibtex/
+    ├── summaries/            # Markdown summaries of key literature papers
+    ├── notes/                # Research timelines, relationship graphs, gaps
+    ├── reading-list/         # Priority lists and "Must Read First" Top 20
+    ├── references/           # Consolidated references.bib database
+    ├── docs/                 # Detailed methodology and conventions
+    ├── datasets/             # Directory for experimental outputs
+    ├── experiments/          # Testing benches and profiling scripts
+    ├── implementations/      # Reference prototype code
+    ├── reports/              # Weekly logs and milestone checklists
+    └── assets/               # System design diagrams and flowcharts
 ```
 
 ---
 
-# Expected Contributions
+## 4. Research Workflow & Selection Criteria
 
-The final research aims to contribute by:
+All incoming literature is processed according to a structured pipeline to ensure quality and prevent duplication:
 
-- Studying existing eBPF security mechanisms
-- Identifying research gaps
-- Designing an improved security approach
-- Implementing a prototype
-- Evaluating performance
-- Comparing with existing approaches
-- Demonstrating practical applicability in cloud-native systems
+```
+[New Paper Discovered]
+        │
+        ▼
+[Perform First Pass Screen] (Meets Selection Criteria?)
+        │
+        ├── Yes ──> [Download PDF / Save to papers/<venue>/]
+        │           [Name file: YYYY_<Venue>_<ShortTitle>.pdf]
+        │
+        └── No ───> [Discard Paper]
+        │
+        ▼
+[Extract Metadata] ──> [Append entry to metadata/papers.json & papers.csv]
+        │
+        ▼
+[Generate Citation] ──> [Create metadata/bibtex/key.bib & append to references.bib]
+        │
+        ▼
+[Draft Summary] ──> [Write summaries/YYYY_<Venue>_<ShortTitle>.md]
+        │
+        ▼
+[Analyze Gaps] ──> [Update notes/research_gaps.md]
+```
 
----
-
-# Evaluation Metrics
-
-Potential evaluation metrics include:
-
-## Security
-
-- Tenant isolation
-- Access control
-- Policy enforcement
-- Attack resistance
-
-## Performance
-
-- CPU overhead
-- Memory usage
-- Latency
-- Throughput
-
-## Scalability
-
-- Number of tenants
-- Number of containers
-- Number of Kubernetes pods
-- Large cluster deployment
-
-## Observability
-
-- Runtime visibility
-- Monitoring overhead
-- Event collection efficiency
+### Selection Criteria
+1. **Source Integrity:** Peer-reviewed publications in top systems conferences (USENIX ATC/Security, SOSP, OSDI, CCSW, NSDI).
+2. **eBPF-Centricity:** eBPF must be a primary contribution or target of study.
+3. **No Hardware Security:** Papers relying on TEE, CPU cache modification, or secure elements are discarded.
 
 ---
 
-# Research Methodology
+## 5. Technology Stack & Tools Used
 
-1. Literature Review
-2. Existing Solution Analysis
-3. Research Gap Identification
-4. Problem Definition
-5. Solution Design
-6. Prototype Implementation
-7. Experimental Evaluation
-8. Performance Benchmarking
-9. Comparative Analysis
-10. Thesis Writing
+To maintain lightweight development and verifiability, this project leverages:
+* **Programming Languages:** Rust (via the `Aya` eBPF compiler framework for user/kernel space modules).
+* **Scripting & Automation:** Python (with standard statistical libraries for parsing CSV indexes and system logs).
+* **Host Platform:** Linux Kernel 5.10+ (supporting BPFLSM hook registration).
+* **Tracing/Validation Tooling:** `bpftool`, `bpftrace`, and standard `perf` tooling.
 
 ---
 
-# Technologies
+## 6. Current Progress & Milestones
 
-## Programming
-
-- Rust
-- C (Linux Kernel concepts)
-
-## Frameworks
-
-- Aya (Rust eBPF Framework)
-
-## Platforms
-
-- Linux
-- Kubernetes
-- Docker
-
-## Tooling
-
-- bpftool
-- perf
-- bpftrace
-- libbpf (for reference)
-- Git
-- QEMU (optional)
-- Virtual Machines
+* [x] **Milestone 1:** Repository structure audit and refactor.
+* [x] **Milestone 2:** Collection & mapping of 8 core literature elements.
+* [ ] **Milestone 3:** Local kernel verifier state verification and testing.
+* [ ] **Milestone 4:** Prototype design of dynamic namespace filters.
 
 ---
 
-# Initial Literature Topics
+## 7. References & Timeline
 
-The literature review will focus on:
-
-- eBPF Runtime Security
-- eBPF Verifier
-- eBPF Capability Model
-- eBPF Isolation
-- Multi-Tenant Cloud Security
-- Kubernetes Security
-- Runtime Monitoring
-- Container Security
-- Cloud Observability
-- Linux Security Modules (LSM)
+See detailed indices under `research/indexes/index.md` or check chronology notes at `research/notes/chronology.md` for historical development trends.
 
 ---
 
-# Possible Research Deliverables
-
-- Literature Review
-- Research Gap Analysis
-- System Architecture
-- Threat Model
-- Prototype
-- Performance Evaluation
-- Benchmark Results
-- Research Paper
-- Master's Thesis
-
----
-
-# Current Status
-
-- [x] Research domain selected
-- [x] Initial discussion with supervisor
-- [ ] Complete literature review
-- [ ] Identify research gap
-- [ ] Define research contribution
-- [ ] Design architecture
-- [ ] Prototype implementation
-- [ ] Experimental evaluation
-- [ ] Thesis writing
-
----
-
-# Long-Term Vision
-
-The long-term goal of this research is to contribute toward making **eBPF a more secure and production-ready technology for cloud-native environments**, enabling organizations to benefit from high-performance kernel observability and runtime security while maintaining strong tenant isolation.
-
----
-
-# Keywords
-
-Linux • eBPF • Rust • Aya • Kubernetes • Cloud Computing • Runtime Security • Multi-Tenant Security • Container Security • Observability • Performance Monitoring • Linux Kernel • Cloud Native • eBPF Security • Runtime Isolation
+## 8. License & Guidelines
+Contributions to this workspace follow standard academic publishing guidelines. All source code is restricted to GPLv2 licensing.
