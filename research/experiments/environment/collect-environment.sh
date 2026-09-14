@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-OUT_DIR="${1:-research/experiments/results/metadata}"
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)"
+OUT_DIR="${1:-$ROOT/research/experiments/results/metadata}"
 mkdir -p "$OUT_DIR"
 TS="$(date -u +%Y%m%dT%H%M%SZ)"
 OUT="$OUT_DIR/environment-$TS.json"
@@ -15,13 +16,8 @@ cmd_version() {
   fi
 }
 
-json_escape() {
-  python3 -c 'import json,sys; print(json.dumps(sys.stdin.read().rstrip("\\n")))'
-}
-
 kernel="$(uname -srmo 2>/dev/null || true)"
 arch="$(uname -m 2>/dev/null || true)"
-
 cpu_model="$(awk -F: '/model name/{print $2; exit}' /proc/cpuinfo 2>/dev/null | sed 's/^ *//' || true)"
 cpu_threads="$(nproc 2>/dev/null || true)"
 ram_kib="$(awk '/MemTotal:/{print $2}' /proc/meminfo 2>/dev/null || true)"
@@ -42,7 +38,6 @@ if command -v podman >/dev/null 2>&1; then container_runtime="podman $(podman --
 
 python3 - <<PY > "$OUT"
 import json
-from pathlib import Path
 
 def text(value):
     return value if isinstance(value, str) else str(value)
