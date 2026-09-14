@@ -1,0 +1,6 @@
+program,class,branches,helpers,maps,loops,policy_dimensions,expected_labels
+programs/a_minimal_xdp.c,A,0,0,0,0,1,compliant
+programs/b_helper_map.c,B,1,1,1,0,3,compliant
+programs/c_branching_maps.c,C,5,1,1,0,4,compliant
+programs/d_policy_sensitive.c,D,2,2,1,0,5,compliant
+programs/e_adversarial_helper.c,E,1,1,0,0,1,violating-under-no-time-helper
