@@ -1,0 +1,12 @@
+{
+  "allow_program": {
+    "type": "ACTION",
+    "dependencies": {"memory": [], "previous_actions": []},
+    "actions": {
+      "memory_access": [{"read-access": ["*"], "write-access": ["*"]}],
+      "map_access": [{"name": "*", "access": "ReadWrite"}],
+      "helper_access": ["*"],
+      "return_value": ["*"]
+    }
+  }
+}
