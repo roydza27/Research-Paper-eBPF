@@ -1,12 +1,15 @@
 {
-  "allow_program": {
+  "base_packet_read_only": {
     "type": "ACTION",
-    "dependencies": {"memory": [], "previous_actions": []},
+    "dependencies": {},
     "actions": {
-      "memory_access": [{"read-access": ["*"], "write-access": ["*"]}],
-      "map_access": [{"name": "*", "access": "ReadWrite"}],
-      "helper_access": ["*"],
-      "return_value": ["*"]
+      "memory_access": [
+        {
+          "read-access": ["0-54"],
+          "write-access": ["x"]
+        }
+      ],
+      "helper_access": ["*"]
     }
   }
 }
