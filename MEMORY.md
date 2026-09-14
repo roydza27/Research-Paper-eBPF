@@ -1,120 +1,83 @@
 # Project Memory Log (MEMORY.md)
 
-> **Persistent Project Context for AI Agents & Researchers**
+> Persistent project context for AI agents and researchers.
 
 ---
 
 ## 1. Research Identity
 
-* **Research Title:** eBPF-Based Multi-Tenant Container Confinement and LSM Policy Enforcement
-* **Research Domain:** Linux Kernel Security, Container Virtualization, Cloud-Native Systems
-* **Research Focus:** Restricting unprivileged and over-privileged eBPF execution spaces in shared infrastructure nodes to prevent cross-container escapes and resource eavesdropping.
-* **Research Objectives:**
-  1. Identify container escape paths utilizing BPF helper interfaces.
-  2. Evaluate existing verifier security limitations and compile-time logic gaps.
-  3. Design a dynamic, namespace-aware LSM hook runtime policy manager using Rust.
-* **Supervisor Discussion Summary:** Supervisor recommended focusing strictly on software isolation constraints within the Linux kernel and avoiding hardware-assisted models. Highlighted that porting solutions across Kubernetes nodes requires general platform availability.
-* **Current Direction:** Transitioning from literature aggregation to local kernel tracing checks of target system call parameters in isolated cgroups.
+* **Research Title:** Scalable Fine-Grained eBPF Isolation and Multi-Tenant Policy Verification
+* **Research Domain:** Linux Kernel Security, eBPF, Container Virtualization, Cloud-Native Systems
+* **Research Focus:** Fine-grained security policies for untrusted or multi-tenant eBPF programs, with emphasis on scalable policy analysis and software-only isolation.
+* **Research Objective:** Determine whether hybrid abstract-interpretation and symbolic-execution techniques can make fine-grained eBPF isolation practical without weakening conservative security decisions.
+* **Historical Direction:** eBPF-based multi-tenant container confinement and BPF-LSM policy enforcement.
+* **2026 Direction:** Move from a generic "BPF namespace / dynamic LSM" proposal toward a narrowly testable policy-verification problem grounded in KRAKENGUARD's published scalability limitation.
 
 ---
 
 ## 2. Research Constraints
 
-### What this project IS:
-* **Linux Kernel Only:** Systems-level hooks and configuration parameters.
-* **eBPF-Centric:** Focuses strictly on BPF verifier testing, maps namespacing, and LSM monitoring.
-* **Software-Only Confinement:** Software Fault Isolation (SFI) and bytecode rewriting patterns.
-* **Cloud-Native Scope:** Evaluated inside Kubernetes pods and Docker runtimes.
+### In scope
 
-### What this project IS NOT:
-* **No Hardware Security:** Out-of-scope: Trusted Execution Environments (TEEs), Intel SGX, AMD SEV, ARM TrustZone, TPMs, and CPU secure elements.
-* **No Side-Channel/Cache Analysis:** Out-of-scope: Speculative execution bugs (Spectre, Meltdown), power usage audits, and differential analysis.
-* **No Hypervisor/Microkernel Research:** Focuses strictly on monolithic shared Linux host kernels.
+* Linux kernel security.
+* eBPF verifier and policy analysis.
+* BPF-LSM and fine-grained security policy.
+* Container/multi-tenant workload identity.
+* Software-only isolation and analysis.
+* Reproducible Linux experiments.
 
----
+### Out of scope
 
-## 3. Research Vocabulary
-
-* **eBPF:** Extended Berkeley Packet Filter (in-kernel virtual machine).
-* **XDP:** eXpress Data Path (early packet processing hot-path in network drivers).
-* **LSM:** Linux Security Modules (kernel callbacks for hooking security actions).
-* **Tracepoints / Kprobes / Uprobes:** Target instrumentation entry points.
-* **Cgroups / Namespaces / Capabilities:** Core Linux virtualization partitioning tools.
-* **Verifier:** In-kernel abstract interpreter auditing BPF bytecode safety.
-* **Maps:** Key-value data stores shared between user space and kernel eBPF modules.
-* **Aya:** A purely Rust-based compilation and loader framework for eBPF.
+* Hardware-assisted isolation: TEEs, SGX, SEV, TrustZone, MTE/PAC/MPK.
+* Hypervisor or microkernel security.
+* Speculative side-channel research.
+* Generic observability-only systems.
+* Generic BPF namespace proposals without a concrete unresolved property.
 
 ---
 
-## 4. Research Questions
+## 3. 2025–2026 State-of-the-Art Anchors
 
-1. How can runtime security agents identify when a BPF program is attempting container escapes via helper call arguments?
-2. What are the performance costs of running software address-masking SFI checks compared to standard VM filters like seccomp?
-3. Can we implement namespace boundaries for BPF-Maps without modifications to the upstream Linux page allocator?
-
----
-
-## 5. Active Reading List
-
-### Currently Reading
-* *Validating the eBPF Verifier via State Embedding* (OSDI '24)
-
-### Completed (Metadata Cataloged)
-* *BPFContain: Fixing the Soft Underbelly of Container Security* (2021)
-* *Cross Container Attacks: The Bewildered eBPF on Clouds* (USENIX Security '23)
-* *Unleashing Unprivileged eBPF Potential with Dynamic Sandboxing* (SandBPF - 2023)
-* *bpfbox: Simple Precise Process Confinement with eBPF* (2020)
-* *eBPF-PATROL: Protective Agent for Threat Recognition* (2025)
-* *eBPF Security Threat Model* (2024)
-* *The eBPF Runtime in the Linux Kernel* (2024)
-
-### Must Revisit / High Priority
-* *BPFContain* (For implementation cues on cgroup identification).
-* *Cross Container Attacks* (To study specific escape sequences).
+* **BCF (SOSP 2025):** proof-guided abstraction refinement for verifier precision.
+* **AEE (USENIX Security 2025):** runtime approximation enforcement to reduce verifier trust assumptions.
+* **Veritas/SpecCheck (SOSP 2025):** specification-based verifier fuzzing.
+* **BPF Token:** upstream delegated BPF operations within user-namespace-bound BPF FS.
+* **SeaBee:** protection of eBPF security tools from privileged tampering.
+* **KRAKENGUARD (NSDI 2026):** fine-grained eBPF policy analysis and cross-program interference checking.
+* **vBPF (OSDI 2026):** multi-tenant eBPF virtualization and state isolation.
+* **PeeR (OSDI 2026):** execution scheduling and resource isolation for eBPF.
 
 ---
 
-## 6. Curated List of Important Papers
+## 4. Current Research Questions
 
-1. **BPFContain (2021):** The premier blueprint showing LSM-based container isolation policies.
-2. **Cross Container Attacks (USENIX Security '23):** Explains exactly what could go wrong if BPF is unconfined.
-3. **SandBPF (2023):** Essential reference for SFI bytecode instruction rewrite techniques.
+1. Can abstract-interpretation-guided symbolic execution reduce KRAKENGUARD-style policy-analysis path explosion while preserving security decisions?
+2. Can delegated BPF authority be revoked with bounded stale-object lifetime across maps, links, pins and policy state?
+3. What security invariant is required when fine-grained authorization and eBPF execution/resource isolation are composed?
 
----
-
-## 7. Evolving Research Gaps
-
-* **Verifier State Mismatch Bypasses:** Register mathematical range calculation mismatches inside the verifier that cannot be caught at load time.
-* **BPF filesystem Map Leakages:** Global namespace availability of pinned BPF objects across different pods.
-* **Syscall Argument TOCTOU:** Time-of-check to time-of-use exploits on memory buffers during tracing execution.
+Primary question: **#1**.
 
 ---
 
-## 8. Ideas
+## 5. Current Gaps
 
-* Construct a dynamic namespaces controller for BPF filesystem endpoints virtualizing the `/sys/fs/bpf` hierarchy per container PID space.
-* Leverage Rust macros in the Aya pipeline to automate bounds validations on helper array structures before JIT compilation.
+### Primary
+
+**Scalable fine-grained policy verification.** KRAKENGUARD's symbolic analysis can encounter path/expression explosion; its paper identifies hybrid abstract interpretation + symbolic execution as future work.
+
+### Secondary
+
+**Revocable tenant delegation/object lifecycle.** BPF Token, BPF-LSM and existing policy systems cover pieces, but an end-to-end revocation contract across the BPF object graph remains to be investigated.
+
+**Security/resource composition.** vBPF and PeeR cover separate dimensions; a meaningful thesis contribution would require a new invariant, not a simple integration.
 
 ---
 
-## 9. Future Tasks
+## 6. Important Research Discipline
 
-* [ ] Program a test script triggering basic pointer validation checks using Aya.
-* [ ] Verify container network namespace isolation constraints inside a minikube grid.
-* [ ] Write the first draft of Chapter 2 (Literature Review) for the Master's thesis.
-
----
-
-## 10. Repository Rules & Agent Instructions
-
-### Adding New Papers
-1. **Naming Template:** `papers/<venue>/YYYY_<Venue>_<ShortTitle>.pdf`
-2. **Summary Template:** `summaries/YYYY_<Venue>_<ShortTitle>.md`
-3. **BibTeX Placement:** Write individual `.bib` entries in `metadata/bibtex/key.bib` and append to `references/references.bib` automatically.
-4. **Metadata Update:** Add the entry to `metadata/papers.json` and `metadata/papers.csv`.
-
-### AI Agent Directives
-* **Strict Filter:** Reject and delete any paper relating to Hardware Security, TEEs, SGX, or CPU side-channels.
-* **Authority First:** Prioritize USENIX, OSDI, NSDI, and ACM CCSW publications.
-* **Consistency Check:** Ensure summary filenames match corresponding PDF names exactly. Always synchronize datasets and Indexes after audits.
-* **No Duplication:** Never create duplicate entries or redundant markdown draft files.
+* Do not claim generic dynamic verification is an untouched gap.
+* Do not claim BPF namespaces are unsolved without discussing BPF Token and vBPF.
+* Do not claim generic verifier-independent isolation is novel; compare against AEE/ePass/SandBPF.
+* Do not claim generic BPF-LSM container enforcement is novel; compare against BPFContain, KubeArmor and Tetragon.
+* Do not manufacture CVEs, benchmark numbers or novelty claims.
+* Re-check 2026/2027 literature immediately before thesis proposal/submission.

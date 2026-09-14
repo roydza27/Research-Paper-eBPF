@@ -1,45 +1,74 @@
 # Chronological Timeline of Publications
 
-This timeline traces the progression of purely software-based, Linux systems eBPF security, isolation, and verification papers.
+This timeline traces the progression of software-based Linux eBPF security, isolation, verification and multi-tenancy research. The September 2026 additions below update the earlier historical record rather than replacing it.
 
-* **2020**
-  * *bpfbox: Simple Precise Process Confinement with eBPF* (ACM CCSW)
-    * `papers/acm/2020_ACM_bpfbox.pdf`
-    * Summary: `summaries/2020_ACM_bpfbox.md`
-    * Establishes early host confinement using BPF-Maps and LSM hook filters.
+## 2020
 
-* **2021**
-  * *BPFContain: Fixing the Soft Underbelly of Container Security* (arXiv preprint)
-    * `papers/arxiv/2021_arXiv_BPFContain.pdf`
-    * Summary: `summaries/2021_arXiv_BPFContain.md`
-    * Evolves bpfbox into a container-aware isolation mechanism incorporating cgroups mapping.
+* *bpfbox: Simple Precise Process Confinement with eBPF* (ACM CCSW)
+  * Early host confinement using eBPF/LSM policy.
 
-* **2023**
-  * *Cross Container Attacks: The Bewildered eBPF on Clouds* (USENIX Security)
-    * `papers/usenix/2023_USENIX_CrossContainerAttacks.pdf`
-    * Summary: `summaries/2023_USENIX_CrossContainerAttacks.md`
-    * Exposes critical security vulnerabilities where malicious containerized eBPF bypasses boundaries to host systems.
-  * *Unleashing Unprivileged eBPF Potential with Dynamic Sandboxing* (SandBPF - SIGCOMM Workshop)
-    * `papers/arxiv/2023_arXiv_SandBPF.pdf`
-    * Summary: `summaries/2023_arXiv_SandBPF.md`
-    * Devises runtime post-JIT bytecode instrumentation (SFI address masking) for safe unprivileged eBPF execution.
+## 2021
 
-* **2024**
-  * *Validating the eBPF Verifier via State Embedding* (USENIX OSDI)
-    * `papers/osdi/2024_OSDI_StateEmbedding.pdf`
-    * Summary: `summaries/2024_OSDI_StateEmbedding.md`
-    * Demonstrates that the verifier's mathematical bounds assertions contain critical logic bugs.
-  * *The eBPF Runtime in the Linux Kernel* (arXiv preprint)
-    * `papers/arxiv/2024_arXiv_eBPFRuntimeLinux.pdf`
-    * Summary: `summaries/2024_arXiv_eBPFRuntimeLinux.md`
-    * Formulates the first comprehensive description of BPF verification passes and safety models up to core 6.7.
-  * *eBPF Security Threat Model* (Linux Foundation Whitepaper)
-    * `papers/arxiv/2024_LF_eBPFThreatModel.pdf`
-    * Summary: `summaries/2024_LF_eBPFThreatModel.md`
-    * Sets standard definitions for threat risks and mitigating operators.
+* *BPFContain: Fixing the Soft Underbelly of Container Security*
+  * Container-aware eBPF/LSM confinement.
 
-* **2025**
-  * *eBPF-PATROL: Protective Agent for Threat Recognition and Overreach Limitation* (arXiv preprint)
-    * `papers/arxiv/2025_arXiv_eBPFPatrol.pdf`
-    * Summary: `summaries/2025_arXiv_eBPFPatrol.md`
-    * Explores runtime container monitoring loops matching arguments to host-level security profiles.
+## 2023
+
+* *Cross Container Attacks: The Bewildered eBPF on Clouds* (USENIX Security)
+  * Demonstrates offensive eBPF attack paths across cloud/container boundaries.
+* *Unleashing Unprivileged eBPF Potential with Dynamic Sandboxing* (SandBPF)
+  * Software-fault-isolation approach for safer unprivileged eBPF execution.
+
+## 2024
+
+* *Validating the eBPF Verifier via State Embedding* (OSDI)
+  * Systematic verifier testing and state-based bug discovery.
+* *The eBPF Runtime in the Linux Kernel*
+  * Detailed analysis of the verifier/runtime safety model.
+* *eBPF Security Threat Model*
+  * Threat taxonomy for eBPF security.
+* **BPF Token enters upstream development**
+  * Delegated BPF operations tied to user-namespace-owned BPF filesystem instances.
+
+## 2025
+
+* *Prove It to the Kernel: Precise Extension Analysis via Proof-Guided Abstraction Refinement* (SOSP 2025)
+  * Proof-guided verifier refinement; materially changes the old dynamic-verification gap.
+* *Approximation Enforced Execution of Untrusted Linux Kernel Extensions* (USENIX Security 2025)
+  * Runtime enforcement designed to reduce trust in verifier state approximation.
+* *eBPF Misbehavior Detection: Fuzzing with a Specification-Based Oracle* (SOSP 2025)
+  * Specification-based verifier fuzzing; reports 15 verifier bugs.
+* **ePass research project**
+  * Verifier-cooperative runtime transformation and enforcement.
+* **SeaBee research/implementation**
+  * Protects eBPF security tools from privileged policy/map tampering.
+
+## 2026
+
+* *KRAKENGUARD: Towards Fine-Grained eBPF Isolation* (NSDI 2026)
+  * Fine-grained policy analysis for helper, memory, map and program interference; multi-tenant XDP use case.
+  * Important unresolved issue: symbolic path/expression explosion; paper identifies hybrid abstract/symbolic analysis as future work.
+* *Virtualizing eBPF with Late-Binding* (OSDI 2026)
+  * Multi-tenant hook virtualization, tenant attribution and state isolation.
+* *PeeR: First-Class Scheduling for Latency-Critical eBPF Applications* (OSDI 2026)
+  * Preemptive/resource-aware execution model for latency-critical eBPF.
+* **CVE-2026-63864**
+  * Verifier-related Linux kernel security issue; reinforces that verifier correctness remains an active security problem.
+
+## Research-state transition
+
+```text
+bpfbox/BPFContain
+      ↓
+attack discovery + SandBPF
+      ↓
+verifier testing / runtime analysis
+      ↓
+BCF + AEE + Veritas
+      ↓
+BPF Token + SeaBee
+      ↓
+KRAKENGUARD + vBPF + PeeR
+      ↓
+2026 opportunity: composition and scalable fine-grained policy verification
+```
