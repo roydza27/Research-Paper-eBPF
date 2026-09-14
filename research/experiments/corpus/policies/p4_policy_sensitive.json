@@ -1,0 +1,12 @@
+{
+  "restricted_policy": {
+    "type": "ACTION",
+    "dependencies": {"memory": [], "previous_actions": []},
+    "actions": {
+      "memory_access": [{"read-access": ["0-64"], "write-access": ["x"]}],
+      "map_access": [{"name": "policy_state", "access": "Read"}],
+      "helper_access": ["bpf_map_lookup_elem"],
+      "return_value": [1, 2]
+    }
+  }
+}
