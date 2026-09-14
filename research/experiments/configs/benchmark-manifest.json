@@ -1,0 +1,64 @@
+{
+  "schema": "phase3-benchmark/v1",
+  "baselines": {
+    "krakenguard": {
+      "repository": "https://github.com/krakenguard-ebpf/krakenguard",
+      "commit": "e7bd84005b304c5a10efcdb04914d1882b3cccf7",
+      "status": "pending-reproduction"
+    },
+    "bcf": {
+      "repository": "https://github.com/SunHao-0/BCF",
+      "status": "pending-reproduction"
+    },
+    "veritas": {
+      "repository": "https://github.com/rs3lab/veritas",
+      "status": "comparison-only-until-artifact-setup"
+    }
+  },
+  "corpus": {
+    "metadata": "research/experiments/corpus/metadata.csv",
+    "programs": [
+      "a_minimal_xdp.c",
+      "b_helper_map.c",
+      "c_branching_maps.c",
+      "d_policy_sensitive.c",
+      "e_adversarial_helper.c"
+    ],
+    "policies": [
+      "p1_allow_execution.json",
+      "p2_helper_allowlist.json",
+      "p3_helper_map_policy.json",
+      "p4_policy_sensitive.json"
+    ]
+  },
+  "measurement": {
+    "warmup_runs": 2,
+    "measured_runs": 7,
+    "timeout_seconds": 300,
+    "record": [
+      "wall_time_ms",
+      "cpu_time_ms",
+      "peak_memory_kb",
+      "status",
+      "accepted",
+      "rejected",
+      "unknown",
+      "timeout",
+      "instructions",
+      "basic_blocks",
+      "branches",
+      "loops",
+      "helpers",
+      "maps",
+      "symbolic_states",
+      "solver_queries",
+      "solver_time_ms"
+    ]
+  },
+  "rules": {
+    "timeout_is_not_a_security_verdict": true,
+    "unsupported_is_not_a_security_verdict": true,
+    "raw_results_are_immutable": true,
+    "no_manual_result_editing": true
+  }
+}
