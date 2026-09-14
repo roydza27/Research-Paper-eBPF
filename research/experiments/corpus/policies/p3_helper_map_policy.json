@@ -1,0 +1,10 @@
+{
+  "allow_map_read": {
+    "type": "ACTION",
+    "dependencies": {"memory": [], "previous_actions": []},
+    "actions": {
+      "map_access": [{"name": "counter", "access": "Read"}],
+      "helper_access": ["bpf_map_lookup_elem"]
+    }
+  }
+}
