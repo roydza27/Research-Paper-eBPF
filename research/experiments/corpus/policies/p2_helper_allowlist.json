@@ -1,0 +1,10 @@
+{
+  "allow_selected_helpers": {
+    "type": "ACTION",
+    "dependencies": {"memory": [], "previous_actions": []},
+    "actions": {
+      "map_access": [],
+      "helper_access": ["bpf_map_lookup_elem"]
+    }
+  }
+}

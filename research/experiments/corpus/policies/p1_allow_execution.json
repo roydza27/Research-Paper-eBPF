@@ -1,0 +1,15 @@
+{
+  "base_packet_read_only": {
+    "type": "ACTION",
+    "dependencies": {},
+    "actions": {
+      "memory_access": [
+        {
+          "read-access": ["0-54"],
+          "write-access": ["x"]
+        }
+      ],
+      "helper_access": ["*"]
+    }
+  }
+}

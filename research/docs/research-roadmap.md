@@ -19,11 +19,18 @@ This roadmap reflects the 2025–2026 state of eBPF security research while pres
 
 ## Phase 3: Baseline Reproduction
 
+- [x] Create the reproducibility specification and environment collector.
+- [x] Create the controlled eBPF benchmark corpus and metadata.
+- [x] Create the baseline policy corpus using documented KRAKENGUARD policy vocabulary.
+- [x] Create the machine-readable benchmark manifest and execution/collection scripts.
+- [x] Write the Phase 3 reproduction report and decision gate.
+- [ ] Freeze the actual experimental host and record exact kernel/compiler/solver versions.
 - [ ] Obtain and build the KRAKENGUARD artifact.
-- [ ] Record exact kernel/compiler/solver versions.
 - [ ] Reproduce a representative subset of the published policy-analysis experiments.
-- [ ] Build a corpus of benign, complex and malicious eBPF programs.
 - [ ] Measure symbolic path count, solver time, memory and timeout behavior.
+- [ ] Perform differential testing against other directly relevant baselines where input semantics permit.
+- [ ] Produce raw and processed baseline measurements.
+- [ ] Decide whether the Phase 4 hypothesis survives the measured baseline.
 
 ## Phase 4: Primary Prototype — Hybrid Policy Verification
 
