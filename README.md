@@ -6,125 +6,151 @@
 
 ## 1. Project Overview & Motivation
 
-This repository serves as the central hub for academic research on **eBPF-Based Multi-Tenant Cloud Security**. 
+This repository is the central research workspace for **eBPF-Based Multi-Tenant Cloud Security**. eBPF enables programmable kernel extensions for networking, tracing, observability and security, but multi-tenant use introduces a broader problem than simple verifier safety: tenants may require different authorities, kernel hooks, object state and resource budgets while sharing one Linux kernel.
 
-eBPF (extended Berkeley Packet Filter) has evolved from a simple packet-filtering tool into a highly performant virtual machine execution runtime integrated directly into the Linux kernel. It enables userspace processes to inject custom bytecode at dynamically instrumented host hooks (e.g. system calls, cgroups boundary transitions, network drivers via XDP, and Linux Security Modules - LSM).
-
-While eBPF provides unparalleled advantages for networking, tracing, and container auditing, it runs directly in the kernel space. As cloud infrastructures scale up and workloads from multiple tenants are co-scheduled on shared physical hardware running a single shared Linux kernel, executing unprivileged or over-privileged BPF bytecode introduces critical vulnerabilities. This research evaluates how eBPF can be safely deployed and isolated in multi-tenant environments.
+The project remains focused on **software-only Linux security** and deliberately excludes hardware enclaves, speculative side channels and hypervisor security.
 
 ---
 
 ## 2. Research Problem & Scope
 
-### The Problem Statement
-Cloud-native container engines partition user processes using generic control primitives (`cgroups`, namespaces, capabilities). However, the underlying kernel remains shared. If a containerized sidecar or tenant process compromises or exploits mathematical range tracker verification bugs in the kernel verifier:
-1. It bypasses load-time validation routines entirely.
-2. It can execute malicious pointer arithmetic to read out-of-bounds kernel memory or write to general system regions.
-3. Because eBPF lacks native namespace boundaries matching PID or NET architectures, maps and hooks remain global assets, exposing systems to **container escape** vectors and cross-tenant eavesdropping.
+The historical project framing focused on container confinement, BPF-LSM policy and eBPF verifier correctness. The September 2026 research update refines the question:
 
-### Scope limits
-* **IN-SCOPE:** Linux systems security, container isolation architectures (cgroups, PID/MNT namespaces), eBPF verifier correctness, software-only SFI bounds checks, dynamic BPFLSM policy engines.
-* **OUT-OF-SCOPE:** Hardware-assisted isolated enclaves (Intel SGX, AMD SEV, ARM TrustZone/MTE/PAC), microarchitectural side-channels (Spectre, Meltdown), hypervisor/VM design, hardware secure boot, cryptoprocessors (TPM).
+> **Can fine-grained eBPF isolation policies be checked with predictable cost by combining inexpensive abstract analysis with selective symbolic execution?**
+
+This direction is grounded in the 2026 KRAKENGUARD result and its stated symbolic-analysis scalability limitation.
+
+### Scope
+
+* **IN-SCOPE:** Linux kernel security, eBPF verifier behavior, fine-grained BPF policy analysis, BPF-LSM, container/multi-tenant isolation, software-only enforcement, reproducible performance/security experiments.
+* **OUT-OF-SCOPE:** TEEs, SGX, SEV, TrustZone, MTE/PAC/MPK, microarchitectural side channels, hypervisor security, secure boot and hardware security.
 
 ---
 
-## 3. Repository Structure
+## 3. Current State of the Research
 
-This workspace is designed to scale to hundreds of papers and maintain absolute reproducibility.
+The 2025–2026 literature materially changes several earlier assumptions:
+
+* **BCF:** proof-guided verifier refinement.
+* **AEE:** verifier-resilient runtime enforcement.
+* **Veritas/SpecCheck:** specification-based verifier fuzzing.
+* **BPF Token:** delegated BPF operations in user-namespace-bound BPF filesystems.
+* **SeaBee:** protection of security-critical eBPF tools against privileged tampering.
+* **KRAKENGUARD:** fine-grained eBPF policy analysis and cross-program interference checks.
+* **vBPF:** multi-tenant eBPF virtualization and state isolation.
+* **PeeR:** eBPF execution scheduling/resource isolation.
+
+Therefore, generic proposals for "BPF namespaces", "another BPF-LSM policy engine", "generic verifier-independent SFI" or "generic cross-container detection" are no longer strong primary research directions.
+
+See [`research/reports/2026-09-research-update.md`](research/reports/2026-09-research-update.md) for the complete evidence-based analysis.
+
+---
+
+## 4. Primary 2026 Research Direction
+
+### Scalable Fine-Grained eBPF Policy Verification
+
+**Working title:** *Scalable Fine-Grained eBPF Isolation through Hybrid Policy Verification*
+
+The proposed system keeps the Linux verifier as the safety gate and adds a fine-grained security-policy analysis layer. Abstract analysis should cheaply summarize/prune policy-irrelevant paths; symbolic execution should handle only unresolved policy-relevant cases.
+
+The immediate goal is **not** to claim a new verifier or a new BPF namespace. The first milestone is to reproduce KRAKENGUARD and measure its scalability before designing the hybrid analysis.
+
+---
+
+## 5. Research Artifacts
 
 ```text
-eBPF/
-│
-├── README.md                 # Primary index, overview, and workflow guide
-├── MEMORY.md                 # Persistent context cache for AI agents
-│
-└── research/
-    ├── papers/               # Categorized reference PDFs sorted by venue
-    │   ├── usenix/
-    │   ├── acm/
-    │   ├── ieee/
-    │   ├── arxiv/
-    │   ├── springer/
-    │   ├── ndss/
-    │   ├── osdi/
-    │   └── nsdi/
-    ├── metadata/             # Structured search matrices and bib databases
-    │   ├── papers.json
-    │   ├── papers.csv
-    │   └── bibtex/
-    ├── summaries/            # Markdown summaries of key literature papers
-    ├── notes/                # Research timelines, relationship graphs, gaps
-    ├── reading-list/         # Priority lists and "Must Read First" Top 20
-    ├── references/           # Consolidated references.bib database
-    ├── docs/                 # Detailed methodology and conventions
-    ├── datasets/             # Directory for experimental outputs
-    ├── experiments/          # Testing benches and profiling scripts
-    ├── implementations/      # Reference prototype code
-    ├── reports/              # Weekly logs and milestone checklists
-    └── assets/               # System design diagrams and flowcharts
+research/
+├── reports/
+│   └── 2026-09-research-update.md
+├── metadata/
+│   └── 2026-papers.csv
+├── notes/
+│   ├── research_gaps.md                 # historical baseline + status
+│   ├── updated-research-gaps.md         # current gaps
+│   └── chronology.md                    # extended through 2026
+├── architectures/
+│   ├── descriptions.md                  # historical architectures
+│   └── candidate-directions.md           # 2026 candidate designs
+└── docs/
+    └── research-roadmap.md               # updated thesis roadmap
 ```
 
 ---
 
-## 4. Research Workflow & Selection Criteria
+## 6. Technology Stack
 
-All incoming literature is processed according to a structured pipeline to ensure quality and prevent duplication:
+* **Host:** Linux; use a modern stable kernel appropriate for the reproduced artifact.
+* **eBPF tooling:** libbpf, bpftool, LLVM/Clang.
+* **Container tooling:** Docker/containerd; Kubernetes only after single-node experiments are stable.
+* **Analysis:** SMT solver(s) required by the selected baseline plus the proposed abstract-analysis component.
+* **Implementation:** C/C++/Rust as required by the baseline artifact; do not force Aya where the research mechanism requires direct integration with existing analyzers.
 
+---
+
+## 7. Research Workflow
+
+```text
+[Primary paper / official kernel source]
+        ↓
+[Verify metadata + threat model + results]
+        ↓
+[Compare with repository baseline]
+        ↓
+[Classify solved / partial / open]
+        ↓
+[Reproduce baseline where possible]
+        ↓
+[Define precise research question]
+        ↓
+[Prototype]
+        ↓
+[Security + performance evaluation]
+        ↓
+[Final novelty sweep]
 ```
-[New Paper Discovered]
-        │
-        ▼
-[Perform First Pass Screen] (Meets Selection Criteria?)
-        │
-        ├── Yes ──> [Download PDF / Save to papers/<venue>/]
-        │           [Name file: YYYY_<Venue>_<ShortTitle>.pdf]
-        │
-        └── No ───> [Discard Paper]
-        │
-        ▼
-[Extract Metadata] ──> [Append entry to metadata/papers.json & papers.csv]
-        │
-        ▼
-[Generate Citation] ──> [Create metadata/bibtex/key.bib & append to references.bib]
-        │
-        ▼
-[Draft Summary] ──> [Write summaries/YYYY_<Venue>_<ShortTitle>.md]
-        │
-        ▼
-[Analyze Gaps] ──> [Update notes/research_gaps.md]
-```
-
-### Selection Criteria
-1. **Source Integrity:** Peer-reviewed publications in top systems conferences (USENIX ATC/Security, SOSP, OSDI, CCSW, NSDI).
-2. **eBPF-Centricity:** eBPF must be a primary contribution or target of study.
-3. **No Hardware Security:** Papers relying on TEE, CPU cache modification, or secure elements are discarded.
 
 ---
 
-## 5. Technology Stack & Tools Used
+## 8. Current Milestones
 
-To maintain lightweight development and verifiability, this project leverages:
-* **Programming Languages:** Rust (via the `Aya` eBPF compiler framework for user/kernel space modules).
-* **Scripting & Automation:** Python (with standard statistical libraries for parsing CSV indexes and system logs).
-* **Host Platform:** Linux Kernel 5.10+ (supporting BPFLSM hook registration).
-* **Tracing/Validation Tooling:** `bpftool`, `bpftrace`, and standard `perf` tooling.
-
----
-
-## 6. Current Progress & Milestones
-
-* [x] **Milestone 1:** Repository structure audit and refactor.
-* [x] **Milestone 2:** Collection & mapping of 8 core literature elements.
-* [ ] **Milestone 3:** Local kernel verifier state verification and testing.
-* [ ] **Milestone 4:** Prototype design of dynamic namespace filters.
+* [x] Repository structure audit/refactor.
+* [x] Original software-only literature baseline.
+* [x] 2025–2026 state-of-the-art update.
+* [x] Reassessment of the original research gaps.
+* [x] Primary/fallback research directions identified.
+* [ ] Reproduce KRAKENGUARD.
+* [ ] Build benchmark corpus.
+* [ ] Prototype hybrid policy analysis.
+* [ ] Security evaluation.
+* [ ] Performance/scalability evaluation.
+* [ ] Final novelty review.
 
 ---
 
-## 7. References & Timeline
+## 9. Research Discipline
 
-See detailed indices under `research/indexes/index.md` or check chronology notes at `research/notes/chronology.md` for historical development trends.
+* Prefer original peer-reviewed papers and official kernel/project sources.
+* Do not manufacture benchmark numbers, vulnerabilities, CVEs or novelty claims.
+* Distinguish academic research, current kernel engineering and production security practice.
+* Preserve historical research even when conclusions change.
+* Treat "evidence not verified" explicitly when primary evidence is unavailable.
 
 ---
 
-## 8. License & Guidelines
+## 10. Key References
+
+* KRAKENGUARD — https://www.usenix.org/conference/nsdi26/presentation/patel
+* vBPF — https://www.usenix.org/conference/osdi26/presentation/zhang-jing
+* PeeR — https://www.usenix.org/conference/osdi26/presentation/carin
+* BCF — https://doi.org/10.1145/3731569.3764796
+* AEE — https://www.usenix.org/conference/usenixsecurity25/presentation/sun-hao
+* BPF Token — https://docs.kernel.org/userspace-api/ebpf/syscall.html
+* SeaBee — https://github.com/NationalSecurityAgency/seabee
+
+---
+
+## 11. License & Guidelines
+
 Contributions to this workspace follow standard academic publishing guidelines. All source code is restricted to GPLv2 licensing.
