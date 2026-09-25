@@ -1,0 +1,23 @@
+{
+  "host": {
+    "architecture": "x86_64",
+    "btf_vmlinux": true,
+    "cpu_model": "AMD Ryzen 5 5600H with Radeon Graphics",
+    "cpu_threads": "12",
+    "kernel": "Linux 7.2.3-arch1-2 x86_64 GNU/Linux",
+    "ram_kib": "7433212"
+  },
+  "kernel_configuration": "CONFIG_BPF=y\nCONFIG_BPF_SYSCALL=y\nCONFIG_BPF_JIT=y\nCONFIG_BPF_LSM=y\nCONFIG_CGROUPS=y\nCONFIG_CGROUP_BPF=y\nCONFIG_USER_NS=y\nCONFIG_PID_NS=y\nCONFIG_NET_NS=y\nCONFIG_SECURITY=y\nCONFIG_DEBUG_INFO_BTF=y",
+  "schema": "phase3-environment/v1",
+  "timestamp_utc": "20260914T093548Z",
+  "toolchain": {
+    "bpftool": "bpftool v7.8.0",
+    "cargo": "cargo 1.93.1 (083ac5135 2025-12-15)",
+    "clang": "clang version 22.1.8",
+    "container_runtime": "podman podman version 6.0.2",
+    "gcc": "gcc (GCC) 16.2.1 20260810",
+    "llvm": "22.1.8",
+    "python3": "Python 3.14.7",
+    "rustc": "rustc 1.93.1 (01f6ddf75 2026-02-11)"
+  }
+}

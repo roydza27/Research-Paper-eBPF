@@ -1,0 +1,145 @@
+[krakenguard] repository root: /home/cy3pher/Documents/WorkSpace-Research/eBPF
+[krakenguard] artifact commit: e7bd84005b304c5a10efcdb04914d1882b3cccf7
+[krakenguard] result directory: /home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/results/krakenguard
+[krakenguard] WARNING: environment collector unavailable; record host metadata manually
+[krakenguard] cloning KRAKENGUARD with submodules
+Cloning into '/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/baselines/krakenguard/artifact'...
+Submodule 'bpf_lifter' (git@github.com:krakenguard-ebpf/bpf_lifter.git) registered for path 'bpf_lifter'
+Submodule 'ebpf-se' (git@github.com:krakenguard-ebpf/ebpf-se-pvt.git) registered for path 'ebpf-se'
+Submodule 'klee' (git@github.com:krakenguard-ebpf/klee-pvt.git) registered for path 'klee'
+Submodule 'xdp-perf' (git@github.com:lucasbn/xdp-perf.git) registered for path 'xdp-perf'
+Cloning into '/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/baselines/krakenguard/artifact/bpf_lifter'...
+git@github.com: Permission denied (publickey).
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.
+fatal: clone of 'git@github.com:krakenguard-ebpf/bpf_lifter.git' into submodule path '/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/baselines/krakenguard/artifact/bpf_lifter' failed
+Failed to clone 'bpf_lifter'. Retry scheduled
+Cloning into '/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/baselines/krakenguard/artifact/ebpf-se'...
+git@github.com: Permission denied (publickey).
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.
+fatal: clone of 'git@github.com:krakenguard-ebpf/ebpf-se-pvt.git' into submodule path '/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/baselines/krakenguard/artifact/ebpf-se' failed
+Failed to clone 'ebpf-se'. Retry scheduled
+Cloning into '/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/baselines/krakenguard/artifact/klee'...
+git@github.com: Permission denied (publickey).
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.
+fatal: clone of 'git@github.com:krakenguard-ebpf/klee-pvt.git' into submodule path '/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/baselines/krakenguard/artifact/klee' failed
+Failed to clone 'klee'. Retry scheduled
+Cloning into '/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/baselines/krakenguard/artifact/xdp-perf'...
+git@github.com: Permission denied (publickey).
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.
+fatal: clone of 'git@github.com:lucasbn/xdp-perf.git' into submodule path '/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/baselines/krakenguard/artifact/xdp-perf' failed
+Failed to clone 'xdp-perf'. Retry scheduled
+Cloning into '/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/baselines/krakenguard/artifact/bpf_lifter'...
+warning: Clone succeeded, but checkout failed.
+You can inspect what was checked out with 'git status'
+and retry with 'git restore --source=HEAD :/'
+
+[krakenguard] repository root: /home/cy3pher/Documents/WorkSpace-Research/eBPF
+[krakenguard] artifact commit: e7bd84005b304c5a10efcdb04914d1882b3cccf7
+[krakenguard] result directory: /home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/results/krakenguard
+[krakenguard] collecting host environment
+HEAD is now at e7bd840 Add MIT License
+Synchronizing submodule url for 'bpf_lifter'
+Synchronizing submodule url for 'ebpf-se'
+Synchronizing submodule url for 'klee'
+Synchronizing submodule url for 'xdp-perf'
+Cloning into '/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/baselines/krakenguard/artifact/bpf_lifter'...
+git@github.com: Permission denied (publickey).
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.
+fatal: clone of 'git@github.com:krakenguard-ebpf/bpf_lifter.git' into submodule path '/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/baselines/krakenguard/artifact/bpf_lifter' failed
+Failed to clone 'bpf_lifter'. Retry scheduled
+Cloning into '/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/baselines/krakenguard/artifact/ebpf-se'...
+git@github.com: Permission denied (publickey).
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.
+fatal: clone of 'git@github.com:krakenguard-ebpf/ebpf-se-pvt.git' into submodule path '/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/baselines/krakenguard/artifact/ebpf-se' failed
+Failed to clone 'ebpf-se'. Retry scheduled
+Cloning into '/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/baselines/krakenguard/artifact/klee'...
+git@github.com: Permission denied (publickey).
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.
+fatal: clone of 'git@github.com:krakenguard-ebpf/klee-pvt.git' into submodule path '/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/baselines/krakenguard/artifact/klee' failed
+Failed to clone 'klee'. Retry scheduled
+Cloning into '/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/baselines/krakenguard/artifact/xdp-perf'...
+git@github.com: Permission denied (publickey).
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.
+fatal: clone of 'git@github.com:lucasbn/xdp-perf.git' into submodule path '/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/baselines/krakenguard/artifact/xdp-perf' failed
+Failed to clone 'xdp-perf'. Retry scheduled
+Cloning into '/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/baselines/krakenguard/artifact/bpf_lifter'...
+git@github.com: Permission denied (publickey).
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.
+fatal: clone of 'git@github.com:krakenguard-ebpf/bpf_lifter.git' into submodule path '/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/baselines/krakenguard/artifact/bpf_lifter' failed
+Failed to clone 'bpf_lifter' a second time, aborting
+[krakenguard] repository root: /home/cy3pher/Documents/WorkSpace-Research/eBPF
+[krakenguard] artifact commit: e7bd84005b304c5a10efcdb04914d1882b3cccf7
+[krakenguard] result directory: /home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/results/krakenguard
+[krakenguard] collecting host environment
+HEAD is now at e7bd840 Add MIT License
+Synchronizing submodule url for 'bpf_lifter'
+Synchronizing submodule url for 'ebpf-se'
+Synchronizing submodule url for 'klee'
+Synchronizing submodule url for 'xdp-perf'
+Cloning into '/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/baselines/krakenguard/artifact/bpf_lifter'...
+git@github.com: Permission denied (publickey).
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.
+fatal: clone of 'git@github.com:krakenguard-ebpf/bpf_lifter.git' into submodule path '/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/baselines/krakenguard/artifact/bpf_lifter' failed
+Failed to clone 'bpf_lifter'. Retry scheduled
+Cloning into '/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/baselines/krakenguard/artifact/ebpf-se'...
+git@github.com: Permission denied (publickey).
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.
+fatal: clone of 'git@github.com:krakenguard-ebpf/ebpf-se-pvt.git' into submodule path '/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/baselines/krakenguard/artifact/ebpf-se' failed
+Failed to clone 'ebpf-se'. Retry scheduled
+Cloning into '/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/baselines/krakenguard/artifact/klee'...
+git@github.com: Permission denied (publickey).
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.
+fatal: clone of 'git@github.com:krakenguard-ebpf/klee-pvt.git' into submodule path '/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/baselines/krakenguard/artifact/klee' failed
+Failed to clone 'klee'. Retry scheduled
+Cloning into '/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/baselines/krakenguard/artifact/xdp-perf'...
+git@github.com: Permission denied (publickey).
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.
+fatal: clone of 'git@github.com:lucasbn/xdp-perf.git' into submodule path '/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/baselines/krakenguard/artifact/xdp-perf' failed
+Failed to clone 'xdp-perf'. Retry scheduled
+Cloning into '/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/baselines/krakenguard/artifact/bpf_lifter'...
+git@github.com: Permission denied (publickey).
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.
+fatal: clone of 'git@github.com:krakenguard-ebpf/bpf_lifter.git' into submodule path '/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/baselines/krakenguard/artifact/bpf_lifter' failed
+Failed to clone 'bpf_lifter' a second time, aborting
