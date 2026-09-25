@@ -1,0 +1,3 @@
+[submodule "research/baselines/krakenguard/artifact"]
+	path = research/baselines/krakenguard/artifact
+	url = https://github.com/krakenguard-ebpf/krakenguard.git
