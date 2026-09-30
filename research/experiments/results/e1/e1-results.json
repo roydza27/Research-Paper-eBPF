@@ -1,0 +1,90 @@
+{
+  "schema": "phase4-e1-results/v1",
+  "experiment": "E1",
+  "status": "blocked_before_smoke_tests",
+  "reason": "The connected execution environment cannot access the research host repository or execute the frozen KRAKENGUARD Docker artifact. Docker, Docker Compose, bpftool, and a BPF-capable clang backend are unavailable in this sandbox.",
+  "baseline": {
+    "name": "KRAKENGUARD",
+    "commit": "e7bd84005b304c5a10efcdb04914d1882b3cccf7"
+  },
+  "policy": {
+    "id": "e1_fixed_policy",
+    "sha256": "270403272d736ae7aee2ceda3bf8d088b6ac0cb476bb99ce0218dd8f33c3c603"
+  },
+  "corpus_metadata_sha256": "8817d79a6cbc4691fbed1477b44be8824c781eaf8acf84065d06650a8caa7f4c",
+  "planned_matrix": {
+    "programs": 8,
+    "warmups_per_program": 2,
+    "measured_runs_per_program": 7,
+    "timeout_seconds": 300,
+    "planned_measured_executions": 56,
+    "planned_warmup_executions": 16
+  },
+  "smoke_tests": [
+    {
+      "program": "P0",
+      "policy": "e1_fixed_policy",
+      "status": "not_run",
+      "reason": "KRAKENGUARD execution unavailable"
+    },
+    {
+      "program": "P7",
+      "policy": "e1_fixed_policy",
+      "status": "not_run",
+      "reason": "KRAKENGUARD execution unavailable"
+    }
+  ],
+  "measurements": [],
+  "aggregates": [],
+  "source_hashes": [
+    {
+      "program": "P0",
+      "path": "research/experiments/corpus/e1/programs/p0_minimal_xdp.c",
+      "source_sha256": "fb5d583be59141d7a02453bdce1037d427a50a9cf7ba0e8ca8af3f1dfdbfdd2f"
+    },
+    {
+      "program": "P1",
+      "path": "research/experiments/corpus/e1/programs/p1_arithmetic_xdp.c",
+      "source_sha256": "b27d7e52569b725cd9063052e0c5ee73c76722d923596dd53205b0651576f9b5"
+    },
+    {
+      "program": "P2",
+      "path": "research/experiments/corpus/e1/programs/p2_one_branch_xdp.c",
+      "source_sha256": "6347f4d41da5f55675a9a95d763be66d97eadd2cb4fbcf0dc2d450205bc51346"
+    },
+    {
+      "program": "P3",
+      "path": "research/experiments/corpus/e1/programs/p3_multi_branch_xdp.c",
+      "source_sha256": "0be3c863817eed6e97211c145af8c8f2a4ef2b74a0f1488deb7f85f73c414892"
+    },
+    {
+      "program": "P4",
+      "path": "research/experiments/corpus/e1/programs/p4_helper_xdp.c",
+      "source_sha256": "c521eded81bfbfb8ced32eac155cc2bcb944a24f978213875db47f010e15e980"
+    },
+    {
+      "program": "P5",
+      "path": "research/experiments/corpus/e1/programs/p5_map_xdp.c",
+      "source_sha256": "55720a9423fe5eaf57f51d3588972b7ed2bad8b25791fc6a5cf12ce9592533b7"
+    },
+    {
+      "program": "P6",
+      "path": "research/experiments/corpus/e1/programs/p6_map_branch_xdp.c",
+      "source_sha256": "f5fa40770606ff3491814cba076d04767c91cb8e6c3f477bf6ebcfab426da668"
+    },
+    {
+      "program": "P7",
+      "path": "research/experiments/corpus/e1/programs/p7_combined_xdp.c",
+      "source_sha256": "647d3cd4dc438558e734277f9bf773008ab978585d3056d3f6fc37eaea6ebb16"
+    }
+  ],
+  "environment_observations": {
+    "host_repo_mounted": false,
+    "docker": "unavailable",
+    "docker_compose": "unavailable",
+    "bpftool": "unavailable",
+    "clang": "17.0.0 Swift LLVM build; BPF target backend unavailable",
+    "python": "3.13.5"
+  },
+  "integrity_rule": "No timing, memory, verifier status, symbolic-state, solver, or compiled-object measurements were fabricated or inferred."
+}
