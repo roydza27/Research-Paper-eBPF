@@ -1,0 +1,36 @@
+[1] PTR '(anon)' type_id=3
+[2] INT 'int' size=4 bits_offset=0 nr_bits=32 encoding=SIGNED
+[3] ARRAY '(anon)' type_id=2 index_type_id=4 nr_elems=2
+[4] INT '__ARRAY_SIZE_TYPE__' size=4 bits_offset=0 nr_bits=32 encoding=(none)
+[5] PTR '(anon)' type_id=6
+[6] ARRAY '(anon)' type_id=2 index_type_id=4 nr_elems=4
+[7] PTR '(anon)' type_id=8
+[8] TYPEDEF '__u32' type_id=9
+[9] INT 'unsigned int' size=4 bits_offset=0 nr_bits=32 encoding=(none)
+[10] PTR '(anon)' type_id=11
+[11] TYPEDEF '__u64' type_id=12
+[12] INT 'unsigned long long' size=8 bits_offset=0 nr_bits=64 encoding=(none)
+[13] STRUCT '(anon)' size=32 vlen=4
+	'type' type_id=1 bits_offset=0
+	'max_entries' type_id=5 bits_offset=64
+	'key' type_id=7 bits_offset=128
+	'value' type_id=10 bits_offset=192
+[14] VAR 'e1_state' type_id=13, linkage=global
+[15] PTR '(anon)' type_id=16
+[16] STRUCT 'xdp_md' size=24 vlen=6
+	'data' type_id=8 bits_offset=0
+	'data_end' type_id=8 bits_offset=32
+	'data_meta' type_id=8 bits_offset=64
+	'ingress_ifindex' type_id=8 bits_offset=96
+	'rx_queue_index' type_id=8 bits_offset=128
+	'egress_ifindex' type_id=8 bits_offset=160
+[17] FUNC_PROTO '(anon)' ret_type_id=2 vlen=1
+	'ctx' type_id=15
+[18] FUNC 'e1_p6' type_id=17 linkage=global
+[19] INT 'char' size=1 bits_offset=0 nr_bits=8 encoding=SIGNED
+[20] ARRAY '(anon)' type_id=19 index_type_id=4 nr_elems=4
+[21] VAR 'LICENSE' type_id=20, linkage=global
+[22] DATASEC '.maps' size=0 vlen=1
+	type_id=14 offset=0 size=32 (VAR 'e1_state')
+[23] DATASEC 'license' size=0 vlen=1
+	type_id=21 offset=0 size=4 (VAR 'LICENSE')

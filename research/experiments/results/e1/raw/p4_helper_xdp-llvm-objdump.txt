@@ -1,0 +1,12 @@
+
+/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/results/raw/e1-objects/p4_helper_xdp.o:	file format elf64-bpf
+
+Disassembly of section xdp:
+
+0000000000000000 <e1_p4>:
+       0:	85 00 00 00 05 00 00 00	call 0x5
+       1:	bf 01 00 00 00 00 00 00	r1 = r0
+       2:	b7 00 00 00 00 00 00 00	r0 = 0x0
+       3:	15 01 01 00 00 00 00 00	if r1 == 0x0 goto +0x1 <e1_p4+0x28>
+       4:	b7 00 00 00 02 00 00 00	r0 = 0x2
+       5:	95 00 00 00 00 00 00 00	exit

@@ -1,0 +1,24 @@
+
+/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/results/raw/e1-objects/p3_multi_branch_xdp.o:	file format elf64-bpf
+
+Disassembly of section xdp:
+
+0000000000000000 <e1_p3>:
+       0:	b7 00 00 00 02 00 00 00	r0 = 0x2
+       1:	61 11 0c 00 00 00 00 00	w1 = *(u32 *)(r1 + 0xc)
+       2:	bf 12 00 00 00 00 00 00	r2 = r1
+       3:	57 02 00 00 01 00 00 00	r2 &= 0x1
+       4:	55 02 0c 00 00 00 00 00	if r2 != 0x0 goto +0xc <e1_p3+0x88>
+       5:	b7 00 00 00 01 00 00 00	r0 = 0x1
+       6:	bf 12 00 00 00 00 00 00	r2 = r1
+       7:	57 02 00 00 02 00 00 00	r2 &= 0x2
+       8:	55 02 08 00 00 00 00 00	if r2 != 0x0 goto +0x8 <e1_p3+0x88>
+       9:	b7 00 00 00 03 00 00 00	r0 = 0x3
+      10:	bf 12 00 00 00 00 00 00	r2 = r1
+      11:	57 02 00 00 04 00 00 00	r2 &= 0x4
+      12:	55 02 04 00 00 00 00 00	if r2 != 0x0 goto +0x4 <e1_p3+0x88>
+      13:	a7 01 00 00 ff ff ff ff	r1 ^= -0x1
+      14:	77 01 00 00 02 00 00 00	r1 >>= 0x2
+      15:	57 01 00 00 02 00 00 00	r1 &= 0x2
+      16:	bf 10 00 00 00 00 00 00	r0 = r1
+      17:	95 00 00 00 00 00 00 00	exit

@@ -1,0 +1,23 @@
+
+/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/results/raw/e1-objects/p6_map_branch_xdp.o:	file format elf64-bpf
+
+Disassembly of section xdp:
+
+0000000000000000 <e1_p6>:
+       0:	61 11 0c 00 00 00 00 00	w1 = *(u32 *)(r1 + 0xc)
+       1:	57 01 00 00 03 00 00 00	r1 &= 0x3
+       2:	63 1a fc ff 00 00 00 00	*(u32 *)(r10 - 0x4) = w1
+       3:	bf a2 00 00 00 00 00 00	r2 = r10
+       4:	07 02 00 00 fc ff ff ff	r2 += -0x4
+       5:	18 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00	r1 = 0x0 ll
+       7:	85 00 00 00 01 00 00 00	call 0x1
+       8:	bf 01 00 00 00 00 00 00	r1 = r0
+       9:	b7 00 00 00 00 00 00 00	r0 = 0x0
+      10:	15 01 06 00 00 00 00 00	if r1 == 0x0 goto +0x6 <e1_p6+0x88>
+      11:	b7 00 00 00 01 00 00 00	r0 = 0x1
+      12:	79 11 00 00 00 00 00 00	r1 = *(u64 *)(r1 + 0x0)
+      13:	25 01 03 00 64 00 00 00	if r1 > 0x64 goto +0x3 <e1_p6+0x88>
+      14:	b7 00 00 00 03 00 00 00	r0 = 0x3
+      15:	25 01 01 00 32 00 00 00	if r1 > 0x32 goto +0x1 <e1_p6+0x88>
+      16:	b7 00 00 00 02 00 00 00	r0 = 0x2
+      17:	95 00 00 00 00 00 00 00	exit

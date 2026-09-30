@@ -1,0 +1,17 @@
+
+/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/results/raw/e1-objects/p5_map_xdp.o:	file format elf64-bpf
+
+Disassembly of section xdp:
+
+0000000000000000 <e1_p5>:
+       0:	b7 01 00 00 00 00 00 00	r1 = 0x0
+       1:	63 1a fc ff 00 00 00 00	*(u32 *)(r10 - 0x4) = w1
+       2:	bf a2 00 00 00 00 00 00	r2 = r10
+       3:	07 02 00 00 fc ff ff ff	r2 += -0x4
+       4:	18 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00	r1 = 0x0 ll
+       6:	85 00 00 00 01 00 00 00	call 0x1
+       7:	bf 01 00 00 00 00 00 00	r1 = r0
+       8:	b7 00 00 00 01 00 00 00	r0 = 0x1
+       9:	15 01 01 00 00 00 00 00	if r1 == 0x0 goto +0x1 <e1_p5+0x58>
+      10:	b7 00 00 00 02 00 00 00	r0 = 0x2
+      11:	95 00 00 00 00 00 00 00	exit

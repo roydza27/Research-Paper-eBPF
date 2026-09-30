@@ -1,0 +1,11 @@
+
+/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/results/raw/e1-objects/p1_arithmetic_xdp.o:	file format elf64-bpf
+
+Disassembly of section xdp:
+
+0000000000000000 <e1_p1>:
+       0:	61 11 0c 00 00 00 00 00	w1 = *(u32 *)(r1 + 0xc)
+       1:	b7 00 00 00 00 00 00 00	r0 = 0x0
+       2:	15 01 01 00 53 55 55 55	if r1 == 0x55555553 goto +0x1 <e1_p1+0x20>
+       3:	b7 00 00 00 02 00 00 00	r0 = 0x2
+       4:	95 00 00 00 00 00 00 00	exit
