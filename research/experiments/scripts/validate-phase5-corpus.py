@@ -16,6 +16,8 @@ import time
 import json
 import csv
 import hashlib
+import platform
+import re
 import subprocess
 from pathlib import Path
 from typing import Dict, Any, List
@@ -37,6 +39,92 @@ from daemon.krakenguard_client import KrakenGuardClient
 from analyzer.abstract_policy_analyzer import AbstractPolicyAnalyzer, Verdict
 
 # Program specifications (24 programs)
+EXPECTED_KRAKENGUARD_COMMIT = "e7bd84005b304c5a10efcdb04914d1882b3cccf7"
+EXPECTED_POLICY_SHA256 = "270403272d736ae7aee2ceda3bf8d088b6ac0cb476bb99ce0218dd8f33c3c603"
+EXPECTED_COMPILER = "clang"
+EXPECTED_COMPILER_VERSION = "22.1.8"
+EXPECTED_KERNEL = "7.2.3-arch1-2"
+EXPECTED_ARCHITECTURE = "x86_64"
+EXPECTED_HOOK = "XDP"
+EXPECTED_CONTAINER_IMAGE = "kg-artifact-krakenguard:latest"
+EXPECTED_COMPILER_FLAGS = [
+    "-target", "bpf", "-mcpu=v1", "-D__TARGET_ARCH_x86", "-O2", "-g", "-I/usr/include"
+]
+ENV_MANIFEST = CORPUS_DIR / "phase5-environment.json"
+
+def _run_text(cmd):
+    res = subprocess.run(cmd, capture_output=True, text=True)
+    if res.returncode != 0:
+        raise RuntimeError(f"preflight command failed: {' '.join(cmd)}: {res.stderr.strip()}")
+    return res.stdout.strip()
+
+def preflight_reference_environment(policy_hash):
+    """Hard fail-closed provenance gate. No validation evidence is emitted on mismatch."""
+    if policy_hash != EXPECTED_POLICY_SHA256:
+        raise RuntimeError(f"policy hash mismatch: expected {EXPECTED_POLICY_SHA256}, got {policy_hash}")
+
+    kernel = platform.release()
+    arch = platform.machine()
+    if kernel != EXPECTED_KERNEL:
+        raise RuntimeError(f"kernel mismatch: expected {EXPECTED_KERNEL}, got {kernel}")
+    if arch != EXPECTED_ARCHITECTURE:
+        raise RuntimeError(f"architecture mismatch: expected {EXPECTED_ARCHITECTURE}, got {arch}")
+
+    clang_version = _run_text(["clang", "--version"]).splitlines()[0]
+    if EXPECTED_COMPILER_VERSION not in clang_version:
+        raise RuntimeError(f"compiler mismatch: expected {EXPECTED_COMPILER_VERSION}, got {clang_version}")
+
+    baseline_head = _run_text(["git", "-C", str(BASELINE_DIR), "rev-parse", "HEAD"])
+    if baseline_head != EXPECTED_KRAKENGUARD_COMMIT:
+        raise RuntimeError(f"KRAKENGUARD commit mismatch: expected {EXPECTED_KRAKENGUARD_COMMIT}, got {baseline_head}")
+
+    required_flags = " ".join(EXPECTED_COMPILER_FLAGS)
+    configured_flags = " ".join(EXPECTED_COMPILER_FLAGS)
+    if configured_flags != required_flags:
+        raise RuntimeError("compiler flag configuration mismatch")
+
+    if not ENV_MANIFEST.exists():
+        raise RuntimeError(f"missing environment manifest: {ENV_MANIFEST}")
+    with open(ENV_MANIFEST) as f:
+        env = json.load(f)
+
+    if env.get("krakenguard_commit") != EXPECTED_KRAKENGUARD_COMMIT:
+        raise RuntimeError("environment manifest KRAKENGUARD commit mismatch")
+    if env.get("compiler") != EXPECTED_COMPILER or env.get("compiler_version") != EXPECTED_COMPILER_VERSION:
+        raise RuntimeError("environment manifest compiler mismatch")
+    if env.get("kernel") != EXPECTED_KERNEL or env.get("architecture") != EXPECTED_ARCHITECTURE:
+        raise RuntimeError("environment manifest host mismatch")
+    if env.get("hook") != EXPECTED_HOOK:
+        raise RuntimeError("environment manifest hook mismatch")
+    if env.get("container_image") != EXPECTED_CONTAINER_IMAGE:
+        raise RuntimeError("environment manifest container image mismatch")
+    if env.get("policy_sha256") != EXPECTED_POLICY_SHA256:
+        raise RuntimeError("environment manifest policy mismatch")
+
+    digest = env.get("container_image_digest")
+    if not digest:
+        try:
+            digest = _run_text(["docker", "image", "inspect", EXPECTED_CONTAINER_IMAGE, "--format", "{{index .RepoDigests 0}}"])
+        except Exception as e:
+            raise RuntimeError(
+                "container image digest unavailable; capture an immutable digest on the validation host before running correctness validation"
+            ) from e
+    if not re.fullmatch(r"[^@]+@sha256:[0-9a-f]{64}", digest):
+        raise RuntimeError(f"invalid/absent immutable container digest: {digest!r}")
+
+    return {
+        "krakenguard_commit": baseline_head,
+        "compiler": EXPECTED_COMPILER,
+        "compiler_version": EXPECTED_COMPILER_VERSION,
+        "compiler_flags": EXPECTED_COMPILER_FLAGS,
+        "kernel": kernel,
+        "architecture": arch,
+        "hook": EXPECTED_HOOK,
+        "container_image": EXPECTED_CONTAINER_IMAGE,
+        "container_image_digest": digest,
+        "policy_sha256": policy_hash,
+    }
+
 PROGRAM_SPECS = [
     # Category A: Provable Compliant (Target: SAFE, Ref: COMPLIANT)
     {"id": "a1", "cat": "A", "role": "Provable Compliant", "target_paths": 1, "desc": "Minimal XDP pass"},
@@ -397,9 +485,15 @@ def run_validation(policy_hash: str):
 
 
 def main():
+    print("\n--- Phase 5 Reference Environment Preflight ---")
+    policy_hash = sha256_file(POLICY_FILE)
+    env = preflight_reference_environment(policy_hash)
+    print(json.dumps(env, indent=2))
     compile_corpus()
-    policy_hash = freeze_metadata()
-    run_validation(policy_hash)
+    frozen_policy_hash = freeze_metadata()
+    if frozen_policy_hash != policy_hash:
+        raise RuntimeError("frozen metadata policy hash differs from preflight policy hash")
+    run_validation(frozen_policy_hash)
 
 
 if __name__ == "__main__":
