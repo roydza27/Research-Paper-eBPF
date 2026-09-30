@@ -1,7 +1,7 @@
 # Phase 5 — Correction-Era Validation Report
 
 **Status:** `CORRECTION VALIDATION COMPLETE — READY FOR INDEPENDENT RE-REVIEW`  
-**Timestamp:** `2026-09-30T17:36:32Z`  
+**Timestamp:** `2026-09-30T18:14:42Z`  
 **Execution Mode:** `Correctness and Provenance Only (No Performance Matrix)`  
 
 ---
@@ -9,7 +9,8 @@
 ## 1. Provenance Manifest
 
 - **Git Branch:** `phase5-experimental-design`
-- **HEAD Commit:** `799412ed885d2e7dd754f4bee55849a71b8e4e0a`
+- **Git HEAD:** `f2c70717ac2b7acc8faa7d303d4085d577f61668`
+- **Git Tree:** `f4062862e73b3f17e1c15ff02737bc9d00cee0c2`
 - **KRAKENGUARD Commit:** `e7bd84005b304c5a10efcdb04914d1882b3cccf7`
 - **Container Image:** `kg-artifact-krakenguard:latest`
 - **Immutable Container Digest:** `kg-artifact-krakenguard@sha256:9633a6922518589803a4c9b8123d0549e54b5f57c1d04f9e383e822fd9ae3bd4`
@@ -25,8 +26,8 @@
 ## 2. Abstract Analyzer Soundness (B01)
 
 - **Test Command:** `python3 -m pytest -v research/tests/test_phase5_abstract_soundness.py`
-- **Total Tests:** 9
-- **Passed:** 9
+- **Total Tests:** 12
+- **Passed:** 12
 - **Failed:** 0
 - **Exit Code:** 0
 - **Coverage:**
@@ -39,6 +40,9 @@
   - unsupported instruction → `UNKNOWN`
   - analysis failure → `UNKNOWN`
   - map update without policy proof → `UNKNOWN`
+  - 64-bit immediate `ll` syntax parsing → `SAFE`
+  - absent `return_value` policy semantics (permits non-default return values) → `SAFE`
+  - strictly fail-closed conditional policy extraction → `PASS`
 
 ---
 
@@ -59,18 +63,20 @@
 
 ---
 
-## 4. Real UNKNOWN → KRAKENGUARD Fallback Validation
+## 4. Real UNKNOWN → KRAKENGUARD Fallback Validation & Raw Evidence
 
 Integration execution via live UNIX domain socket against the authoritative KRAKENGUARD daemon container:
 
 - **UNKNOWN Compliant Fixture (`b1`):**
   - Abstract Verdict: `UNKNOWN`
-  - Actual Fallback Invocation: Yes (`7c764064-19b3-4c85-8581-e7cf7374b139`)
+  - Actual Fallback Invocation: Yes (Request ID: `5f45e5c0-b6bb-46eb-bab9-a4e3574c0405`)
   - Authoritative Reference Verdict: `COMPLIANT`
+  - Preserved Raw Evidence: `research/experiments/results/phase5-validation/raw/fallback/b1`
 - **UNKNOWN Violating Fixture (`d1`):**
   - Abstract Verdict: `UNKNOWN`
-  - Actual Fallback Invocation: Yes (`fe1dcc81-38dc-4c27-9a10-25ccb8213a9f`)
+  - Actual Fallback Invocation: Yes (Request ID: `6f61566d-c437-48b5-b794-b12c5cf33568`)
   - Authoritative Reference Verdict: `POLICY VIOLATION`
+  - Preserved Raw Evidence: `research/experiments/results/phase5-validation/raw/fallback/d1`
 
 ---
 
