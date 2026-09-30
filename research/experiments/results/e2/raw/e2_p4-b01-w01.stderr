@@ -1,0 +1,32 @@
+
+KLEE: WARNING: Module and host target triples do not match: 'bpf' != 'x86_64-unknown-linux-gnu'
+This may cause unexpected crashes or assertion violations.
+KLEE: NOTE: Using klee-uclibc : /opt/krakenguard/klee/build/runtime/lib/klee-uclibc.bca
+KLEE: output directory is "/data/requests/14ca9feb-473c-46ba-892e-62f668430684/output"
+KLEE: Using Z3 solver backend
+KLEE: Deterministic allocator: Using quarantine queue size 8
+KLEE: Deterministic allocator: globals (start-address=0x7fe296400000 size=10 GiB)
+KLEE: Deterministic allocator: constants (start-address=0x7fe016400000 size=10 GiB)
+KLEE: Deterministic allocator: heap (start-address=0x40000000 size=1 GiB)
+KLEE: Deterministic allocator: stack (start-address=0x7fc016400000 size=128 GiB)
+warning: Linking two modules of different data layouts: '/data/requests/14ca9feb-473c-46ba-892e-62f668430684/input/final_linked_ir.bc' is 'e-m:e-p:64:64-i64:64-i128:128-n32:64-S128' whereas '__uClibc_main.os' is 'e-m:e-p270:32:32-p271:32:32-p272:64:64-i64:64-f80:128-n8:16:32:64-S128'
+
+warning: Linking two modules of different target triples: '/data/requests/14ca9feb-473c-46ba-892e-62f668430684/input/final_linked_ir.bc' is 'bpf' whereas '__uClibc_main.os' is 'x86_64-unknown-linux-gnu'
+
+KLEE: WARNING: undefined reference to function: __syscall_rt_sigaction
+KLEE: WARNING: undefined reference to function: fcntl
+KLEE: WARNING: undefined reference to function: fstat
+KLEE: WARNING: undefined reference to function: ioctl
+KLEE: WARNING: undefined reference to function: lseek64
+KLEE: WARNING: undefined reference to function: mmap
+KLEE: WARNING: undefined reference to function: open
+KLEE: WARNING: undefined reference to function: write
+KLEE: WARNING: undefined reference to function: kill (UNSAFE)!
+KLEE: WARNING ONCE: calling external: ioctl(0, 21505, 140508080898048) at libc/termios/tcgetattr.c:43 12
+KLEE: WARNING ONCE: calling __user_main with extra arguments.
+KLEE: WARNING ONCE: Alignment of memory from call "malloc" is not modelled. Using alignment of 8.
+
+KLEE: done: total instructions = 14069
+KLEE: done: completed paths = 16
+KLEE: done: partially completed paths = 0
+KLEE: done: generated tests = 16

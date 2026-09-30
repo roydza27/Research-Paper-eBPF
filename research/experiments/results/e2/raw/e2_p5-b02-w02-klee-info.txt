@@ -1,0 +1,20 @@
+/opt/krakenguard/bin/klee -kdalloc -kdalloc-heap-start-address=0x00040000000 -kdalloc-heap-size=1 -libc=uclibc --external-calls=all --disable-verify -solver-backend=z3 -silent-klee-assume=true --exit-on-error -max-memory=750000 -search=dfs -single-object-resolution=true -verification=true -restrict-helper-function=true -enable-conditional-policy=true -config-file=/data/requests/77a3f9f1-4e16-47c7-a2c7-ebe89df2c261/input/e1_fixed_policy.json --output-dir=/data/requests/77a3f9f1-4e16-47c7-a2c7-ebe89df2c261/output /data/requests/77a3f9f1-4e16-47c7-a2c7-ebe89df2c261/input/final_linked_ir.bc
+PID: 1001
+Using monotonic steady clock with 1/1000000000s resolution
+Started: 2026-09-30 08:37:59
+BEGIN searcher description
+DFSSearcher
+END searcher description
+Finished: 2026-09-30 08:38:00
+Elapsed: 00:00:01
+KLEE: done: explored paths = 32
+KLEE: done: avg. constructs per query = 44
+KLEE: done: total queries = 32
+KLEE: done: valid queries = 0
+KLEE: done: invalid queries = 32
+KLEE: done: query cex = 32
+
+KLEE: done: total instructions = 15509
+KLEE: done: completed paths = 32
+KLEE: done: partially completed paths = 0
+KLEE: done: generated tests = 32
