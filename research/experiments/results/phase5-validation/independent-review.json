@@ -1,0 +1,48 @@
+{
+  "schema": "phase5-independent-review/v1",
+  "review_date": "2026-09-30",
+  "branch": "phase5-experimental-design",
+  "verdict": "FAIL — EXECUTION BLOCKED",
+  "execution_gate": {
+    "independent_review_complete": false,
+    "execution_approved": false
+  },
+  "scope": {
+    "e3_executed": false,
+    "e4_executed": false,
+    "e5_executed": false,
+    "timing_repeated": false,
+    "implementation_modified_during_review": false
+  },
+  "findings": {
+    "blockers": [
+      "P5-B01: SAFE can be produced despite unmodeled policy-relevant memory stores/instructions.",
+      "P5-B02: Phase 5 policy hash differs from the E1 fixed-policy hash specified as the mandatory reference/control.",
+      "P5-B03: Validation implementation does not enforce the frozen KRAKENGUARD/toolchain/kernel/architecture provenance declared by the gate.",
+      "P5-B04: Phase 5 corpus metadata lacks required compiler, flags, kernel, architecture, KRAKENGUARD, hook and image provenance."
+    ],
+    "major": [
+      "P5-M01: UNKNOWN hybrid results are synthesized from the reference result instead of independently exercising selective fallback.",
+      "P5-M02: Corpus does not exercise map semantics, memory-policy semantics, unknown helpers, or unsupported instructions.",
+      "P5-M03: Implemented abstract domain is materially narrower than the design specification.",
+      "P5-M04: Unknown helper IDs can become VIOLATION instead of UNKNOWN."
+    ],
+    "minor": [
+      "P5-M05: B2 generator comment does not match the generated condition."
+    ]
+  },
+  "correctness_summary": {
+    "corpus_size": 24,
+    "category_agreements": "24/24",
+    "false_safe": 0,
+    "false_violation": 0,
+    "abstract_discharge": "12/24 (50%)",
+    "leakage": "none found in abstract analyzer"
+  },
+  "provenance": {
+    "krakenguard_commit": "e7bd84005b304c5a10efcdb04914d1882b3cccf7",
+    "design_reference_policy_sha256": "270403272d736ae7aee2ceda3bf8d088b6ac0cb476bb99ce0218dd8f33c3c603",
+    "actual_phase5_policy_sha256": "8e349d091fd4c1af9127c8fe19ceb99ad0468ef8a565d5e47224993f051204b6"
+  },
+  "required_next_step": "Correction commit, freeze policy/environment provenance, strengthen conservative analyzer semantics, then repeat independent review."
+}
