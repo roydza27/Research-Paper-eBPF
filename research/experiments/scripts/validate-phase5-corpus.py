@@ -103,14 +103,17 @@ def preflight_reference_environment(policy_hash):
 
     digest = env.get("container_image_digest")
     if not digest:
-        try:
-            digest = _run_text(["docker", "image", "inspect", EXPECTED_CONTAINER_IMAGE, "--format", "{{index .RepoDigests 0}}"])
-        except Exception as e:
-            raise RuntimeError(
-                "container image digest unavailable; capture an immutable digest on the validation host before running correctness validation"
-            ) from e
+        raise RuntimeError(
+            "container image digest is not frozen in phase5-environment.json; capture the immutable digest on the validation host and update the manifest before correctness validation"
+        )
     if not re.fullmatch(r"[^@]+@sha256:[0-9a-f]{64}", digest):
         raise RuntimeError(f"invalid/absent immutable container digest: {digest!r}")
+    try:
+        observed_digest = _run_text(["docker", "image", "inspect", EXPECTED_CONTAINER_IMAGE, "--format", "{{index .RepoDigests 0}}"])
+    except Exception as e:
+        raise RuntimeError("cannot independently verify frozen container digest with docker image inspect") from e
+    if observed_digest != digest:
+        raise RuntimeError(f"container image digest mismatch: manifest={digest}, observed={observed_digest}")
 
     return {
         "krakenguard_commit": baseline_head,
