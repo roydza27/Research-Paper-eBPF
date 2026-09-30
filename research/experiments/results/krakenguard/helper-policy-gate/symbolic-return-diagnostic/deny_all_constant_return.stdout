@@ -1,0 +1,19 @@
+
+Testing verification...
+Object file: /tmp/ebpf/research/experiments/results/krakenguard/helper-policy-gate/symbolic-return-diagnostic/e_ktime_constant_return.o
+Constraints: /home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/results/krakenguard/helper-policy-gate/policies/deny_all_helpers.json
+Debug mode: ENABLED (stdout/stderr will be saved to execution.log)
+
+Verification Status: success
+Passed: True
+Helper Functions: No use of restricted function detected in any execution path
+Map Access: mapAccess.results not generated (legacy map-access-control disabled in conditional policy mode)
+
+Execution Statistics:
+Paths Explored: 1
+Total Instructions: 12710
+Duration: 0.87s
+
+Output Directory: /data/requests/da0e105e-f26e-4a83-ad48-8f54cd3c1900/output
+Output Files: ['helperFunc.results', 'info', 'warnings.txt', 'messages.txt', 'test000001.ktest', 'execution.log']
+Debug log: /data/requests/da0e105e-f26e-4a83-ad48-8f54cd3c1900/output/execution.log

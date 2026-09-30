@@ -1,0 +1,19 @@
+
+Testing verification...
+Object file: /tmp/p2_e_adversarial_helper.o
+Constraints: /tmp/p2_policy.json
+Debug mode: ENABLED (stdout/stderr will be saved to execution.log)
+
+Verification Status: success
+Passed: True
+Helper Functions: No use of restricted function detected in any execution path
+Map Access: mapAccess.results not generated (legacy map-access-control disabled in conditional policy mode)
+
+Execution Statistics:
+Paths Explored: 1
+Total Instructions: 12712
+Duration: 0.81s
+
+Output Directory: /data/requests/17a2c8f1-ab25-403c-b0d2-e0c8947057fc/output
+Output Files: ['helperFunc.results', 'info', 'warnings.txt', 'messages.txt', 'test000001.ktest', 'execution.log']
+Debug log: /data/requests/17a2c8f1-ab25-403c-b0d2-e0c8947057fc/output/execution.log

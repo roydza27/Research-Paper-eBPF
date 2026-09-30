@@ -1,0 +1,14 @@
+{
+  "allow_ktime_only": {
+    "type": "ACTION",
+    "dependencies": {
+      "memory": [],
+      "previous_actions": []
+    },
+    "actions": {
+      "helper_access": [
+        "bpf_ktime_get_ns"
+      ]
+    }
+  }
+}

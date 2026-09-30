@@ -1,0 +1,38 @@
+
+[Step 1] Lifting object file: /tmp/frozen-clang13-20260925/d_policy_sensitive.o
+Working dir: /tmp/tmpa6rdt0qn
+[Optimize IR] Running: opt -O3 -S /tmp/tmpa6rdt0qn/tmpc2icc9nw -o /tmp/tmpa6rdt0qn/tmpc2icc9nw
+[Step 2] Extracting relocation info
+Found relocation section: .relxdp
+Detected program type: xdp
+[relocation data] (hex) : 2800000000000000010000000a000000
+Number of relocation entries in .relxdp: 1
+Function start offsets: [0]
+Has .relxdp: True
+[Step 3] Applying function pass to remove map globals
+[Remove map globals] Running: opt -load /opt/krakenguard/lifting_tools/llvm_func_pass/build/libfunc_pass.so -load-pass-plugin=/opt/krakenguard/lifting_tools/llvm_func_pass/build/libfunc_pass.so -passes=custom-bpf-pass -map-config /tmp/tmpa6rdt0qn/map_offset_mapping /tmp/tmpa6rdt0qn/tmpc2icc9nw -o /tmp/tmpa6rdt0qn/tmpc2icc9nw
+Loaded map config: ID 40 -> policy_state
+Found map global to remove: policy_state
+map name : policy_state, mapId : 40
+not a tail call
+Found map lookup with ID: 40
+  Mapped to map name: policy_state
+lookup or delete
+simple helper: bpf_ktime_get_ns
+call to replace :: bpf_ktime_get_ns.toreplace
+trying to erase : bpf_ktime_get_ns.toreplace
+ERASED
+call to replace :: bpf_map_lookup_elem.toreplace
+trying to erase : bpf_map_lookup_elem.toreplace
+ERASED
+transformMapLookups done
+
+[Step 4] Generating template code
+Function: xdp_policy_sensitive, Maps: 1
+[Step 5] Compiling template
+[Compile template] Running: clang-13 -target bpf -DKLEE_VERIFICATION -DVERIFY_INTERACTIONS -I/opt/krakenguard/examples/headers -I/usr/include/x86_64-linux-gnu -I/opt/krakenguard/ebpf-se/libbpf-stubbed/src/build/usr/include -I /opt/krakenguard/klee/include -D__USE_VMLINUX__ -D__TARGET_ARCH_x86 -DBPF_NO_PRESERVE_ACCESS_INDEX -Wall -Wno-unused-value -Wno-unused-variable -Wno-pointer-sign -Wno-compare-distinct-pointer-types -Wno-unused-function -fno-discard-value-names -fno-builtin -O0 -emit-llvm -c -g /tmp/tmpa6rdt0qn/cpp_generated_code.c -o /tmp/tmpa6rdt0qn/cpp_generated_code.c
+[Step 6] Applying ext sym pass
+[Ext sym pass] Running: opt -load-pass-plugin=/opt/krakenguard/lifting_tools/llvm_ext_sym_pass/build/libext_sym_pass.so -passes=int-to-ext /tmp/tmpa6rdt0qn/cpp_generated_code.c -o /tmp/tmpa6rdt0qn/cpp_generated_code.c
+[Step 7] Linking IRs
+[Link IRs] Running: llvm-link /tmp/tmpa6rdt0qn/cpp_generated_code.c /tmp/tmpa6rdt0qn/tmpc2icc9nw -o /tmp/frozen-clang13-20260925/final_linked_ir.bc
+Output: /tmp/frozen-clang13-20260925/final_linked_ir.bc

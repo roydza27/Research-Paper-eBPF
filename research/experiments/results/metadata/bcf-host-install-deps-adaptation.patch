@@ -1,0 +1,102 @@
+diff --git a/scripts/install-deps.sh b/scripts/install-deps.sh
+index 01498e9..ccface0 100755
+--- a/scripts/install-deps.sh
++++ b/scripts/install-deps.sh
+@@ -9,7 +9,7 @@ detect_os() {
+     if [[ -f /etc/os-release ]]; then
+         . /etc/os-release
+         OS=$NAME
+-        VER=$VERSION_ID
++        VER=${VERSION_ID:-rolling}
+     elif command -v lsb_release &>/dev/null; then
+         OS=$(lsb_release -si)
+         VER=$(lsb_release -sr)
+@@ -34,22 +34,87 @@ detect_os() {
+ 
+ install_packages() {
+     local packages=("$@")
++
+     if command -v apt-get &>/dev/null; then
+         info "Using apt-get"
+         [[ -z "${APT_UPDATED:-}" ]] && sudo apt-get update && APT_UPDATED=1
+         sudo apt-get install -y "${packages[@]}"
++
+     elif command -v yum &>/dev/null; then
+         info "Using yum"
+         sudo yum install -y "${packages[@]}"
++
+     elif command -v dnf &>/dev/null; then
+         info "Using dnf"
+         sudo dnf install -y "${packages[@]}"
++
+     elif command -v pacman &>/dev/null; then
+         info "Using pacman"
+-        sudo pacman -S --noconfirm "${packages[@]}"
++
++        local arch_packages=()
++
++        for pkg in "${packages[@]}"; do
++            case "$pkg" in
++                build-essential)
++                    arch_packages+=(base-devel)
++                    ;;
++                libncurses5-dev)
++                    arch_packages+=(ncurses)
++                    ;;
++                libssl-dev)
++                    arch_packages+=(openssl)
++                    ;;
++                libelf-dev)
++                    arch_packages+=(libelf)
++                    ;;
++                libpcap-dev)
++                    arch_packages+=(libpcap)
++                    ;;
++                libcap-dev)
++                    arch_packages+=(libcap)
++                    ;;
++                libgmp-dev)
++                    arch_packages+=(gmp)
++                    ;;
++                libboost-all-dev|libboost-dev|libboost-filesystem-dev|libboost-program-options-dev)
++                    arch_packages+=(boost)
++                    ;;
++                libreadline-dev)
++                    arch_packages+=(readline)
++                    ;;
++                libedit-dev)
++                    arch_packages+=(libedit)
++                    ;;
++                libffi-dev)
++                    arch_packages+=(libffi)
++                    ;;
++                libyaml-cpp-dev)
++                    arch_packages+=(yaml-cpp)
++                    ;;
++                python3)
++                    arch_packages+=(python)
++                    ;;
++                python3-pip)
++                    arch_packages+=(python-pip)
++                    ;;
++                openssh-client|openssh-server)
++                    arch_packages+=(openssh)
++                    ;;
++                *)
++                    arch_packages+=("$pkg")
++                    ;;
++            esac
++        done
++
++        # Remove duplicates
++        arch_packages=($(printf '%s\n' "${arch_packages[@]}" | sort -u))
++
++        sudo pacman -S --needed --noconfirm "${arch_packages[@]}"
++
+     elif command -v brew &>/dev/null; then
+         info "Using Homebrew"
+         brew install "${packages[@]}"
++
+     else
+         fatal "No supported package manager found"
+     fi

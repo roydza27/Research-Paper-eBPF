@@ -1,0 +1,21 @@
+Phase 3 runtime provenance
+==========================
+
+Environment manifest:
+environment-20260925T162759Z.json
+
+Recorded by collector:
+container_runtime = podman 6.0.2
+
+Actual runtime used for KRAKENGUARD reproduction:
+Docker 29.7.2
+
+Podman:
+Installed (6.0.2), not used for KRAKENGUARD execution.
+
+Reason:
+collect-environment.sh checks Docker first but then overwrites
+container_runtime if Podman is installed.
+
+This file is a provenance correction; the original environment
+manifest remains unchanged.

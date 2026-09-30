@@ -1,0 +1,19 @@
+
+Testing verification...
+Object file: /tmp/ebpf/research/experiments/results/raw/objects/e_adversarial_helper.o
+Constraints: /tmp/ebpf/research/experiments/results/krakenguard/helper-policy-gate/policies/deny_all_helpers.json
+Debug mode: ENABLED (stdout/stderr will be saved to execution.log)
+
+Verification Status: success
+Passed: True
+Helper Functions: No use of restricted function detected in any execution path
+Map Access: mapAccess.results not generated (legacy map-access-control disabled in conditional policy mode)
+
+Execution Statistics:
+Paths Explored: 1
+Total Instructions: 12712
+Duration: 0.81s
+
+Output Directory: /data/requests/3931ce9c-7f8b-4108-92a0-3dac149d7b78/output
+Output Files: ['helperFunc.results', 'info', 'warnings.txt', 'messages.txt', 'test000001.ktest', 'execution.log']
+Debug log: /data/requests/3931ce9c-7f8b-4108-92a0-3dac149d7b78/output/execution.log

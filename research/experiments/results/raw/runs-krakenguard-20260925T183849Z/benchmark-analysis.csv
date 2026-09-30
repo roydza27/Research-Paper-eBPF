@@ -1,0 +1,13 @@
+program,policy,runs,completed,no_violations,policy_violations,median_wall_ms,q1_wall_ms,q3_wall_ms,iqr_wall_ms,min_wall_ms,max_wall_ms,cv_wall_pct,median_client_cpu_ms,median_client_rss_kb,paths,instructions,policy_outcomes
+a_minimal_xdp,p1_allow_execution,7,7,7,0,938.269,919.227,941.092,21.865,914.583,966.15,1.948,21.713,31548,1,12695,no_violations
+a_minimal_xdp,p2_helper_allowlist,7,7,7,0,928.649,919.45,935.617,16.167,909.308,960.063,1.79,22.514,31708,1,12695,no_violations
+a_minimal_xdp,p4_policy_sensitive,7,7,7,0,929.794,927.555,943.392,15.837,906.143,1099.646,6.875,22.867,31916,1,12695,no_violations
+c_branching_maps,p1_allow_execution,7,7,0,7,936.198,922.324,959.139,36.815,917.087,974.39,2.447,22.928,31732,1,13127,policy_violations
+c_branching_maps,p2_helper_allowlist,7,7,0,7,945.26,934.824,950.048,15.223,927.792,961.339,1.246,22.325,31892,1,13127,policy_violations
+c_branching_maps,p4_policy_sensitive,7,7,0,7,942.996,937.402,958.023,20.621,928.337,967.127,1.552,22.583,31736,1,13127,policy_violations
+d_policy_sensitive,p1_allow_execution,7,7,0,7,949.905,947.305,961.671,14.366,943.729,964.886,0.93,21.514,31488,1,13277,policy_violations
+d_policy_sensitive,p2_helper_allowlist,7,7,0,7,984.492,967.293,993.209,25.917,930.462,1251.296,10.644,22.046,31356,1,13277,policy_violations
+d_policy_sensitive,p4_policy_sensitive,7,7,0,7,952.15,933.493,984.32,50.827,921.914,1039.535,4.333,22.422,31788,1,13277,policy_violations
+e_adversarial_helper,p1_allow_execution,7,7,7,0,931.488,924.008,943.073,19.065,911.811,957.94,1.789,22.34,31428,1,12712,no_violations
+e_adversarial_helper,p2_helper_allowlist,7,7,7,0,940.185,930.143,944.034,13.891,914.877,986.586,2.381,21.962,30208,1,12712,no_violations
+e_adversarial_helper,p4_policy_sensitive,7,7,7,0,937.706,936.162,944.239,8.077,930.48,954.194,0.859,22.01,32000,1,12712,no_violations

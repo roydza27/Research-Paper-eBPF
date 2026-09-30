@@ -1,0 +1,15 @@
+{
+  "allow_policy_state_and_map_helper": {
+    "type": "ACTION",
+    "dependencies": {
+      "memory": [],
+      "previous_actions": []
+    },
+    "actions": {
+      "map_access": [
+        {"name": "policy_state", "access": "ReadWrite"}
+      ],
+      "helper_access": ["bpf_map_lookup_elem"]
+    }
+  }
+}

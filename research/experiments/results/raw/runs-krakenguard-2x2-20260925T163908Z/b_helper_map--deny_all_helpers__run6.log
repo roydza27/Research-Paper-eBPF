@@ -1,0 +1,9 @@
+
+Testing verification...
+Object file: /tmp/ebpf/research/experiments/results/raw/objects/b_helper_map.o
+Constraints: /tmp/ebpf/research/experiments/results/krakenguard/helper-policy-gate/policies/deny_all_helpers.json
+Debug mode: ENABLED (stdout/stderr will be saved to execution.log)
+
+Verification Status: error
+
+Error: Command '['python3', '/opt/krakenguard/lifting_tools/generateIR.py', '/data/requests/b2f0be26-3d1d-45fa-8636-0ab4300afc5e/input/b_helper_map.o']' returned non-zero exit status 1.

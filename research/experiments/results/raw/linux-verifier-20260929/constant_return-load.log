@@ -1,0 +1,47 @@
+libbpf: loading object from research/experiments/results/krakenguard/helper-policy-gate/minimal-pair/constant_return.o
+libbpf: elf: section(3) xdp, size 40, link 0, flags 6, type=1
+libbpf: sec 'xdp': found program 'xdp_ktime_constant_return' at insn offset 0 (0 bytes), code size 5 insns (40 bytes)
+libbpf: elf: section(4) license, size 4, link 0, flags 3, type=1
+libbpf: license of research/experiments/results/krakenguard/helper-policy-gate/minimal-pair/constant_return.o is GPL
+libbpf: elf: section(13) .BTF, size 688, link 0, flags 0, type=1
+libbpf: elf: section(15) .BTF.ext, size 128, link 0, flags 0, type=1
+libbpf: elf: section(23) .symtab, size 288, link 1, flags 0, type=2
+libbpf: looking for externs among 12 symbols...
+libbpf: collected 0 externs total
+libbpf: object 'constant_return': failed (-95) to create BPF token from '/sys/fs/bpf', skipping optional step...
+libbpf: prog 'xdp_ktime_constant_return': -- BEGIN PROG LOAD LOG --
+func#0 @0
+topo_order[0] = xdp_ktime_constant_return
+subprog#0: analyzing (depth 0)...
+subprog#0 xdp_ktime_constant_return:
+  0: (85) call bpf_ktime_get_ns#5
+  1: (7b) *(u64 *)(r10 -8) = r0
+  2: (79) r1 = *(u64 *)(r10 -8)
+  3: (b4) w0 = 2
+  4: (95) exit
+stack use/def subprog#0 xdp_ktime_constant_return (d0,cs0):
+  0: (85) call bpf_ktime_get_ns#5
+  1: (7b) *(u64 *)(r10 -8) = r0        ; def: fp0-8
+  2: (79) r1 = *(u64 *)(r10 -8)        ; use: fp0-8
+  3: (b4) w0 = 2
+  4: (95) exit
+Live regs before insn:
+      0: .......... (85) call bpf_ktime_get_ns#5
+      1: 0......... (7b) *(u64 *)(r10 -8) = r0
+      2: .......... (79) r1 = *(u64 *)(r10 -8)
+      3: .......... (b4) w0 = 2
+      4: 0......... (95) exit
+0: R1=ctx() R10=fp0
+; volatile __u64 now = bpf_ktime_get_ns(); @ constant_return.c:7
+0: (85) call bpf_ktime_get_ns#5       ; R0=scalar()
+1: (7b) *(u64 *)(r10 -8) = r0         ; R0=scalar(id=1) R10=fp0 fp-8=scalar(id=1)
+; (void)now; @ constant_return.c:8
+2: (79) r1 = *(u64 *)(r10 -8)         ; R1=scalar(id=1) R10=fp0 fp-8=scalar(id=1)
+; return XDP_PASS; @ constant_return.c:10
+3: (b4) w0 = 2                        ; R0=2
+4: (95) exit
+verification time 117 usec
+stack depth 8 max 16
+insns processed 5
+processed 5 insns (limit 1000000) max_states_per_insn 0 total_states 0 peak_states 0 mark_read 0
+-- END PROG LOAD LOG --

@@ -1,0 +1,19 @@
+{
+  "client_cpu_time_ms": 65.22,
+  "client_peak_memory_kb": 17056,
+  "conditional_policy_result": "no_violations",
+  "object": "/tmp/ebpf/research/experiments/results/raw/objects/a_minimal_xdp.o",
+  "paths_explored": 1,
+  "policy": "/tmp/ebpf/research/experiments/results/krakenguard/helper-policy-gate/policies/deny_all_helpers.json",
+  "request_id": "79b0fb7f-6b06-4c9c-9210-414e5143907d",
+  "return_code": 0,
+  "status": "completed",
+  "system_time_ms": 17.056,
+  "timeout": false,
+  "top_level_passed": true,
+  "total_instructions": 12695,
+  "user_time_ms": 48.164,
+  "verifier_cpu_time_ms": null,
+  "verifier_peak_memory_kb": null,
+  "wall_time_ms": 916.674
+}

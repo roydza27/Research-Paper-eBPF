@@ -1,0 +1,8 @@
+
+/tmp/frozen-clang13-20260925/a_minimal_xdp.o:	file format elf64-bpf
+
+Disassembly of section xdp:
+
+0000000000000000 <xdp_minimal>:
+       0:	b7 00 00 00 02 00 00 00	r0 = 2
+       1:	95 00 00 00 00 00 00 00	exit

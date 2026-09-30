@@ -1,0 +1,27 @@
+# Large BCF VM artifacts
+research/baselines/bcf/**/*.img
+research/baselines/bcf/**/*.zip
+research/baselines/bcf/**/*.qcow2
+research/baselines/bcf/**/*.iso
+# Large BCF VM artifacts
+research/baselines/bcf/imgs/*.img
+research/baselines/bcf/imgs/*.zip
+research/baselines/bcf/imgs/*.qcow2
+research/baselines/bcf/imgs/*.iso
+# Nested upstream repositories
+research/baselines/bcf/.git/
+research/baselines/veritas/.git/
+
+# BCF generated artifacts
+research/baselines/bcf/imgs/*.img
+research/baselines/bcf/imgs/*.zip
+research/baselines/bcf/imgs/*.qcow2
+research/baselines/bcf/imgs/*.iso
+research/baselines/bcf/e_adversarial_helper.o
+
+# Veritas generated artifacts
+research/baselines/veritas/vm-image/
+research/baselines/veritas/vm-image.tar.gz
+research/baselines/veritas/fuzzing-dir/vm-image/
+research/baselines/veritas/fuzzing-dir/linux-kernel/vmlinux
+research/baselines/veritas/fuzzing-dir/linux-kernel.tar.gz
