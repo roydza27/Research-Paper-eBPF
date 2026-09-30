@@ -1,0 +1,7 @@
+Command: clang -target bpf -mcpu=v1 -D__TARGET_ARCH_x86 -O2 -g -I/usr/include -c /home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/corpus/e2/programs/e2_p0.c -o /home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/results/raw/e2-objects/e2_p0.o
+Exit code: 0
+Wall time: 65202 us
+--- STDOUT ---
+
+--- STDERR ---
+
