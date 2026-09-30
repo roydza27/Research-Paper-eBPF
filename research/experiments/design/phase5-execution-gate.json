@@ -1,0 +1,63 @@
+{
+  "schema": "phase5-execution-gate/v1",
+  "execution_approved": false,
+  "design_status": "IMPLEMENTATION_AND_VALIDATION_COMPLETE_EXECUTION_GATED",
+  "evidence_sources": {
+    "e1_ref": "main",
+    "e2_ref": "phase4-e2-full-matrix",
+    "krakenguard_commit": "e7bd84005b304c5a10efcdb04914d1882b3cccf7",
+    "policy_sha256": "8e349d091fd4c1af9127c8fe19ceb99ad0468ef8a565d5e47224993f051204b6",
+    "corpus_metadata_sha256": "6d4b578028f0d7f792a1de324903f30bdd3703e95e8a147c0bfb8eaebe100865"
+  },
+  "conditions": {
+    "corpus_defined": true,
+    "baseline_defined": true,
+    "hybrid_defined": true,
+    "correctness_oracle_defined": true,
+    "metrics_defined": true,
+    "statistical_design_defined": true,
+    "environment_controlled": true,
+    "timeout_policy_defined": true,
+    "failure_policy_defined": true,
+    "raw_artifact_policy_defined": true,
+    "execution_reproducibility_defined": true,
+    "implementation_complete": true,
+    "corpus_implemented": true,
+    "reference_verdicts_validated": true,
+    "abstract_soundness_reviewed": true,
+    "category_behavior_validated": true,
+    "independent_review_complete": false
+  },
+  "experiments": {
+    "E3": {
+      "programs": 24,
+      "warmups": 2,
+      "measured": 7,
+      "total_executions": 216
+    },
+    "E4": {
+      "programs": 24,
+      "conditions": [
+        "symbolic_only",
+        "hybrid"
+      ],
+      "warmups": 2,
+      "measured": 7,
+      "total_executions": 432
+    },
+    "E5": {
+      "path_levels": "validated 1–64 where reachable",
+      "execution_count": "TBD after corpus validation"
+    }
+  },
+  "disallowed": [
+    "execute Phase 5 during design stage",
+    "implement the full hybrid verifier before protocol review",
+    "compare abstract-only time against symbolic-only end-to-end time",
+    "treat UNKNOWN as rejection",
+    "discard correctness disagreements",
+    "remove timing outliers",
+    "modify E1 or E2 evidence",
+    "claim hybrid performance improvement before measurement"
+  ]
+}
