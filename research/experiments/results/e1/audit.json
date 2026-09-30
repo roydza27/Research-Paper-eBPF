@@ -1,0 +1,54 @@
+{
+  "schema": "phase4-e1-audit/v1",
+  "audit_status": "PASS_WITH_QUALIFICATIONS",
+  "execution_commit": "45f64f1693a4eee20759109d3904e13b267d554a",
+  "baseline_commit": "e7bd84005b304c5a10efcdb04914d1882b3cccf7",
+  "dataset_integrity": {
+    "status": "PASS",
+    "total": 72,
+    "warmups": 16,
+    "measured": 56,
+    "programs": 8,
+    "each_program": {
+      "warmups": 2,
+      "measured": 7
+    },
+    "unique_run_ids": true,
+    "single_policy_sha256": "270403272d736ae7aee2ceda3bf8d088b6ac0cb476bb99ce0218dd8f33c3c603",
+    "single_baseline": true,
+    "single_compiler": "clang 22.1.8",
+    "single_kernel": "7.2.3-arch1-2"
+  },
+  "statistical_recalculation": {
+    "source": "e1-results.csv",
+    "sample_standard_deviation": true,
+    "p0_p3_median_difference_pct": -1.3764690525,
+    "p0_p7_median_difference_pct": 3.7828332236,
+    "p0_p3_median_range_us": 9385,
+    "p4_outlier_us": 935658,
+    "p4_median_us": 688569,
+    "p4_outlier_vs_median_pct": 35.8844211691
+  },
+  "key_findings": [
+    "P2 source-level conditional branch was optimized away; compiled object has 0 conditional branches.",
+    "verifier_states is populated from KLEE explored paths.",
+    "basic_blocks is estimated as 1 + branch_count.",
+    "maps is inferred from slug in the runner.",
+    "cpu_time_us is Python process_time for the client process, not total verifier CPU.",
+    "peak_memory_bytes and solver_time_us are not reported.",
+    "KLEE query/path counts are extracted from output/info, which is not committed.",
+    "Compiled object binaries are not committed, so object hashes cannot be independently recomputed from repository artifacts.",
+    "The ~95% fixed-overhead claim is not a component-level measured decomposition.",
+    "mcpu=v1 is a controlled compatibility adaptation, but its A/B effect is not independently measured."
+  ],
+  "p4_outlier": {
+    "status": "genuine_runtime_spike",
+    "cause": "undetermined"
+  },
+  "e1_contribution": "baseline and feature-sensitivity evidence",
+  "next_experiment": {
+    "id": "E2",
+    "title": "Controlled Symbolic Branching / Path Scaling",
+    "reason": "E1 reaches only 2 explored paths at maximum and therefore does not test substantial symbolic path growth."
+  }
+}
