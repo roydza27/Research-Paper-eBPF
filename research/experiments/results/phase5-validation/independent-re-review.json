@@ -1,0 +1,81 @@
+{
+  "schema": "phase5-independent-re-review/v1",
+  "review_type": "independent_re_review",
+  "repository": "roydza27/Research-Paper-eBPF",
+  "branch": "phase5-experimental-design",
+  "reported_head": "51e1dc28532f14643df65d3ec85a2107452d3a95",
+  "reported_head_verifiable": false,
+  "corrected_commit": "51e1dc2683bc1ffef02172193aee6bcf79be6037",
+  "branch_head_at_review_start": "1a6c01f0a7c56bbd46e81dcfbc363db696ecd23c",
+  "base_commit": "799412ed885d2e7dd754f4bee55849a71b8e4e0a",
+  "verdict": "FAIL — PHASE 5 CORRECTION REQUIRES FURTHER WORK",
+  "checks": {
+    "B01": {
+      "status": "FAIL",
+      "reason": "Regression suite does not exercise corrected 64-bit ll immediate parsing or absence of return_value rule."
+    },
+    "B02": {
+      "status": "PASS",
+      "policy_sha256": "270403272d736ae7aee2ceda3bf8d088b6ac0cb476bb99ce0218dd8f33c3c603"
+    },
+    "B03": {
+      "status": "FAIL",
+      "reason": "Correction validation report records stale pre-correction HEAD 799412ed... instead of binding evidence to corrected commit."
+    },
+    "B04": {
+      "status": "PASS",
+      "container_digest": "kg-artifact-krakenguard@sha256:9633a6922518589803a4c9b8123d0549e54b5f57c1d04f9e383e822fd9ae3bd4"
+    },
+    "corpus": {
+      "status": "PASS",
+      "counts": {
+        "A": 6,
+        "B": 6,
+        "C": 6,
+        "D": 6
+      }
+    },
+    "validation_independence": {
+      "status": "PASS",
+      "circular_validation_found": false
+    },
+    "fallback": {
+      "status": "FAIL",
+      "reason": "Conditional output is not mandatory/fail-closed and committed evidence lacks raw request-linked artifacts."
+    },
+    "reported_24_of_24": {
+      "status": "PASS_FOR_INTERNAL_ACCOUNTING",
+      "total": 24,
+      "false_safe": 0,
+      "false_violation": 0
+    },
+    "klee_crash_handling": {
+      "status": "PASS"
+    },
+    "E3": "NOT RUN",
+    "E4": "NOT RUN",
+    "E5": "NOT RUN",
+    "matrix_432": "NOT RUN"
+  },
+  "remaining_blockers": [
+    "Bind correction-validation evidence to the actual corrected implementation commit/tree.",
+    "Make conditional_policy.results.txt authoritative and fail closed on missing/malformed output.",
+    "Preserve request-linked raw KRAKENGUARD fallback evidence for b1 and d1.",
+    "Add regression tests for 64-bit ll immediate parsing and absent return_value semantics.",
+    "Regenerate correction-only validation artifacts after the above corrections."
+  ],
+  "gate": {
+    "execution_approved": false,
+    "independent_review_complete": false
+  },
+  "review_scope": {
+    "local_experiments_run": false,
+    "E3_run": false,
+    "E4_run": false,
+    "E5_run": false,
+    "matrix_432_run": false,
+    "implementation_modified": false,
+    "policy_modified": false,
+    "gate_modified": false
+  }
+}

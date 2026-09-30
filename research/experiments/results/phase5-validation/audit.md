@@ -3,6 +3,10 @@
 ## 1. Executive Summary
 
 **Status**: **`AUDIT PASS — 100% SOUND & VALIDATED`**  
+**Git Branch**: `phase5-experimental-design`  
+**Git HEAD**: `f2c70717ac2b7acc8faa7d303d4085d577f61668`  
+**Git Tree**: `f4062862e73b3f17e1c15ff02737bc9d00cee0c2`  
+**Container Digest**: `kg-artifact-krakenguard@sha256:9633a6922518589803a4c9b8123d0549e54b5f57c1d04f9e383e822fd9ae3bd4`  
 **Policy Hash**: `270403272d736ae7aee2ceda3bf8d088b6ac0cb476bb99ce0218dd8f33c3c603`  
 **Corpus Size**: 24 programs (6 per category A–D)  
 **Abstract Stage Discharge Rate**: 12/24 (50.0%)  

@@ -32,15 +32,40 @@ extract_krakenguard_verdict = _validator.extract_krakenguard_verdict
 FIXTURES = {"b1": "UNKNOWN compliant fixture", "d1": "UNKNOWN violating fixture"}
 
 
+import os
+import shutil
+import subprocess
+
+REPO_ROOT = ROOT_DIR.parent
+RAW_FALLBACK_DIR = RESULTS_DIR / "raw" / "fallback"
+
+
+def get_git_provenance():
+    def _git(args):
+        return subprocess.run(
+            ["git", "-C", str(REPO_ROOT)] + args,
+            capture_output=True,
+            text=True,
+            check=True,
+        ).stdout.strip()
+
+    return {
+        "branch": _git(["branch", "--show-current"]),
+        "head": _git(["rev-parse", "HEAD"]),
+        "tree": _git(["rev-parse", "HEAD^{tree}"]),
+    }
+
+
 def main():
     policy_hash = sha256_file(POLICY_FILE)
     env = preflight_reference_environment(policy_hash)
+    git_prov = get_git_provenance()
     socket_path = BASELINE_DIR / "socket" / "krakenguard.sock"
     if not socket_path.exists():
         raise RuntimeError(f"KRAKENGUARD socket not found: {socket_path}")
-    import os
     client = KrakenGuardClient(os.path.relpath(socket_path, Path.cwd()))
 
+    RAW_FALLBACK_DIR.mkdir(parents=True, exist_ok=True)
     rows = []
     for program_id, description in FIXTURES.items():
         object_file = PROGRAMS_DIR / f"{program_id}.o"
@@ -58,6 +83,49 @@ def main():
         response = client.verify(object_file=str(object_file), constraints_file=str(POLICY_FILE))
         reference_us = int((time.perf_counter() - t1) * 1e6)
         passed, final_verdict = extract_krakenguard_verdict(response)
+
+        # Preserve request-linked raw KRAKENGUARD evidence
+        fixture_raw_dir = RAW_FALLBACK_DIR / program_id
+        fixture_raw_dir.mkdir(parents=True, exist_ok=True)
+
+        req_record = {
+            "request_id": response.request_id,
+            "program_id": program_id,
+            "object_file": str(object_file),
+            "object_sha256": sha256_file(object_file),
+            "policy_file": str(POLICY_FILE),
+            "policy_sha256": policy_hash,
+            "timestamp": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+        }
+        req_file = fixture_raw_dir / "request.json"
+        with open(req_file, "w") as f:
+            json.dump(req_record, f, indent=2)
+
+        resp_file = fixture_raw_dir / "response.json"
+        with open(resp_file, "w") as f:
+            json.dump(response.to_dict(), f, indent=2)
+
+        raw_files = {
+            "request.json": sha256_file(req_file),
+            "response.json": sha256_file(resp_file),
+        }
+
+        out_dir = response.output.directory or ""
+        host_out_dir = Path(out_dir.replace("/data", str(BASELINE_DIR / "data")))
+        cond_src = host_out_dir / "conditional_policy.results.txt"
+        if not cond_src.exists():
+            raise RuntimeError(f"Missing mandatory output file: {cond_src}")
+        cond_dst = fixture_raw_dir / "conditional_policy.results.txt"
+        shutil.copyfile(cond_src, cond_dst)
+        raw_files["conditional_policy.results.txt"] = sha256_file(cond_dst)
+
+        for log_name in ["messages.txt", "warnings.txt", "info"]:
+            src_log = host_out_dir / log_name
+            if src_log.exists():
+                dst_log = fixture_raw_dir / log_name
+                shutil.copyfile(src_log, dst_log)
+                raw_files[log_name] = sha256_file(dst_log)
+
         rows.append({
             "program_id": program_id,
             "description": description,
@@ -70,17 +138,40 @@ def main():
             "reference_duration_us": reference_us,
             "policy_sha256": policy_hash,
             "krakenguard_commit": EXPECTED_KRAKENGUARD_COMMIT,
+            "raw_evidence_dir": str(fixture_raw_dir.relative_to(REPO_ROOT)),
+            "raw_artifacts": raw_files,
         })
 
     RESULTS_DIR.mkdir(parents=True, exist_ok=True)
+    validation_payload = {
+        "schema": "phase5-fallback-validation/v1",
+        "timestamp": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+        "execution_type": "correctness_only",
+        "performance_matrix": False,
+        "provenance": {
+            "git": git_prov,
+            "environment": env,
+        },
+        "fixtures": rows,
+    }
     with open(RESULTS_DIR / "fallback-validation.json", "w") as f:
-        json.dump({"schema":"phase5-fallback-validation/v1","execution_type":"correctness_only","performance_matrix":False,"environment":env,"fixtures":rows}, f, indent=2)
+        json.dump(validation_payload, f, indent=2)
+
     with open(RESULTS_DIR / "fallback-validation.md", "w") as f:
-        f.write("# Phase 5 — Actual UNKNOWN Fallback Validation\n\nCorrectness-only integration evidence. No E3/E4/E5 performance claim.\n\n")
-        f.write("| Program | Abstract | Actual fallback | Final reference verdict |\n|---|---|---|---|\n")
+        f.write("# Phase 5 — Actual UNKNOWN Fallback Validation\n\n")
+        f.write("Correctness-only integration evidence. No E3/E4/E5 performance claim.\n\n")
+        f.write(f"- **Git Branch:** `{git_prov['branch']}`\n")
+        f.write(f"- **Git HEAD:** `{git_prov['head']}`\n")
+        f.write(f"- **Git Tree:** `{git_prov['tree']}`\n\n")
+        f.write("| Program | Abstract | Actual fallback | Final reference verdict | Request ID | Raw Evidence |\n")
+        f.write("|---|---|---|---|---|---|\n")
         for row in rows:
-            f.write(f"| {row['program_id']} | {row['abstract_verdict']} | KRAKENGUARD invoked | {row['reference_verdict']} |\n")
+            f.write(
+                f"| `{row['program_id']}` | `{row['abstract_verdict']}` | KRAKENGUARD invoked | "
+                f"`{row['reference_verdict']}` | `{row['reference_request_id']}` | `{row['raw_evidence_dir']}` |\n"
+            )
 
 
 if __name__ == "__main__":
     main()
+

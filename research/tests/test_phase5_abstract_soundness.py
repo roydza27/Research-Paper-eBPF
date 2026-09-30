@@ -122,3 +122,116 @@ def test_map_update_cannot_be_assumed_safe(tmp_path):
     analyzer.relocations = {0: "e1_map"}
     result = analyze_fixture(tmp_path, ["call 2", "r0 = 2", "exit"], policy)
     assert result["verdict"] == Verdict.UNKNOWN.value
+
+
+def test_64bit_immediate_ll_parsing(tmp_path):
+    """Ensure instructions with 64-bit immediate 'll' syntax parse correctly without degrading to UNKNOWN."""
+    result = analyze_fixture(
+        tmp_path,
+        [
+            "r1 = 0x0 ll",
+            "r2 = 0x123456789abcdef0 ll",
+            "r0 = 2",
+            "exit",
+        ],
+    )
+    assert result["verdict"] == Verdict.SAFE.value
+    assert "policy-allowed values" in result["proof"]
+
+
+def test_absent_return_value_policy_allows_all_returns(tmp_path):
+    """Ensure policy without 'return_value' rule does not invent a default {1, 2} restriction."""
+    policy_no_ret = {
+        "phase5": {
+            "type": "ACTION",
+            "dependencies": {"memory": [], "previous_actions": []},
+            "actions": {
+                "helper_access": ["bpf_ktime_get_ns"],
+                "map_access": [],
+            },
+        },
+        "helper_func": ["bpf_trace_printk"],
+    }
+    # r0 = 3 would be a VIOLATION under SAFE_POLICY (which specifies [1, 2]),
+    # but under policy_no_ret it must be SAFE.
+    result = analyze_fixture(tmp_path, ["r0 = 3", "exit"], policy_no_ret)
+    assert result["verdict"] == Verdict.SAFE.value
+    assert "policy-allowed values" in result["proof"]
+
+
+def test_extract_krakenguard_verdict_fail_closed(tmp_path, monkeypatch):
+    """Ensure authoritative extraction requires conditional_policy.results.txt and fails closed."""
+    import importlib.util
+
+    val_script = (
+        Path(__file__).resolve().parents[1]
+        / "experiments"
+        / "scripts"
+        / "validate-phase5-corpus.py"
+    )
+    spec = importlib.util.spec_from_file_location("corpus_val", val_script)
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    extract_verdict = mod.extract_krakenguard_verdict
+
+    # Redirect BASELINE_DIR in module so test creates directories inside tmp_path
+    monkeypatch.setattr(mod, "BASELINE_DIR", tmp_path)
+
+    class DummyExecution:
+        def __init__(self, return_code=0):
+            self.return_code = return_code
+
+    class DummyOutput:
+        def __init__(self, directory="", stderr=""):
+            self.directory = directory
+            self.stderr = stderr
+
+    class DummyResponse:
+        def __init__(self, return_code=0, directory="", stderr=""):
+            self.execution = DummyExecution(return_code)
+            self.output = DummyOutput(directory, stderr)
+
+    # 1. Non-zero return code must fail closed
+    fail_resp = DummyResponse(return_code=1, stderr="KLEE crashed")
+    with pytest.raises(RuntimeError, match="KRAKENGUARD execution failed"):
+        extract_verdict(fail_resp)
+
+    # 2. Missing output directory must fail closed
+    no_dir_resp = DummyResponse(return_code=0, directory="")
+    with pytest.raises(RuntimeError, match="missing output directory"):
+        extract_verdict(no_dir_resp)
+
+    # 3. Missing conditional_policy.results.txt must fail closed
+    fake_data_dir = tmp_path / "data" / "fake_test_run"
+    fake_data_dir.mkdir(parents=True, exist_ok=True)
+
+    resp_missing_cond = DummyResponse(
+        return_code=0, directory="/data/fake_test_run"
+    )
+    with pytest.raises(RuntimeError, match="Mandatory conditional policy output missing"):
+        extract_verdict(resp_missing_cond)
+
+    # 4. Empty conditional_policy.results.txt must fail closed
+    cond_file = fake_data_dir / "conditional_policy.results.txt"
+    cond_file.write_text("   \n")
+    with pytest.raises(RuntimeError, match="Mandatory conditional policy output is empty"):
+        extract_verdict(resp_missing_cond)
+
+    # 5. Malformed/ambiguous output must fail closed
+    cond_file.write_text("Status: UNEXPECTED INTERNAL ERROR")
+    with pytest.raises(RuntimeError, match="Unrecognized or ambiguous"):
+        extract_verdict(resp_missing_cond)
+
+    # 6. Valid violation
+    cond_file.write_text("Some trace...\nStatus: POLICY VIOLATIONS DETECTED\nDetails...")
+    passed, verdict = extract_verdict(resp_missing_cond)
+    assert passed is False
+    assert verdict == "POLICY VIOLATION"
+
+    # 7. Valid compliant
+    cond_file.write_text("Some trace...\nStatus: NO VIOLATIONS\nDetails...")
+    passed, verdict = extract_verdict(resp_missing_cond)
+    assert passed is True
+    assert verdict == "COMPLIANT"
+
+

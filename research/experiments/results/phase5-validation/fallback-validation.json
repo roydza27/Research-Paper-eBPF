@@ -1,26 +1,37 @@
 {
   "schema": "phase5-fallback-validation/v1",
+  "timestamp": "2026-09-30T18:14:20Z",
   "execution_type": "correctness_only",
   "performance_matrix": false,
-  "environment": {
-    "krakenguard_commit": "e7bd84005b304c5a10efcdb04914d1882b3cccf7",
-    "compiler": "clang",
-    "compiler_version": "22.1.8",
-    "compiler_flags": [
-      "-target",
-      "bpf",
-      "-mcpu=v1",
-      "-D__TARGET_ARCH_x86",
-      "-O2",
-      "-g",
-      "-I/usr/include"
-    ],
-    "kernel": "7.2.3-arch1-2",
-    "architecture": "x86_64",
-    "hook": "XDP",
-    "container_image": "kg-artifact-krakenguard:latest",
-    "container_image_digest": "kg-artifact-krakenguard@sha256:9633a6922518589803a4c9b8123d0549e54b5f57c1d04f9e383e822fd9ae3bd4",
-    "policy_sha256": "270403272d736ae7aee2ceda3bf8d088b6ac0cb476bb99ce0218dd8f33c3c603"
+  "provenance": {
+    "git": {
+      "branch": "phase5-experimental-design",
+      "head": "f2c70717ac2b7acc8faa7d303d4085d577f61668",
+      "tree": "f4062862e73b3f17e1c15ff02737bc9d00cee0c2"
+    },
+    "environment": {
+      "git_branch": "phase5-experimental-design",
+      "git_head": "f2c70717ac2b7acc8faa7d303d4085d577f61668",
+      "git_tree": "f4062862e73b3f17e1c15ff02737bc9d00cee0c2",
+      "krakenguard_commit": "e7bd84005b304c5a10efcdb04914d1882b3cccf7",
+      "compiler": "clang",
+      "compiler_version": "22.1.8",
+      "compiler_flags": [
+        "-target",
+        "bpf",
+        "-mcpu=v1",
+        "-D__TARGET_ARCH_x86",
+        "-O2",
+        "-g",
+        "-I/usr/include"
+      ],
+      "kernel": "7.2.3-arch1-2",
+      "architecture": "x86_64",
+      "hook": "XDP",
+      "container_image": "kg-artifact-krakenguard:latest",
+      "container_image_digest": "kg-artifact-krakenguard@sha256:9633a6922518589803a4c9b8123d0549e54b5f57c1d04f9e383e822fd9ae3bd4",
+      "policy_sha256": "270403272d736ae7aee2ceda3bf8d088b6ac0cb476bb99ce0218dd8f33c3c603"
+    }
   },
   "fixtures": [
     {
@@ -29,12 +40,21 @@
       "abstract_verdict": "UNKNOWN",
       "fallback_invoked": true,
       "reference_verdict": "COMPLIANT",
-      "reference_request_id": "7c764064-19b3-4c85-8581-e7cf7374b139",
+      "reference_request_id": "5f45e5c0-b6bb-46eb-bab9-a4e3574c0405",
       "reference_status": "success",
-      "abstract_duration_us": 33107,
-      "reference_duration_us": 692996,
+      "abstract_duration_us": 32467,
+      "reference_duration_us": 710682,
       "policy_sha256": "270403272d736ae7aee2ceda3bf8d088b6ac0cb476bb99ce0218dd8f33c3c603",
-      "krakenguard_commit": "e7bd84005b304c5a10efcdb04914d1882b3cccf7"
+      "krakenguard_commit": "e7bd84005b304c5a10efcdb04914d1882b3cccf7",
+      "raw_evidence_dir": "research/experiments/results/phase5-validation/raw/fallback/b1",
+      "raw_artifacts": {
+        "request.json": "45b1b31457d0b188bc5e0e5f455092d5f1cdd7ff4c8e7f6018c0b639033a18b0",
+        "response.json": "f69aa5678a990f25f4ee705caa93fcce57d126380b6396ae7b0d77ffb773f6b5",
+        "conditional_policy.results.txt": "1eb3cc089ce2ce372809eb1424e4ff29b63ee2218268e55dd5a7c7de68c09f9e",
+        "messages.txt": "d520cf7f9fcd86eaedd1d2107b216ba8941765b38ed4f74b8d54329809891f2f",
+        "warnings.txt": "4578d27509e947240c2ad0d9292ac577167fa9147904452e053157f4f06a9883",
+        "info": "2bd8684c55e63fcf94348abfb8dd56064448229c7b3e9c6a0447a508e2a2a718"
+      }
     },
     {
       "program_id": "d1",
@@ -42,12 +62,21 @@
       "abstract_verdict": "UNKNOWN",
       "fallback_invoked": true,
       "reference_verdict": "POLICY VIOLATION",
-      "reference_request_id": "fe1dcc81-38dc-4c27-9a10-25ccb8213a9f",
+      "reference_request_id": "6f61566d-c437-48b5-b794-b12c5cf33568",
       "reference_status": "success",
-      "abstract_duration_us": 31191,
-      "reference_duration_us": 712530,
+      "abstract_duration_us": 34922,
+      "reference_duration_us": 700304,
       "policy_sha256": "270403272d736ae7aee2ceda3bf8d088b6ac0cb476bb99ce0218dd8f33c3c603",
-      "krakenguard_commit": "e7bd84005b304c5a10efcdb04914d1882b3cccf7"
+      "krakenguard_commit": "e7bd84005b304c5a10efcdb04914d1882b3cccf7",
+      "raw_evidence_dir": "research/experiments/results/phase5-validation/raw/fallback/d1",
+      "raw_artifacts": {
+        "request.json": "c736bd5ab616037cd893599720554522c21409b71603f1ca22226b8edad37742",
+        "response.json": "3eb1046ee46f645e54fa76928dc3b8dba3da827477b2e6dbdab3e307029500df",
+        "conditional_policy.results.txt": "98affe529ffa4dec17b64899989838d06f26e7568710da20577e932d13a09bdb",
+        "messages.txt": "0e2bd40e9ec973dcd95ba66b48fd5af28dd5bd24280c4abc003b039c16c7da94",
+        "warnings.txt": "df676d1118cdb0505c9057cdc1c66a81a3936f3bb9c3b1b46a7f02bf23fb94c6",
+        "info": "2896fc0e20119cede48dc1be2d6142e5c4e7180194e485524a2c9346b791eb6f"
+      }
     }
   ]
 }
