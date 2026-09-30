@@ -1,0 +1,19 @@
+
+Testing verification...
+Object file: /tmp/smoke_e_adversarial_helper.o
+Constraints: /tmp/smoke_p1_allow_execution.json
+Debug mode: ENABLED (stdout/stderr will be saved to execution.log)
+
+Verification Status: success
+Passed: True
+Helper Functions: No use of restricted function detected in any execution path
+Map Access: mapAccess.results not generated (legacy map-access-control disabled in conditional policy mode)
+
+Execution Statistics:
+Paths Explored: 1
+Total Instructions: 12712
+Duration: 0.84s
+
+Output Directory: /data/requests/fe9e16ff-431e-4141-8334-d17214aa16a7/output
+Output Files: ['helperFunc.results', 'info', 'warnings.txt', 'messages.txt', 'test000001.ktest', 'execution.log']
+Debug log: /data/requests/fe9e16ff-431e-4141-8334-d17214aa16a7/output/execution.log

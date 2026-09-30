@@ -1,0 +1,85 @@
+program,policy,run,request_id,result,violation_reason
+a_minimal_xdp,p1_allow_execution,1,c6b5f788-535a-4e1b-801c-755f46dfe76c,NO_VIOLATIONS,
+a_minimal_xdp,p1_allow_execution,2,4f60082b-e484-4681-b0c5-499fcc9e067e,NO_VIOLATIONS,
+a_minimal_xdp,p1_allow_execution,3,9b88f97f-aabd-4a80-9334-8cc9499aaa0b,NO_VIOLATIONS,
+a_minimal_xdp,p1_allow_execution,4,115e7fd8-234d-4ae3-8c75-8e10a36f6623,NO_VIOLATIONS,
+a_minimal_xdp,p1_allow_execution,5,8cc90a1f-bef1-4fca-bf1d-a17ae82e9478,NO_VIOLATIONS,
+a_minimal_xdp,p1_allow_execution,6,4f010764-d82d-486d-b42e-f8f32620c999,NO_VIOLATIONS,
+a_minimal_xdp,p1_allow_execution,7,0019df47-fe8a-4d4a-8c35-ef3477cd04d0,NO_VIOLATIONS,
+a_minimal_xdp,p2_helper_allowlist,1,0b6e9502-28d5-4aba-9201-a1470f00ad44,NO_VIOLATIONS,
+a_minimal_xdp,p2_helper_allowlist,2,905d1ae5-b95b-4155-bc34-96b0d172e5b7,NO_VIOLATIONS,
+a_minimal_xdp,p2_helper_allowlist,3,be6638b6-72c0-45a1-b6b6-f892c540c442,NO_VIOLATIONS,
+a_minimal_xdp,p2_helper_allowlist,4,5fac70d3-c3b3-4e54-988c-9f17e5374988,NO_VIOLATIONS,
+a_minimal_xdp,p2_helper_allowlist,5,479404da-bf52-463a-9b8f-00db815355e5,NO_VIOLATIONS,
+a_minimal_xdp,p2_helper_allowlist,6,bf82db6b-c2ae-48a8-8434-70966aad6305,NO_VIOLATIONS,
+a_minimal_xdp,p2_helper_allowlist,7,c7652f0a-b39d-44ba-a78f-40af5e5fe141,NO_VIOLATIONS,
+a_minimal_xdp,p4_policy_sensitive,1,fec35e22-2d82-4338-9ff1-e74c27105595,NO_VIOLATIONS,
+a_minimal_xdp,p4_policy_sensitive,2,0a3f6ba4-1a84-41d2-bb46-993d42841565,NO_VIOLATIONS,
+a_minimal_xdp,p4_policy_sensitive,3,9b06f2dd-5995-4103-a0ef-910f025659d7,NO_VIOLATIONS,
+a_minimal_xdp,p4_policy_sensitive,4,50376317-62a3-4130-b7d7-7d64a3937545,NO_VIOLATIONS,
+a_minimal_xdp,p4_policy_sensitive,5,422a2244-8bdc-49bd-a2e3-407454649193,NO_VIOLATIONS,
+a_minimal_xdp,p4_policy_sensitive,6,ab33497e-6a44-493c-9391-b8127838a6e4,NO_VIOLATIONS,
+a_minimal_xdp,p4_policy_sensitive,7,cbebe441-94c7-42e2-a084-81db58c8ab9b,NO_VIOLATIONS,
+c_branching_maps,p1_allow_execution,1,84838442-bec4-4a94-aca8-2f06b26c6c09,POLICY_VIOLATIONS,"Violated: Policy 'base_packet_read_only' blocks ALL map access, but maps were accessed"
+c_branching_maps,p1_allow_execution,2,8d815774-68e6-4bb1-9de1-43f989b2c834,POLICY_VIOLATIONS,"Violated: Policy 'base_packet_read_only' blocks ALL map access, but maps were accessed"
+c_branching_maps,p1_allow_execution,3,7b79b801-117c-46a8-b297-3401c8404051,POLICY_VIOLATIONS,"Violated: Policy 'base_packet_read_only' blocks ALL map access, but maps were accessed"
+c_branching_maps,p1_allow_execution,4,3fb79968-e4ec-493a-99e5-1d3452576506,POLICY_VIOLATIONS,"Violated: Policy 'base_packet_read_only' blocks ALL map access, but maps were accessed"
+c_branching_maps,p1_allow_execution,5,c2005cc4-4e49-46e7-ba7a-75d9a00c7a57,POLICY_VIOLATIONS,"Violated: Policy 'base_packet_read_only' blocks ALL map access, but maps were accessed"
+c_branching_maps,p1_allow_execution,6,e6e853ab-501d-404f-b95c-93c07349b719,POLICY_VIOLATIONS,"Violated: Policy 'base_packet_read_only' blocks ALL map access, but maps were accessed"
+c_branching_maps,p1_allow_execution,7,f4496c88-87ea-4a63-a09c-a32d13b4e9f5,POLICY_VIOLATIONS,"Violated: Policy 'base_packet_read_only' blocks ALL map access, but maps were accessed"
+c_branching_maps,p2_helper_allowlist,1,674ab918-1f8d-4a89-af59-4d7de96d2270,POLICY_VIOLATIONS,Violated: Unauthorized map access to 'state'
+c_branching_maps,p2_helper_allowlist,2,20c350c7-728e-4232-89e1-bf361a069f64,POLICY_VIOLATIONS,Violated: Unauthorized map access to 'state'
+c_branching_maps,p2_helper_allowlist,3,b9e23d6c-08ed-4b35-bf06-a3eae7f87330,POLICY_VIOLATIONS,Violated: Unauthorized map access to 'state'
+c_branching_maps,p2_helper_allowlist,4,44cfafbe-4786-40f6-870f-0bdf9919a0e7,POLICY_VIOLATIONS,Violated: Unauthorized map access to 'state'
+c_branching_maps,p2_helper_allowlist,5,4bdceec3-964c-476a-9981-4ca62361172f,POLICY_VIOLATIONS,Violated: Unauthorized map access to 'state'
+c_branching_maps,p2_helper_allowlist,6,0d2a4410-2d43-4ffa-a748-1dfc446db228,POLICY_VIOLATIONS,Violated: Unauthorized map access to 'state'
+c_branching_maps,p2_helper_allowlist,7,ae8b037f-2b31-4de0-962f-aff7f008ce2d,POLICY_VIOLATIONS,Violated: Unauthorized map access to 'state'
+c_branching_maps,p4_policy_sensitive,1,d7852f37-b16e-421d-8eba-529a3a7020f6,POLICY_VIOLATIONS,Violated: Unauthorized map access to 'state'
+c_branching_maps,p4_policy_sensitive,2,7768cef7-e869-4f3e-b1a3-8835e1f044c3,POLICY_VIOLATIONS,Violated: Unauthorized map access to 'state'
+c_branching_maps,p4_policy_sensitive,3,b0a0c3e5-12d9-4bea-b34c-0e83c1804f94,POLICY_VIOLATIONS,Violated: Unauthorized map access to 'state'
+c_branching_maps,p4_policy_sensitive,4,cbcfabcd-202d-4b58-93a9-091b50a9fece,POLICY_VIOLATIONS,Violated: Unauthorized map access to 'state'
+c_branching_maps,p4_policy_sensitive,5,32ac7603-c9a1-4716-8c84-959283ff8fa2,POLICY_VIOLATIONS,Violated: Unauthorized map access to 'state'
+c_branching_maps,p4_policy_sensitive,6,dcd25091-21c4-401d-986d-0ed051b1ecf4,POLICY_VIOLATIONS,Violated: Unauthorized map access to 'state'
+c_branching_maps,p4_policy_sensitive,7,9bddef88-2465-4713-b25a-30de7c8baf52,POLICY_VIOLATIONS,Violated: Unauthorized map access to 'state'
+d_policy_sensitive,p1_allow_execution,1,437d2589-f1d6-485d-aabb-5ddb03282169,POLICY_VIOLATIONS,"Violated: Policy 'base_packet_read_only' blocks ALL map access, but maps were accessed"
+d_policy_sensitive,p1_allow_execution,2,f6e21ea9-2e23-49b4-82aa-d34ebbee35aa,POLICY_VIOLATIONS,"Violated: Policy 'base_packet_read_only' blocks ALL map access, but maps were accessed"
+d_policy_sensitive,p1_allow_execution,3,6519e65e-0420-4acf-86a3-eea3b9b3c2e6,POLICY_VIOLATIONS,"Violated: Policy 'base_packet_read_only' blocks ALL map access, but maps were accessed"
+d_policy_sensitive,p1_allow_execution,4,f91aa766-196c-4095-a981-86c42f8db32a,POLICY_VIOLATIONS,"Violated: Policy 'base_packet_read_only' blocks ALL map access, but maps were accessed"
+d_policy_sensitive,p1_allow_execution,5,554e620f-e2a0-43ba-91c7-17a66d39783c,POLICY_VIOLATIONS,"Violated: Policy 'base_packet_read_only' blocks ALL map access, but maps were accessed"
+d_policy_sensitive,p1_allow_execution,6,95fa2269-980c-4358-93eb-6d3120129377,POLICY_VIOLATIONS,"Violated: Policy 'base_packet_read_only' blocks ALL map access, but maps were accessed"
+d_policy_sensitive,p1_allow_execution,7,c2df0d2e-2ff0-4f55-901f-aa9cffcf0fad,POLICY_VIOLATIONS,"Violated: Policy 'base_packet_read_only' blocks ALL map access, but maps were accessed"
+d_policy_sensitive,p2_helper_allowlist,1,7feafeae-f1e7-4b44-ab86-c5e4722e0344,POLICY_VIOLATIONS,Violated: Unauthorized map access to 'policy_state'
+d_policy_sensitive,p2_helper_allowlist,2,1b442684-122e-4813-b802-92f528406530,POLICY_VIOLATIONS,Violated: Unauthorized map access to 'policy_state'
+d_policy_sensitive,p2_helper_allowlist,3,3f07be45-5f33-48ed-a248-6e30b0cc7100,POLICY_VIOLATIONS,Violated: Unauthorized map access to 'policy_state'
+d_policy_sensitive,p2_helper_allowlist,4,079eba6b-f717-4634-ae9d-2b26edddb957,POLICY_VIOLATIONS,Violated: Unauthorized map access to 'policy_state'
+d_policy_sensitive,p2_helper_allowlist,5,ebf6dcb6-4982-48e7-baff-506801f1e251,POLICY_VIOLATIONS,Violated: Unauthorized map access to 'policy_state'
+d_policy_sensitive,p2_helper_allowlist,6,b53c70ec-3443-439d-b880-0ba13c55b347,POLICY_VIOLATIONS,Violated: Unauthorized map access to 'policy_state'
+d_policy_sensitive,p2_helper_allowlist,7,9c1a9e7b-4d35-4529-9c6c-f84d3b92992b,POLICY_VIOLATIONS,Violated: Unauthorized map access to 'policy_state'
+d_policy_sensitive,p4_policy_sensitive,1,6d1b00a8-249c-464f-8081-c0cf38ffd630,POLICY_VIOLATIONS,Violated: Write access to read-only map 'policy_state'
+d_policy_sensitive,p4_policy_sensitive,2,eff84bd3-91eb-468f-ac80-6ee12bd907bd,POLICY_VIOLATIONS,Violated: Write access to read-only map 'policy_state'
+d_policy_sensitive,p4_policy_sensitive,3,7838329f-f316-4d88-bb1c-d6c00f53bc7c,POLICY_VIOLATIONS,Violated: Write access to read-only map 'policy_state'
+d_policy_sensitive,p4_policy_sensitive,4,48d95258-95c8-4a2b-9800-ea7a62c670dc,POLICY_VIOLATIONS,Violated: Write access to read-only map 'policy_state'
+d_policy_sensitive,p4_policy_sensitive,5,347ca16d-0bcf-41c5-ae73-85559a7586da,POLICY_VIOLATIONS,Violated: Write access to read-only map 'policy_state'
+d_policy_sensitive,p4_policy_sensitive,6,b7c3b636-3164-4c44-9fc4-6ac0567781a3,POLICY_VIOLATIONS,Violated: Write access to read-only map 'policy_state'
+d_policy_sensitive,p4_policy_sensitive,7,f27813a2-8015-4230-ab8f-c7922045e808,POLICY_VIOLATIONS,Violated: Write access to read-only map 'policy_state'
+e_adversarial_helper,p1_allow_execution,1,3e80ba39-746f-4997-ae8c-740c714e1db1,NO_VIOLATIONS,
+e_adversarial_helper,p1_allow_execution,2,02be7874-ae4b-4092-9dde-f5d93e659a48,NO_VIOLATIONS,
+e_adversarial_helper,p1_allow_execution,3,3d1774c7-5955-4293-9b76-3c3f7350540e,NO_VIOLATIONS,
+e_adversarial_helper,p1_allow_execution,4,2e80e120-865f-4cee-b097-e71b91ebb245,NO_VIOLATIONS,
+e_adversarial_helper,p1_allow_execution,5,c3d5e6ad-8d18-4bb0-bb29-00b4cf95cec5,NO_VIOLATIONS,
+e_adversarial_helper,p1_allow_execution,6,0c0a6a51-f34d-4924-990f-d0551f99373c,NO_VIOLATIONS,
+e_adversarial_helper,p1_allow_execution,7,9dfaa885-c479-46d8-9040-3eb5a24a8195,NO_VIOLATIONS,
+e_adversarial_helper,p2_helper_allowlist,1,bfbe3826-3e74-45c8-ae49-7c4502473a99,NO_VIOLATIONS,
+e_adversarial_helper,p2_helper_allowlist,2,0812630f-3651-4ab7-8459-e51385709dc7,NO_VIOLATIONS,
+e_adversarial_helper,p2_helper_allowlist,3,8f9f7a02-4fb8-4ce8-b97b-da44c304a078,NO_VIOLATIONS,
+e_adversarial_helper,p2_helper_allowlist,4,f27bd64d-007b-4ebe-a012-9d90d3ee948e,NO_VIOLATIONS,
+e_adversarial_helper,p2_helper_allowlist,5,6d13a2c9-0415-4129-bab6-6b57d978013a,NO_VIOLATIONS,
+e_adversarial_helper,p2_helper_allowlist,6,5d3af893-11b2-4cc3-9a98-4b695a9a6b42,NO_VIOLATIONS,
+e_adversarial_helper,p2_helper_allowlist,7,53b99b8d-f8fd-4f2d-a47a-c2af7866d64c,NO_VIOLATIONS,
+e_adversarial_helper,p4_policy_sensitive,1,7e820b08-fbb3-4813-9bdf-9f13a491c228,NO_VIOLATIONS,
+e_adversarial_helper,p4_policy_sensitive,2,7e89f29a-af5c-4ccd-b7fa-e3c504d09ab3,NO_VIOLATIONS,
+e_adversarial_helper,p4_policy_sensitive,3,b9bbca84-73f5-4507-b6c1-c5907c4c4529,NO_VIOLATIONS,
+e_adversarial_helper,p4_policy_sensitive,4,e8010345-00a4-4f3c-8592-c60f2bde100c,NO_VIOLATIONS,
+e_adversarial_helper,p4_policy_sensitive,5,a7d465ea-f9d1-4bf5-9f67-60012cd1aecd,NO_VIOLATIONS,
+e_adversarial_helper,p4_policy_sensitive,6,4f2cedd9-731d-4e5f-81c7-5e844d0e1962,NO_VIOLATIONS,
+e_adversarial_helper,p4_policy_sensitive,7,480a2cd4-9f58-4bca-ac6f-a0d7488e3277,NO_VIOLATIONS,

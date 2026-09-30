@@ -1,0 +1,19 @@
+{
+  "status": "completed",
+  "object": "/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/results/raw/objects/frozen-clang13-20260925/a_minimal_xdp.o",
+  "policy": "/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/corpus/policies/p4_policy_sensitive.json",
+  "request_id": "fec35e22-2d82-4338-9ff1-e74c27105595",
+  "return_code": 0,
+  "timeout": false,
+  "top_level_passed": true,
+  "conditional_policy_result": "no_violations",
+  "paths_explored": 1,
+  "total_instructions": 12695,
+  "wall_time_ms": 929.071,
+  "user_time_ms": 4.958,
+  "system_time_ms": 17.909,
+  "client_cpu_time_ms": 22.867,
+  "client_peak_memory_kb": 32008,
+  "verifier_cpu_time_ms": null,
+  "verifier_peak_memory_kb": null
+}

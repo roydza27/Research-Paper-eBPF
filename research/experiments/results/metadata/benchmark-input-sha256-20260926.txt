@@ -1,0 +1,9 @@
+=== OBJECT HASHES ===
+75371e0729f0b8fdc9a46b9be813fe65a10296d1c5be5fbc830130810b92a670  /home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/results/raw/objects/frozen-clang13-20260925/a_minimal_xdp.o
+2e430711bc78ca483ea29cd0e620f21b5a63a02945b918e71b34771f36fac42c  /home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/results/raw/objects/frozen-clang13-20260925/c_branching_maps.o
+2b2efb58a4f407d5c766cc09128122d5d5e490527195c13b0a2b2647160ad3f1  /home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/results/raw/objects/frozen-clang13-20260925/d_policy_sensitive.o
+c7c7fb9cb9283a3bdd0430da10118ef187d78d9a91fb16d4bf16e0babf71095b  /home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/results/raw/objects/frozen-clang13-20260925/e_adversarial_helper.o
+=== POLICY HASHES ===
+c0f0ac4d1a5ecf781c867ff742409767f24544b71aa36c57a533715d1d4c387b  /home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/corpus/policies/p1_allow_execution.json
+38a0939c75fc2f13eaabc6c10f37cee47d6309e9d4582d0a8933a19041a4c9f5  /home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/corpus/policies/p2_helper_allowlist.json
+e6b527ad6ddcfb1846b3c1b461484c14a87ec8460cf7e1bbb07a5c2d08d67b46  /home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/corpus/policies/p4_policy_sensitive.json

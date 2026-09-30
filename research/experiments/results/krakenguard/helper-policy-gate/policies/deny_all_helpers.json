@@ -1,0 +1,12 @@
+{
+  "deny_all_helpers": {
+    "type": "ACTION",
+    "dependencies": {
+      "memory": [],
+      "previous_actions": []
+    },
+    "actions": {
+      "helper_access": []
+    }
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "status": "completed",
+  "object": "/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/results/raw/objects/frozen-clang13-20260925/e_adversarial_helper.o",
+  "policy": "/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/corpus/policies/p4_policy_sensitive.json",
+  "request_id": "7e6ff72b-533c-476c-a53c-7af04e0ad25f",
+  "return_code": 0,
+  "timeout": false,
+  "top_level_passed": true,
+  "conditional_policy_result": "no_violations",
+  "paths_explored": 1,
+  "total_instructions": 12712,
+  "wall_time_ms": 929.05,
+  "user_time_ms": 11.924,
+  "system_time_ms": 9.864,
+  "client_cpu_time_ms": 21.788,
+  "client_peak_memory_kb": 32000,
+  "verifier_cpu_time_ms": null,
+  "verifier_peak_memory_kb": null
+}

@@ -1,0 +1,189 @@
+libbpf: loading object from research/experiments/results/raw/objects/frozen-clang13-20260925/c_branching_maps.o
+libbpf: elf: section(3) xdp, size 232, link 0, flags 6, type=1
+libbpf: sec 'xdp': found program 'xdp_branching_maps' at insn offset 0 (0 bytes), code size 29 insns (232 bytes)
+libbpf: elf: section(4) .relxdp, size 16, link 21, flags 0, type=9
+libbpf: elf: section(5) .maps, size 32, link 0, flags 3, type=1
+libbpf: elf: section(6) license, size 4, link 0, flags 3, type=1
+libbpf: license of research/experiments/results/raw/objects/frozen-clang13-20260925/c_branching_maps.o is GPL
+libbpf: elf: section(12) .BTF, size 1021, link 0, flags 0, type=1
+libbpf: elf: section(14) .BTF.ext, size 320, link 0, flags 0, type=1
+libbpf: elf: section(21) .symtab, size 312, link 1, flags 0, type=2
+libbpf: looking for externs among 13 symbols...
+libbpf: collected 0 externs total
+libbpf: map 'state': at sec_idx 5, offset 0.
+libbpf: map 'state': found type = 2.
+libbpf: map 'state': found key [8], sz = 4.
+libbpf: map 'state': found value [11], sz = 8.
+libbpf: map 'state': found max_entries = 4.
+libbpf: sec '.relxdp': collecting relocation for section(3) 'xdp'
+libbpf: sec '.relxdp': relo #0: insn #16 against 'state'
+libbpf: prog 'xdp_branching_maps': found map 0 (state, sec 5, off 0) for insn #16
+libbpf: object 'c_branching_map': failed (-95) to create BPF token from '/sys/fs/bpf', skipping optional step...
+libbpf: map 'state': created successfully, fd=4
+libbpf: prog 'xdp_branching_maps': -- BEGIN PROG LOAD LOG --
+func#0 @0
+topo_order[0] = xdp_branching_maps
+subprog#0: analyzing (depth 0)...
+ 14: (bf) r2 = r10	r2: _ -> fp0+0
+ 15: (07) r2 += -4	r2: fp0+0 -> fp0-4
+ 18: (85) call bpf_map_lookup_elem#1	r2: fp0-4 -> _
+ 14: (bf) r2 = r10	r2: _ -> fp0+0
+ 15: (07) r2 += -4	r2: fp0+0 -> fp0-4
+ 18: (85) call bpf_map_lookup_elem#1	r2: fp0-4 -> _
+subprog#0 xdp_branching_maps:
+  0: (b7) r2 = 1
+  1: (61) r1 = *(u32 *)(r1 +12)
+  2: (bf) r3 = r1
+  3: (57) r3 &= 1
+  4: (55) if r3 != 0x0 goto pc+8
+  5: (b7) r2 = 2
+  6: (bf) r3 = r1
+  7: (57) r3 &= 2
+  8: (55) if r3 != 0x0 goto pc+4
+  9: (67) r1 <<= 61
+ 10: (c7) r1 s>>= 63
+ 11: (57) r1 &= 3
+ 12: (bf) r2 = r1
+ 13: (63) *(u32 *)(r10 -4) = r2
+ 14: (bf) r2 = r10
+ 15: (07) r2 += -4
+ 16: (18) r1 = 0xffff8e4c1078f800
+ 18: (85) call bpf_map_lookup_elem#1 // r2=fp0-4
+ 19: (bf) r1 = r0
+ 20: (b7) r0 = 0
+ 21: (15) if r1 == 0x0 goto pc+6
+ 22: (b7) r0 = 1
+ 23: (79) r1 = *(u64 *)(r1 +0)
+ 24: (25) if r1 > 0x64 goto pc+3
+ 25: (b7) r0 = 3
+ 26: (25) if r1 > 0x32 goto pc+1
+ 27: (b7) r0 = 2
+ 28: (95) exit
+stack use/def subprog#0 xdp_branching_maps (d0,cs0):
+  0: (b7) r2 = 1
+  1: (61) r1 = *(u32 *)(r1 +12)
+  2: (bf) r3 = r1
+  3: (57) r3 &= 1
+  4: (55) if r3 != 0x0 goto pc+8
+  5: (b7) r2 = 2
+  6: (bf) r3 = r1
+  7: (57) r3 &= 2
+  8: (55) if r3 != 0x0 goto pc+4
+  9: (67) r1 <<= 61
+ 10: (c7) r1 s>>= 63
+ 11: (57) r1 &= 3
+ 12: (bf) r2 = r1
+ 13: (63) *(u32 *)(r10 -4) = r2        ; def: fp0-4h
+ 14: (bf) r2 = r10
+ 15: (07) r2 += -4
+ 16: (18) r1 = 0xffff8e4c1078f800
+ 18: (85) call bpf_map_lookup_elem#1   ; use: fp0-4h
+ 19: (bf) r1 = r0
+ 20: (b7) r0 = 0
+ 21: (15) if r1 == 0x0 goto pc+6
+ 22: (b7) r0 = 1
+ 23: (79) r1 = *(u64 *)(r1 +0)
+ 24: (25) if r1 > 0x64 goto pc+3
+ 25: (b7) r0 = 3
+ 26: (25) if r1 > 0x32 goto pc+1
+ 27: (b7) r0 = 2
+ 28: (95) exit
+Live regs before insn:
+      0: .1........ (b7) r2 = 1
+      1: .12....... (61) r1 = *(u32 *)(r1 +12)
+      2: .12....... (bf) r3 = r1
+      3: .123...... (57) r3 &= 1
+      4: .123...... (55) if r3 != 0x0 goto pc+8
+      5: .1........ (b7) r2 = 2
+      6: .12....... (bf) r3 = r1
+      7: .123...... (57) r3 &= 2
+      8: .123...... (55) if r3 != 0x0 goto pc+4
+      9: .1........ (67) r1 <<= 61
+     10: .1........ (c7) r1 s>>= 63
+     11: .1........ (57) r1 &= 3
+     12: .1........ (bf) r2 = r1
+     13: ..2....... (63) *(u32 *)(r10 -4) = r2
+     14: .......... (bf) r2 = r10
+     15: ..2....... (07) r2 += -4
+     16: ..2....... (18) r1 = 0xffff8e4c1078f800
+     18: .12....... (85) call bpf_map_lookup_elem#1
+     19: 0......... (bf) r1 = r0
+     20: .1........ (b7) r0 = 0
+     21: 01........ (15) if r1 == 0x0 goto pc+6
+     22: .1........ (b7) r0 = 1
+     23: 01........ (79) r1 = *(u64 *)(r1 +0)
+     24: 01........ (25) if r1 > 0x64 goto pc+3
+     25: .1........ (b7) r0 = 3
+     26: 01........ (25) if r1 > 0x32 goto pc+1
+     27: .......... (b7) r0 = 2
+     28: 0......... (95) exit
+0: R1=ctx() R10=fp0
+; int xdp_branching_maps(struct xdp_md *ctx) @ c_branching_maps.c:23
+0: (b7) r2 = 1                        ; R2=1
+; __u32 key = classify(ctx->ingress_ifindex); @ c_branching_maps.c:25
+1: (61) r1 = *(u32 *)(r1 +12)         ; R1=scalar(smin=0,smax=umax=0xffffffff,var_off=(0x0; 0xffffffff))
+; if (x & 1) @ c_branching_maps.c:13
+2: (bf) r3 = r1                       ; R1=scalar(id=1,smin=0,smax=umax=0xffffffff,var_off=(0x0; 0xffffffff)) R3=scalar(id=1,smin=0,smax=umax=0xffffffff,var_off=(0x0; 0xffffffff))
+3: (57) r3 &= 1                       ; R3=scalar(smin=smin32=0,smax=umax=smax32=umax32=1,var_off=(0x0; 0x1))
+4: (55) if r3 != 0x0 goto pc+8        ; R3=0
+5: (b7) r2 = 2                        ; R2=2
+; if (x & 2) @ c_branching_maps.c:15
+6: (bf) r3 = r1                       ; R1=scalar(id=1,smin=0,smax=umax=0xffffffff,var_off=(0x0; 0xffffffff)) R3=scalar(id=1,smin=0,smax=umax=0xffffffff,var_off=(0x0; 0xffffffff))
+7: (57) r3 &= 2                       ; R3=scalar(smin=smin32=0,smax=umax=smax32=umax32=2,var_off=(0x0; 0x2))
+8: (55) if r3 != 0x0 goto pc+4        ; R3=0
+; if (x & 4) @ c_branching_maps.c:17
+9: (67) r1 <<= 61                     ; R1=scalar(smax=0x6000000000000000,smin32=0,smax32=umax32=0,var_off=(0x0; 0xe000000000000000))
+10: (c7) r1 s>>= 63                   ; R1=scalar(smin=smin32=-1,smax=smax32=0)
+;  @ c_branching_maps.c:0
+11: (57) r1 &= 3                      ; R1=3
+12: (bf) r2 = r1                      ; R2=3
+; __u32 key = classify(ctx->ingress_ifindex); @ c_branching_maps.c:25
+13: (63) *(u32 *)(r10 -4) = r2        ; R2=3 R10=fp0 fp-8=mmmm????
+14: (bf) r2 = r10                     ; R2=fp0 R10=fp0
+;  @ c_branching_maps.c:0
+15: (07) r2 += -4                     ; R2=fp-4
+; __u64 *value = bpf_map_lookup_elem(&state, &key); @ c_branching_maps.c:26
+16: (18) r1 = 0xffff8e4c1078f800      ; R1=map_ptr(map=state,ks=4,vs=8)
+18: (85) call bpf_map_lookup_elem#1   ; R0=map_value_or_null(id=2,map=state,ks=4,vs=8)
+19: (bf) r1 = r0                      ; R0=map_value_or_null(id=2,map=state,ks=4,vs=8) R1=map_value_or_null(id=2,map=state,ks=4,vs=8)
+20: (b7) r0 = 0                       ; R0=0
+; if (!value) @ c_branching_maps.c:27
+21: (15) if r1 == 0x0 goto pc+6       ; R1=map_value(id=2,map=state,ks=4,vs=8)
+22: (b7) r0 = 1                       ; R0=1
+; if (*value > 100) @ c_branching_maps.c:29
+23: (79) r1 = *(u64 *)(r1 +0)         ; R1=scalar()
+24: (25) if r1 > 0x64 goto pc+3       ; R1=scalar(smin=smin32=0,smax=umax=smax32=umax32=100,var_off=(0x0; 0x7f))
+25: (b7) r0 = 3                       ; R0=3
+;  @ c_branching_maps.c:0
+26: (25) if r1 > 0x32 goto pc+1       ; R1=scalar(smin=smin32=0,smax=umax=smax32=umax32=50,var_off=(0x0; 0x3f))
+27: (b7) r0 = 2                       ; R0=2
+; } @ c_branching_maps.c:34
+28: (95) exit
+
+from 26 to 28: R0=3 R10=fp0
+28: R0=3 R10=fp0
+28: (95) exit
+
+from 24 to 28: R0=1 R10=fp0
+28: R0=1 R10=fp0
+28: (95) exit
+
+from 21 to 28: R0=0 R10=fp0
+28: R0=0 R10=fp0
+28: (95) exit
+
+from 11 to 11: R1=0 R2=2 R3=0 R10=fp0
+11: R1=0 R2=2 R3=0 R10=fp0
+;  @ c_branching_maps.c:0
+11: (57) r1 &= 3                      ; R1=0
+12: (bf) r2 = r1
+13: safe
+
+from 8 to 13: safe
+
+from 4 to 13: safe
+verification time 570 usec
+stack depth 8 max 16
+insns processed 36
+processed 36 insns (limit 1000000) max_states_per_insn 0 total_states 2 peak_states 2 mark_read 0
+-- END PROG LOAD LOG --

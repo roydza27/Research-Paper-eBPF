@@ -1,0 +1,59 @@
+libbpf: loading object from research/experiments/results/raw/objects/frozen-clang13-20260925/e_adversarial_helper.o
+libbpf: elf: section(3) xdp, size 56, link 0, flags 6, type=1
+libbpf: sec 'xdp': found program 'xdp_adversarial_helper' at insn offset 0 (0 bytes), code size 7 insns (56 bytes)
+libbpf: elf: section(4) license, size 4, link 0, flags 3, type=1
+libbpf: license of research/experiments/results/raw/objects/frozen-clang13-20260925/e_adversarial_helper.o is GPL
+libbpf: elf: section(10) .BTF, size 545, link 0, flags 0, type=1
+libbpf: elf: section(12) .BTF.ext, size 96, link 0, flags 0, type=1
+libbpf: elf: section(19) .symtab, size 264, link 1, flags 0, type=2
+libbpf: looking for externs among 11 symbols...
+libbpf: collected 0 externs total
+libbpf: object 'e_adversarial_h': failed (-95) to create BPF token from '/sys/fs/bpf', skipping optional step...
+libbpf: prog 'xdp_adversarial_helper': -- BEGIN PROG LOAD LOG --
+func#0 @0
+topo_order[0] = xdp_adversarial_helper
+subprog#0: analyzing (depth 0)...
+subprog#0 xdp_adversarial_helper:
+  0: (85) call bpf_ktime_get_ns#5
+  1: (bf) r1 = r0
+  2: (b7) r0 = 1
+  3: (55) if r1 != 0x0 goto pc+1
+  4: (b7) r0 = 0
+  5: (67) r0 <<= 1
+  6: (95) exit
+stack use/def subprog#0 xdp_adversarial_helper (d0,cs0):
+  0: (85) call bpf_ktime_get_ns#5
+  1: (bf) r1 = r0
+  2: (b7) r0 = 1
+  3: (55) if r1 != 0x0 goto pc+1
+  4: (b7) r0 = 0
+  5: (67) r0 <<= 1
+  6: (95) exit
+Live regs before insn:
+      0: .......... (85) call bpf_ktime_get_ns#5
+      1: 0......... (bf) r1 = r0
+      2: .1........ (b7) r0 = 1
+      3: 01........ (55) if r1 != 0x0 goto pc+1
+      4: .......... (b7) r0 = 0
+      5: 0......... (67) r0 <<= 1
+      6: 0......... (95) exit
+0: R1=ctx() R10=fp0
+; __u64 now = bpf_ktime_get_ns(); @ e_adversarial_helper.c:8
+0: (85) call bpf_ktime_get_ns#5       ; R0=scalar()
+1: (bf) r1 = r0                       ; R0=scalar(id=1) R1=scalar(id=1)
+2: (b7) r0 = 1                        ; R0=1
+3: (55) if r1 != 0x0 goto pc+1        ; R1=0
+4: (b7) r0 = 0                        ; R0=0
+; } @ e_adversarial_helper.c:12
+5: (67) r0 <<= 1                      ; R0=0
+6: (95) exit
+
+from 3 to 5: R0=1 R10=fp0
+5: R0=1 R10=fp0
+5: (67) r0 <<= 1                      ; R0=2
+6: (95) exit
+verification time 158 usec
+stack depth 0 max 0
+insns processed 9
+processed 9 insns (limit 1000000) max_states_per_insn 0 total_states 1 peak_states 1 mark_read 0
+-- END PROG LOAD LOG --

@@ -1,0 +1,10 @@
+
+[Step 1] Lifting object file: /tmp/frozen-clang13-20260925/b_helper_map.o
+Working dir: /tmp/tmpgruxlcbt
+[Optimize IR] Running: opt -O3 -S /tmp/tmpgruxlcbt/tmpup2mnx7j -o /tmp/tmpgruxlcbt/tmpup2mnx7j
+ERROR: Optimize IR failed (code 1)
+stderr:
+opt: /tmp/tmpgruxlcbt/tmpup2mnx7j:66:14: error: explicit pointee type doesn't match operand's pointee type (ptr vs i64)
+  %16 = load ptr, i64* %r0, align 8
+             ^
+

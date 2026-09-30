@@ -1,0 +1,33 @@
+libbpf: loading object from research/experiments/results/raw/objects/frozen-clang13-20260925/a_minimal_xdp.o
+libbpf: elf: section(3) xdp, size 16, link 0, flags 6, type=1
+libbpf: sec 'xdp': found program 'xdp_minimal' at insn offset 0 (0 bytes), code size 2 insns (16 bytes)
+libbpf: elf: section(4) license, size 4, link 0, flags 3, type=1
+libbpf: license of research/experiments/results/raw/objects/frozen-clang13-20260925/a_minimal_xdp.o is GPL
+libbpf: elf: section(9) .BTF, size 510, link 0, flags 0, type=1
+libbpf: elf: section(11) .BTF.ext, size 80, link 0, flags 0, type=1
+libbpf: elf: section(18) .symtab, size 216, link 1, flags 0, type=2
+libbpf: looking for externs among 9 symbols...
+libbpf: collected 0 externs total
+libbpf: object 'a_minimal_xdp': failed (-95) to create BPF token from '/sys/fs/bpf', skipping optional step...
+libbpf: prog 'xdp_minimal': -- BEGIN PROG LOAD LOG --
+func#0 @0
+topo_order[0] = xdp_minimal
+subprog#0: analyzing (depth 0)...
+subprog#0 xdp_minimal:
+  0: (b7) r0 = 2
+  1: (95) exit
+stack use/def subprog#0 xdp_minimal (d0,cs0):
+  0: (b7) r0 = 2
+  1: (95) exit
+Live regs before insn:
+      0: .......... (b7) r0 = 2
+      1: 0......... (95) exit
+0: R1=ctx() R10=fp0
+; return XDP_PASS; @ a_minimal_xdp.c:7
+0: (b7) r0 = 2                        ; R0=2
+1: (95) exit
+verification time 53 usec
+stack depth 0 max 0
+insns processed 2
+processed 2 insns (limit 1000000) max_states_per_insn 0 total_states 0 peak_states 0 mark_read 0
+-- END PROG LOAD LOG --

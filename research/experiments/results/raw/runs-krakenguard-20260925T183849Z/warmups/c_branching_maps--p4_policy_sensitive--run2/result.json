@@ -1,0 +1,19 @@
+{
+  "status": "completed",
+  "object": "/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/results/raw/objects/frozen-clang13-20260925/c_branching_maps.o",
+  "policy": "/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/corpus/policies/p4_policy_sensitive.json",
+  "request_id": "bc159555-03b8-4f7f-87f7-f1299b263b22",
+  "return_code": 0,
+  "timeout": false,
+  "top_level_passed": true,
+  "conditional_policy_result": "policy_violations",
+  "paths_explored": 1,
+  "total_instructions": 13127,
+  "wall_time_ms": 929.806,
+  "user_time_ms": 11.097,
+  "system_time_ms": 11.056,
+  "client_cpu_time_ms": 22.153,
+  "client_peak_memory_kb": 31956,
+  "verifier_cpu_time_ms": null,
+  "verifier_peak_memory_kb": null
+}

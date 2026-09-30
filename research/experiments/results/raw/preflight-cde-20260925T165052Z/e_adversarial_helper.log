@@ -1,0 +1,17 @@
+Traceback (most recent call last):
+  File "/tmp/kg-artifact/daemon/test_client.py", line 78, in test_verify
+    response = client.verify(
+        object_file=object_file,
+    ...<3 lines>...
+        debug=debug
+    )
+  File "/tmp/kg-artifact/daemon/krakenguard_client.py", line 194, in verify
+    with open(constraints_file, 'r') as f:
+         ~~~~^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/tmp/ebpf/research/experiments/results/corpus/policies/p1_allow_execution.json'
+
+Testing verification...
+Object file: /tmp/ebpf/research/experiments/results/raw/objects/e_adversarial_helper.o
+Constraints: /tmp/ebpf/research/experiments/results/corpus/policies/p1_allow_execution.json
+Debug mode: ENABLED (stdout/stderr will be saved to execution.log)
+Verification failed: [Errno 2] No such file or directory: '/tmp/ebpf/research/experiments/results/corpus/policies/p1_allow_execution.json'

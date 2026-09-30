@@ -1,0 +1,9 @@
+compiler=clang-13
+target=bpf
+arch=x86
+opt=-O2
+debug=-g
+include=/usr/include
+artifact=kg-artifact-krakenguard:latest
+source=research/experiments/corpus/programs
+purpose=frozen-toolchain corpus object provenance

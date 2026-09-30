@@ -1,0 +1,6 @@
+program,return_code,status
+a_minimal_xdp,0,generateIR_success
+b_helper_map,1,generateIR_failure
+c_branching_maps,0,generateIR_success
+d_policy_sensitive,0,generateIR_success
+e_adversarial_helper,0,generateIR_success
