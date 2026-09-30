@@ -1,8 +1,10 @@
+> **Important:** This report was generated before the Phase 5 correction sprint. It must not be used as post-correction correctness evidence or as an execution-gate approval.
+
 # Phase 5 Corpus Validation & Correctness Audit Report
 
 ## 1. Executive Summary
 
-**Status**: **`AUDIT PASS — 100% SOUND & VALIDATED`**  
+**Status**: **`SUPERSEDED — PRE-CORRECTION EVIDENCE`**  
 **Policy Hash**: `8e349d091fd4c1af9127c8fe19ceb99ad0468ef8a565d5e47224993f051204b6`  
 **Corpus Size**: 24 programs (6 per category A–D)  
 **Abstract Stage Discharge Rate**: 12/24 (50.0%)  
