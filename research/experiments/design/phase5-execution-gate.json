@@ -6,8 +6,9 @@
     "e1_ref": "main",
     "e2_ref": "phase4-e2-full-matrix",
     "krakenguard_commit": "e7bd84005b304c5a10efcdb04914d1882b3cccf7",
-    "policy_sha256": "8e349d091fd4c1af9127c8fe19ceb99ad0468ef8a565d5e47224993f051204b6",
-    "corpus_metadata_sha256": "6d4b578028f0d7f792a1de324903f30bdd3703e95e8a147c0bfb8eaebe100865"
+    "policy_sha256": "270403272d736ae7aee2ceda3bf8d088b6ac0cb476bb99ce0218dd8f33c3c603",
+    "corpus_metadata_sha256": null,
+    "environment_manifest": "research/experiments/corpus/phase5/phase5-environment.json"
   },
   "conditions": {
     "corpus_defined": true,
@@ -21,11 +22,11 @@
     "failure_policy_defined": true,
     "raw_artifact_policy_defined": true,
     "execution_reproducibility_defined": true,
-    "implementation_complete": true,
+    "implementation_complete": false,
     "corpus_implemented": true,
-    "reference_verdicts_validated": true,
-    "abstract_soundness_reviewed": true,
-    "category_behavior_validated": true,
+    "reference_verdicts_validated": false,
+    "abstract_soundness_reviewed": false,
+    "category_behavior_validated": false,
     "independent_review_complete": false
   },
   "experiments": {
@@ -59,5 +60,6 @@
     "remove timing outliers",
     "modify E1 or E2 evidence",
     "claim hybrid performance improvement before measurement"
-  ]
+  ],
+  "correction_status": "IN_PROGRESS — correctness revalidation blocked until immutable container digest is frozen"
 }
