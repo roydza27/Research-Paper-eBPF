@@ -1,9 +1,12 @@
 {
   "schema": "phase5-validation-results/v1",
   "provenance": {
-    "git_branch": "phase5-experimental-design",
-    "git_head": "f2c70717ac2b7acc8faa7d303d4085d577f61668",
-    "git_tree": "f4062862e73b3f17e1c15ff02737bc9d00cee0c2",
+    "git_branch": "main",
+    "current_main_commit": "adc57ab2f7bc29b35be7e3f23535c7c209dfcc8d",
+    "current_main_tree": "b5324029b181fb698bf07353179ed841ed47f7d0",
+    "tested_tree": "f4062862e73b3f17e1c15ff02737bc9d00cee0c2",
+    "historical_reported_head": "f2c70717ac2b7acc8faa7d303d4085d577f61668",
+    "provenance_note": "Tested implementation blobs in tree f4062862 match main commit adc57ab exactly; pre-merge branch commits were squashed in PR #17.",
     "krakenguard_commit": "e7bd84005b304c5a10efcdb04914d1882b3cccf7",
     "compiler": "clang",
     "compiler_version": "22.1.8",

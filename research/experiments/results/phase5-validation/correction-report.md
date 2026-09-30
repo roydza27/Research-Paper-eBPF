@@ -1,8 +1,11 @@
 # Phase 5 Correction Report
 
-**Status:** CORRECTIONS INCOMPLETE — BLOCKED BY CONTAINER DIGEST / CORRECTNESS REVALIDATION
+**Status:** CORRECTIONS COMPLETE — AWAITING INDEPENDENT RE-REVIEW
 
-**Correction branch:** phase5-experimental-design
+**Current Main Commit:** `adc57ab2f7bc29b35be7e3f23535c7c209dfcc8d` (PR #17)  
+**Current Main Tree:** `b5324029b181fb698bf07353179ed841ed47f7d0`  
+**Tested Implementation Tree:** `f4062862e73b3f17e1c15ff02737bc9d00cee0c2`  
+**Historical Pre-Merge Head:** `f2c70717ac2b7acc8faa7d303d4085d577f61668` (squashed into PR #17 on `main`)
 
 ## Scope
 
@@ -28,6 +31,8 @@ Instruction dispatch did not have a complete fail-closed path, and helper resolu
 - Map helper operations require resolvable map identity.
 - Map update/delete/redirect behavior is not assumed safe without supported policy semantics.
 - Memory stores are only policy-neutral while the frozen policy has no memory predicates; constrained memory policy returns UNKNOWN.
+- 64-bit immediate `ll` syntax parsing supported.
+- Absent `return_value` policy semantics permit non-default return values without false violation.
 
 ### Soundness boundary
 SAFE means every reachable abstract terminal path was interpreted with supported semantics and ended in a policy-allowed return.
@@ -37,148 +42,115 @@ VIOLATION means every reachable terminal path establishes violation, or a forbid
 Anything else is UNKNOWN.
 
 ### Regression tests
-Added:
+Suite:
+`research/tests/test_phase5_abstract_soundness.py`
 
-research/tests/test_phase5_abstract_soundness.py
-
-The suite covers SAFE, VIOLATION, unresolved condition, unknown helper, forbidden helper, constrained memory store, unsupported instruction, analysis failure, and map-update conservatism.
+Covers 12 tests:
+- supported compliant operation → `SAFE`
+- supported provable violation → `VIOLATION`
+- unresolved conditional → `UNKNOWN`
+- unknown helper ID → `UNKNOWN`
+- explicitly forbidden helper → `VIOLATION`
+- unknown memory store under constrained policy → `UNKNOWN`
+- unsupported instruction → `UNKNOWN`
+- analysis failure → `UNKNOWN`
+- map update without policy proof → `UNKNOWN`
+- 64-bit immediate `ll` syntax parsing → `SAFE`
+- absent `return_value` policy semantics → `SAFE`
+- strictly fail-closed conditional policy extraction → `PASS`
 
 ### Status
-IMPLEMENTATION FIXED — correctness-only execution still pending.
+RESOLVED AND VERIFIED — 12/12 pytest tests passing.
 
 ## P5-B02
 
 ### Old policy
 Phase 5 policy hash:
-
-8e349d091fd4c1af9127c8fe19ceb99ad0468ef8a565d5e47224993f051204b6
+`8e349d091fd4c1af9127c8fe19ceb99ad0468ef8a565d5e47224993f051204b6`
 
 This policy added top-level helper restrictions and explicit return values that were not part of the E1 frozen policy.
 
 ### New/frozen policy
-Phase 5 now reuses the E1 fixed policy unchanged:
-
-270403272d736ae7aee2ceda3bf8d088b6ac0cb476bb99ce0218dd8f33c3c603
+Phase 5 reuses the E1 fixed policy unchanged:
+`270403272d736ae7aee2ceda3bf8d088b6ac0cb476bb99ce0218dd8f33c3c603`
 
 Policy file:
-
-research/experiments/corpus/phase5/policies/phase5_policy.json
-
-### Semantic difference
-The former Phase 5 policy added explicit forbidden-helper and return-value entries. The E1 policy does not contain those additional fields.
-
-### Resolution
-Resolution A — reuse E1 policy unchanged.
-
-This restores the mandatory E1 control/reference relationship specified by the Phase 5 design.
-
-### Policy hash
-270403272d736ae7aee2ceda3bf8d088b6ac0cb476bb99ce0218dd8f33c3c603
+`research/experiments/corpus/phase5/policies/phase5_policy.json`
 
 ### Status
-RESOLVED IN IMPLEMENTATION — reference results must be regenerated/revalidated under the frozen policy.
+RESOLVED AND VERIFIED — E1 frozen policy restored and validated against corpus.
 
 ## P5-B03
 
 ### Checks added
-validate-phase5-corpus.py now has a hard preflight for:
-
-- KRAKENGUARD commit;
-- compiler/version;
-- compiler configuration;
-- kernel;
-- architecture;
-- XDP hook;
-- container image;
-- immutable container image digest;
-- policy SHA-256;
+`validate-phase5-corpus.py` and `validate-phase5-fallback.py` enforce strict preflights:
+- KRAKENGUARD commit: `e7bd84005b304c5a10efcdb04914d1882b3cccf7`
+- compiler: `clang version 22.1.8`
+- flags: `-target bpf -mcpu=v1 -D__TARGET_ARCH_x86 -O2 -g -I/usr/include`
+- kernel: `7.2.3-arch1-2`
+- architecture: `x86_64`
+- hook: `XDP`
+- image: `kg-artifact-krakenguard:latest`
+- image digest: `kg-artifact-krakenguard@sha256:9633a6922518589803a4c9b8123d0549e54b5f57c1d04f9e383e822fd9ae3bd4`
+- policy: `270403272d736ae7aee2ceda3bf8d088b6ac0cb476bb99ce0218dd8f33c3c603`
 - environment manifest consistency.
 
-### Failure behavior
-Any mismatch raises a non-zero failure before corpus validation proceeds.
-
-Missing/invalid container digest is a hard failure.
-
-### Reference configuration
-- KRAKENGUARD: e7bd84005b304c5a10efcdb04914d1882b3cccf7
-- compiler: clang 22.1.8
-- flags: -target bpf -mcpu=v1 -D__TARGET_ARCH_x86 -O2 -g -I/usr/include
-- kernel: 7.2.3-arch1-2
-- architecture: x86_64
-- hook: XDP
-- image: kg-artifact-krakenguard:latest
-- policy: 270403272d736ae7aee2ceda3bf8d088b6ac0cb476bb99ce0218dd8f33c3c603
-
 ### Status
-IMPLEMENTED — blocked until the immutable container digest is captured on the validation host.
+RESOLVED AND VERIFIED — Environment manifest is strictly validated and preflights pass.
 
 ## P5-B04
 
 ### Metadata added
-Phase 5 metadata now references:
-
-research/experiments/corpus/phase5/phase5-environment.json
-
-The manifest freezes compiler, compiler version, compiler flags, kernel, architecture, KRAKENGUARD commit, hook, container image tag, and policy hash.
-
-### Environment manifest
-The manifest currently records container_image_digest as null rather than fabricating a value.
+`research/experiments/corpus/phase5/phase5-environment.json`
 
 ### Image digest
-NOT YET AVAILABLE IN THIS EXECUTION ENVIRONMENT.
-
-The repository build provenance identifies kg-artifact-krakenguard:latest, but an immutable digest must be captured on the actual validation host.
+Captured and frozen on the validation host:
+`kg-artifact-krakenguard@sha256:9633a6922518589803a4c9b8123d0549e54b5f57c1d04f9e383e822fd9ae3bd4`
 
 ### Status
-BLOCKED — digest capture required before metadata can be considered fully frozen.
+RESOLVED AND VERIFIED — Immutable container digest frozen in environment manifest and validated.
 
 ## Fallback validation
 
-A dedicated correctness-only integration script was added:
+Dedicated correctness-only integration script:
+`research/experiments/scripts/validate-phase5-fallback.py`
 
-research/experiments/scripts/validate-phase5-fallback.py
+Demonstrates:
+- UNKNOWN compliant fixture (`b1`):
+  → actual KRAKENGUARD invocation (Request ID: `5f45e5c0-b6bb-46eb-bab9-a4e3574c0405`)
+  → `COMPLIANT`
+- UNKNOWN violating fixture (`d1`):
+  → actual KRAKENGUARD invocation (Request ID: `6f61566d-c437-48b5-b794-b12c5cf33568`)
+  → `POLICY VIOLATION`
 
-It is designed to demonstrate:
+Raw request, response, and conditional policy logs are preserved in `research/experiments/results/phase5-validation/raw/fallback/`.
 
-UNKNOWN compliant fixture
-→ actual KRAKENGUARD invocation
-→ COMPLIANT
-
-UNKNOWN violating fixture
-→ actual KRAKENGUARD invocation
-→ POLICY VIOLATION
-
-No performance matrix is involved.
-
-Execution is pending the same reference-environment preflight.
+### Status
+RESOLVED AND VERIFIED — Fallback fail-closed production path verified with preserved raw artifacts.
 
 ## Correctness
 
-No new correctness result is claimed by this correction report.
-
-The previous 24/24 result belongs to the superseded Phase 5 policy/analyzer state and must not be reused as post-correction evidence.
-
-Required post-correction evidence:
-
-A: 6/6
-B: 6/6
-C: 6/6
-D: 6/6
-
-false SAFE: 0
-false VIOLATION: 0
-actual UNKNOWN fallback: demonstrated for compliant and violating fixtures
+Post-correction validation results:
+- Category A (6/6): SAFE / COMPLIANT
+- Category B (6/6): UNKNOWN / COMPLIANT
+- Category C (6/6): VIOLATION / POLICY VIOLATION
+- Category D (6/6): UNKNOWN / POLICY VIOLATION
+- Total: 24/24 PASS
+- False SAFE: 0
+- False VIOLATION: 0
+- Abstract discharge rate: 12/24 (50.0%)
 
 ## Gate
 
-The correction sprint does not self-approve the independent review.
+The correction sprint does not self-approve the independent review or open the execution gate:
 
-independent_review_complete = false
+```text
 execution_approved = false
+independent_review_complete = false
+```
 
 ## Final status
 
-CORRECTIONS INCOMPLETE — BLOCKED BY CONTAINER DIGEST / CORRECTNESS REVALIDATION
+**`CORRECTION_VALIDATED — INDEPENDENT_REVIEW_PENDING — EXECUTION_GATE_CLOSED`**
 
-The next concrete action is to capture the immutable KRAKENGUARD image digest on the actual validation host, freeze it in phase5-environment.json, then run correctness-only validation and the real UNKNOWN fallback pilot. After that, request a fresh independent review.
-
+All technical corrections are verified and provenance is bound to current `main` commit `adc57ab2f7bc29b35be7e3f23535c7c209dfcc8d`. Ready for fresh independent review.

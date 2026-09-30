@@ -4,9 +4,14 @@
   "status": "CORRECTION_VALIDATION_COMPLETE",
   "provenance": {
     "repository": "roydza27/Research-Paper-eBPF",
-    "branch": "phase5-experimental-design",
-    "head": "f2c70717ac2b7acc8faa7d303d4085d577f61668",
-    "tree": "f4062862e73b3f17e1c15ff02737bc9d00cee0c2",
+    "branch": "main",
+    "current_main_commit": "adc57ab2f7bc29b35be7e3f23535c7c209dfcc8d",
+    "current_main_tree": "b5324029b181fb698bf07353179ed841ed47f7d0",
+    "tested_tree": "f4062862e73b3f17e1c15ff02737bc9d00cee0c2",
+    "historical_reported_head": "f2c70717ac2b7acc8faa7d303d4085d577f61668",
+    "historical_reported_evidence_commit": "b13d22384a8ff0ee2b730f7384a56a6a9be7e6f8",
+    "historical_actual_branch_evidence_commit": "b13d2230b0c283fbe747aab41097c91a52521400",
+    "provenance_note": "Implementation and validation evidence squashed into PR #17 (commit adc57ab) on main; tested implementation blobs in tree f4062862 match main exactly.",
     "krakenguard_commit": "e7bd84005b304c5a10efcdb04914d1882b3cccf7",
     "container_image": "kg-artifact-krakenguard:latest",
     "container_digest": "kg-artifact-krakenguard@sha256:9633a6922518589803a4c9b8123d0549e54b5f57c1d04f9e383e822fd9ae3bd4",
@@ -105,6 +110,6 @@
   "gate_status": {
     "execution_approved": false,
     "independent_review_complete": false,
-    "state": "CORRECTION VALIDATION COMPLETE \u2014 READY FOR INDEPENDENT RE-REVIEW"
+    "state": "CORRECTION_VALIDATED — INDEPENDENT_REVIEW_PENDING — EXECUTION_GATE_CLOSED"
   }
 }

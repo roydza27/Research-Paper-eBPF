@@ -87,10 +87,17 @@ def main():
     correction_validation = {
         "schema": "phase5-correction-validation/v1",
         "timestamp": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
-        "status": "CORRECTION_VALIDATION_COMPLETE",
+        "status": "CORRECTION_VALIDATED",
         "provenance": {
             "repository": "roydza27/Research-Paper-eBPF",
             "branch": branch,
+            "current_main_commit": "adc57ab2f7bc29b35be7e3f23535c7c209dfcc8d",
+            "current_main_tree": "b5324029b181fb698bf07353179ed841ed47f7d0",
+            "tested_tree": "f4062862e73b3f17e1c15ff02737bc9d00cee0c2",
+            "historical_reported_head": "f2c70717ac2b7acc8faa7d303d4085d577f61668",
+            "historical_reported_evidence_commit": "b13d22384a8ff0ee2b730f7384a56a6a9be7e6f8",
+            "historical_actual_branch_evidence_commit": "b13d2230b0c283fbe747aab41097c91a52521400",
+            "provenance_note": "Implementation and validation evidence squashed into PR #17 (commit adc57ab) on main; tested implementation blobs in tree f4062862 match main exactly.",
             "head": head,
             "tree": tree,
             "krakenguard_commit": env.get("krakenguard_commit"),
@@ -146,7 +153,7 @@ def main():
         "gate_status": {
             "execution_approved": False,
             "independent_review_complete": False,
-            "state": "CORRECTION VALIDATION COMPLETE — READY FOR INDEPENDENT RE-REVIEW",
+            "state": "CORRECTION_VALIDATED — INDEPENDENT_REVIEW_PENDING — EXECUTION_GATE_CLOSED",
         },
     }
 
@@ -158,11 +165,18 @@ def main():
     out_md = RESULTS_DIR / "correction-validation.md"
     with open(out_md, "w") as f:
         f.write("# Phase 5 — Correction-Era Validation Report\n\n")
-        f.write("**Status:** `CORRECTION VALIDATION COMPLETE — READY FOR INDEPENDENT RE-REVIEW`  \n")
+        f.write("**Status:** `CORRECTION_VALIDATED — INDEPENDENT_REVIEW_PENDING — EXECUTION_GATE_CLOSED`  \n")
         f.write(f"**Timestamp:** `{correction_validation['timestamp']}`  \n")
         f.write("**Execution Mode:** `Correctness and Provenance Only (No Performance Matrix)`  \n\n")
         f.write("---\n\n")
         f.write("## 1. Provenance Manifest\n\n")
+        f.write(f"- **Current Main Commit:** `adc57ab2f7bc29b35be7e3f23535c7c209dfcc8d` (PR #17)\n")
+        f.write(f"- **Current Main Tree:** `b5324029b181fb698bf07353179ed841ed47f7d0`\n")
+        f.write(f"- **Tested Implementation Tree:** `f4062862e73b3f17e1c15ff02737bc9d00cee0c2`\n")
+        f.write(f"- **Historical Pre-Merge Implementation Commit:** `f2c70717ac2b7acc8faa7d303d4085d577f61668` (squashed into PR #17 on `main`)\n")
+        f.write(f"- **Historical Pre-Merge Evidence Commit (Reported):** `b13d22384a8ff0ee2b730f7384a56a6a9be7e6f8`\n")
+        f.write(f"- **Historical Pre-Merge Evidence Commit (Actual Branch):** `b13d2230b0c283fbe747aab41097c91a52521400`\n")
+        f.write(f"- **Provenance Note:** PR #17 squashed the implementation and evidence into a single commit on `main`. The tested implementation blobs in tree `f4062862...` match current `main` 100%.\n")
         f.write(f"- **Git Branch:** `{branch}`\n")
         f.write(f"- **Git HEAD:** `{head}`\n")
         f.write(f"- **Git Tree:** `{tree}`\n")

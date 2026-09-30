@@ -1,14 +1,25 @@
 {
   "schema": "phase5-execution-gate/v1",
   "execution_approved": false,
-  "design_status": "CORRECTION_IN_PROGRESS_EXECUTION_GATED",
+  "design_status": "CORRECTION_VALIDATED",
   "evidence_sources": {
     "e1_ref": "main",
     "e2_ref": "phase4-e2-full-matrix",
     "krakenguard_commit": "e7bd84005b304c5a10efcdb04914d1882b3cccf7",
+    "container_image_digest": "kg-artifact-krakenguard@sha256:9633a6922518589803a4c9b8123d0549e54b5f57c1d04f9e383e822fd9ae3bd4",
     "policy_sha256": "270403272d736ae7aee2ceda3bf8d088b6ac0cb476bb99ce0218dd8f33c3c603",
-    "corpus_metadata_sha256": null,
-    "environment_manifest": "research/experiments/corpus/phase5/phase5-environment.json"
+    "corpus_metadata_sha256": "0afd9ceeb34240c0398381a54b745f10516eb5fd536f310c3c3e6fa71ff31e2a",
+    "environment_manifest": "research/experiments/corpus/phase5/phase5-environment.json",
+    "current_main_commit": "adc57ab2f7bc29b35be7e3f23535c7c209dfcc8d",
+    "current_main_tree": "b5324029b181fb698bf07353179ed841ed47f7d0",
+    "tested_tree": "f4062862e73b3f17e1c15ff02737bc9d00cee0c2",
+    "historical_premerge_references": {
+      "implementation_commit": "f2c70717ac2b7acc8faa7d303d4085d577f61668",
+      "evidence_commit_reported": "b13d22384a8ff0ee2b730f7384a56a6a9be7e6f8",
+      "evidence_commit_actual_branch": "b13d2230b0c283fbe747aab41097c91a52521400",
+      "squash_merge_pr": "#17",
+      "note": "Pre-merge branch commits were squashed into PR #17 (adc57ab) on main; tested implementation blobs in tree f4062862 match main exactly."
+    }
   },
   "conditions": {
     "corpus_defined": true,
@@ -22,11 +33,13 @@
     "failure_policy_defined": true,
     "raw_artifact_policy_defined": true,
     "execution_reproducibility_defined": true,
-    "implementation_complete": false,
+    "implementation_complete": true,
     "corpus_implemented": true,
-    "reference_verdicts_validated": false,
-    "abstract_soundness_reviewed": false,
-    "category_behavior_validated": false,
+    "reference_verdicts_validated": true,
+    "abstract_soundness_reviewed": true,
+    "category_behavior_validated": true,
+    "immutable_container_identity_verified": true,
+    "correction_validation_complete": true,
     "independent_review_complete": false
   },
   "experiments": {
@@ -34,7 +47,8 @@
       "programs": 24,
       "warmups": 2,
       "measured": 7,
-      "total_executions": 216
+      "total_executions": 216,
+      "executed": false
     },
     "E4": {
       "programs": 24,
@@ -44,11 +58,13 @@
       ],
       "warmups": 2,
       "measured": 7,
-      "total_executions": 432
+      "total_executions": 432,
+      "executed": false
     },
     "E5": {
       "path_levels": "validated 1–64 where reachable",
-      "execution_count": "TBD after corpus validation"
+      "execution_count": "TBD after corpus validation",
+      "executed": false
     }
   },
   "disallowed": [
@@ -62,5 +78,5 @@
     "claim hybrid performance improvement before measurement",
     "treat pre-correction Phase 5 validation artifacts as post-correction evidence"
   ],
-  "correction_status": "IN_PROGRESS — correctness revalidation blocked until immutable container digest is frozen"
+  "correction_status": "CORRECTION_VALIDATED — INDEPENDENT_REVIEW_PENDING — EXECUTION_GATE_CLOSED"
 }

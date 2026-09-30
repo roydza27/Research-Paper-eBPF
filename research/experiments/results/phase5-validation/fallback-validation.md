@@ -2,9 +2,11 @@
 
 Correctness-only integration evidence. No E3/E4/E5 performance claim.
 
-- **Git Branch:** `phase5-experimental-design`
-- **Git HEAD:** `f2c70717ac2b7acc8faa7d303d4085d577f61668`
-- **Git Tree:** `f4062862e73b3f17e1c15ff02737bc9d00cee0c2`
+- **Git Branch:** `main`
+- **Current Main Commit:** `adc57ab2f7bc29b35be7e3f23535c7c209dfcc8d` (PR #17)
+- **Current Main Tree:** `b5324029b181fb698bf07353179ed841ed47f7d0`
+- **Tested Implementation Tree:** `f4062862e73b3f17e1c15ff02737bc9d00cee0c2`
+- **Historical Pre-Merge Head:** `f2c70717ac2b7acc8faa7d303d4085d577f61668`
 
 | Program | Abstract | Actual fallback | Final reference verdict | Request ID | Raw Evidence |
 |---|---|---|---|---|---|

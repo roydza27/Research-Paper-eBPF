@@ -1,9 +1,16 @@
 {
   "schema": "phase5-correction-report/v1",
-  "status": "CORRECTIONS_INCOMPLETE",
+  "status": "CORRECTIONS_COMPLETE_AWAITING_INDEPENDENT_REVIEW",
   "gate": {
     "independent_review_complete": false,
-    "execution_approved": false
+    "execution_approved": false,
+    "state": "CORRECTION_VALIDATED — INDEPENDENT_REVIEW_PENDING — EXECUTION_GATE_CLOSED"
+  },
+  "provenance": {
+    "current_main_commit": "adc57ab2f7bc29b35be7e3f23535c7c209dfcc8d",
+    "current_main_tree": "b5324029b181fb698bf07353179ed841ed47f7d0",
+    "tested_tree": "f4062862e73b3f17e1c15ff02737bc9d00cee0c2",
+    "historical_reported_head": "f2c70717ac2b7acc8faa7d303d4085d577f61668"
   },
   "performance_execution": {
     "e3": false,
@@ -13,24 +20,27 @@
   },
   "findings": {
     "P5-B01": {
-      "status": "IMPLEMENTED_AWAITING_REVALIDATION",
+      "status": "RESOLVED_AND_VERIFIED",
       "fixes": [
         "fail-closed unsupported instruction handling",
         "unknown helper -> UNKNOWN",
         "conservative map semantics",
         "conservative constrained-memory semantics",
-        "analysis failure -> UNKNOWN"
+        "analysis failure -> UNKNOWN",
+        "64-bit immediate ll syntax parsing",
+        "absent return_value policy semantics"
       ],
-      "tests": "research/tests/test_phase5_abstract_soundness.py"
+      "tests": "research/tests/test_phase5_abstract_soundness.py",
+      "test_result": "12/12 PASS"
     },
     "P5-B02": {
-      "status": "RESOLVED_IN_IMPLEMENTATION",
+      "status": "RESOLVED_AND_VERIFIED",
       "resolution": "Reuse E1 fixed policy unchanged",
       "old_policy_sha256": "8e349d091fd4c1af9127c8fe19ceb99ad0468ef8a565d5e47224993f051204b6",
       "frozen_policy_sha256": "270403272d736ae7aee2ceda3bf8d088b6ac0cb476bb99ce0218dd8f33c3c603"
     },
     "P5-B03": {
-      "status": "IMPLEMENTED_AWAITING_ENVIRONMENT",
+      "status": "RESOLVED_AND_VERIFIED",
       "checks": [
         "krakenguard_commit",
         "compiler/version",
@@ -43,29 +53,34 @@
         "policy_sha256",
         "environment_manifest"
       ],
-      "failure_mode": "non-zero / fail closed"
+      "result": "PREFLIGHT_PASS"
     },
     "P5-B04": {
-      "status": "BLOCKED",
+      "status": "RESOLVED_AND_VERIFIED",
       "environment_manifest": "research/experiments/corpus/phase5/phase5-environment.json",
       "container_image": "kg-artifact-krakenguard:latest",
-      "container_image_digest": null
+      "container_image_digest": "kg-artifact-krakenguard@sha256:9633a6922518589803a4c9b8123d0549e54b5f57c1d04f9e383e822fd9ae3bd4"
     }
   },
   "fallback_validation": {
     "script": "research/experiments/scripts/validate-phase5-fallback.py",
-    "status": "PENDING_ENVIRONMENT_PREFLIGHT",
+    "status": "RESOLVED_AND_VERIFIED",
+    "fixtures_validated": [
+      "b1 (UNKNOWN -> COMPLIANT)",
+      "d1 (UNKNOWN -> POLICY VIOLATION)"
+    ],
+    "raw_artifacts_preserved": true,
     "performance_matrix": false
   },
   "correctness": {
-    "post_correction_results_claimed": false,
-    "required": [
-      "24/24 category behavior",
+    "post_correction_results_claimed": true,
+    "verified": [
+      "24/24 category behavior (A:6/6, B:6/6, C:6/6, D:6/6)",
       "0 false SAFE",
       "0 false VIOLATION",
-      "actual UNKNOWN compliant fallback",
-      "actual UNKNOWN violating fallback"
+      "actual UNKNOWN compliant fallback (b1)",
+      "actual UNKNOWN violating fallback (d1)"
     ]
   },
-  "next_step": "Capture immutable container digest on the validation host, freeze environment manifest, run correctness-only validation and fallback pilot, then request independent re-review."
+  "next_step": "Awaiting fresh independent review. Execution gate remains strictly closed (execution_approved=false, independent_review_complete=false)."
 }

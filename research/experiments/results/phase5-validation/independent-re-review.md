@@ -1,5 +1,10 @@
 # Phase 5 — Independent Re-Review of Correctness, Provenance & Experimental Readiness
 
+> [!NOTE]
+> **Historical Review Record — Superseded**  
+> This review evaluated pre-correction commit `51e1dc2683bc1ffef02172193aee6bcf79be6037` against base `799412ed885d2e7dd754f4bee55849a71b8e4e0a`.  
+> All three identified technical blockers (fail-closed conditional extraction, B01 12-test regression suite, and request-linked raw fallback artifacts) were subsequently resolved and squashed into PR #17 (`adc57ab2f7bc29b35be7e3f23535c7c209dfcc8d`) on `main`. This document is preserved for historical review provenance.
+
 ## Executive verdict
 
 **FAIL — PHASE 5 CORRECTION REQUIRES FURTHER WORK**

@@ -1,6 +1,6 @@
 # Phase 5 — Correction-Era Validation Report
 
-**Status:** `CORRECTION VALIDATION COMPLETE — READY FOR INDEPENDENT RE-REVIEW`  
+**Status:** `CORRECTION_VALIDATED — INDEPENDENT_REVIEW_PENDING — EXECUTION_GATE_CLOSED`  
 **Timestamp:** `2026-09-30T18:14:42Z`  
 **Execution Mode:** `Correctness and Provenance Only (No Performance Matrix)`  
 
@@ -8,9 +8,13 @@
 
 ## 1. Provenance Manifest
 
-- **Git Branch:** `phase5-experimental-design`
-- **Git HEAD:** `f2c70717ac2b7acc8faa7d303d4085d577f61668`
-- **Git Tree:** `f4062862e73b3f17e1c15ff02737bc9d00cee0c2`
+- **Current Main Commit:** `adc57ab2f7bc29b35be7e3f23535c7c209dfcc8d` (PR #17)
+- **Current Main Tree:** `b5324029b181fb698bf07353179ed841ed47f7d0`
+- **Tested Implementation Tree:** `f4062862e73b3f17e1c15ff02737bc9d00cee0c2`
+- **Historical Pre-Merge Implementation Commit:** `f2c70717ac2b7acc8faa7d303d4085d577f61668` (squashed into PR #17 on `main`)
+- **Historical Pre-Merge Evidence Commit (Reported):** `b13d22384a8ff0ee2b730f7384a56a6a9be7e6f8`
+- **Historical Pre-Merge Evidence Commit (Actual Branch):** `b13d2230b0c283fbe747aab41097c91a52521400`
+- **Provenance Note:** PR #17 squashed the implementation and evidence into a single commit on `main`. The tested implementation blobs in tree `f4062862...` match current `main` 100%.
 - **KRAKENGUARD Commit:** `e7bd84005b304c5a10efcdb04914d1882b3cccf7`
 - **Container Image:** `kg-artifact-krakenguard:latest`
 - **Immutable Container Digest:** `kg-artifact-krakenguard@sha256:9633a6922518589803a4c9b8123d0549e54b5f57c1d04f9e383e822fd9ae3bd4`
@@ -96,4 +100,4 @@ Integration execution via live UNIX domain socket against the authoritative KRAK
 ```
 
 The validation suite and fallback integration have completely succeeded under the immutable frozen environment. The repository state is:
-**`CORRECTION VALIDATION COMPLETE — READY FOR INDEPENDENT RE-REVIEW`**
+**`CORRECTION_VALIDATED — INDEPENDENT_REVIEW_PENDING — EXECUTION_GATE_CLOSED`**
