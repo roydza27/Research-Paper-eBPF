@@ -1,0 +1,10 @@
+
+/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/results/raw/e1-objects/p2_one_branch_xdp.o:	file format elf64-bpf
+
+Disassembly of section xdp:
+
+0000000000000000 <e1_p2>:
+       0:	61 10 0c 00 00 00 00 00	w0 = *(u32 *)(r1 + 0xc)
+       1:	57 00 00 00 01 00 00 00	r0 &= 0x1
+       2:	07 00 00 00 01 00 00 00	r0 += 0x1
+       3:	95 00 00 00 00 00 00 00	exit

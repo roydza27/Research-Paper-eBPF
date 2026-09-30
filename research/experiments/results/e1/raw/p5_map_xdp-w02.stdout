@@ -1,0 +1,61 @@
+
+[Step 1] Lifting object file: /data/requests/2fe8aba4-6ea9-4dbf-8d14-aa10a35f776e/input/p5_map_xdp.o
+Working dir: /tmp/tmpvgmgxlqu
+[Optimize IR] Running: opt -O3 -S /tmp/tmpvgmgxlqu/tmpx8drf925 -o /tmp/tmpvgmgxlqu/tmpx8drf925
+[Step 2] Extracting relocation info
+Found relocation section: .relxdp
+Detected program type: xdp
+[relocation data] (hex) : 2000000000000000010000000c000000
+Number of relocation entries in .relxdp: 1
+Function start offsets: [0]
+Has .relxdp: True
+[Step 3] Applying function pass to remove map globals
+[Remove map globals] Running: opt -load /opt/krakenguard/lifting_tools/llvm_func_pass/build/libfunc_pass.so -load-pass-plugin=/opt/krakenguard/lifting_tools/llvm_func_pass/build/libfunc_pass.so -passes=custom-bpf-pass -map-config /tmp/tmpvgmgxlqu/map_offset_mapping /tmp/tmpvgmgxlqu/tmpx8drf925 -o /tmp/tmpvgmgxlqu/tmpx8drf925
+Loaded map config: ID 32 -> e1_map
+Found map global to remove: e1_map
+map name : e1_map, mapId : 32
+not a tail call
+Found map lookup with ID: 32
+  Mapped to map name: e1_map
+lookup or delete
+call to replace :: bpf_map_lookup_elem.toreplace
+trying to erase : bpf_map_lookup_elem.toreplace
+ERASED
+transformMapLookups done
+
+[Step 4] Generating template code
+Function: e1_p5, Maps: 1
+[Step 5] Compiling template
+[Compile template] Running: clang-13 -target bpf -DKLEE_VERIFICATION -DVERIFY_INTERACTIONS -I/opt/krakenguard/examples/headers -I/usr/include/x86_64-linux-gnu -I/opt/krakenguard/ebpf-se/libbpf-stubbed/src/build/usr/include -I /opt/krakenguard/klee/include -D__USE_VMLINUX__ -D__TARGET_ARCH_x86 -DBPF_NO_PRESERVE_ACCESS_INDEX -Wall -Wno-unused-value -Wno-unused-variable -Wno-pointer-sign -Wno-compare-distinct-pointer-types -Wno-unused-function -fno-discard-value-names -fno-builtin -O0 -emit-llvm -c -g /tmp/tmpvgmgxlqu/cpp_generated_code.c -o /tmp/tmpvgmgxlqu/cpp_generated_code.c
+[Step 6] Applying ext sym pass
+[Ext sym pass] Running: opt -load-pass-plugin=/opt/krakenguard/lifting_tools/llvm_ext_sym_pass/build/libext_sym_pass.so -passes=int-to-ext /tmp/tmpvgmgxlqu/cpp_generated_code.c -o /tmp/tmpvgmgxlqu/cpp_generated_code.c
+[Step 7] Linking IRs
+[Link IRs] Running: llvm-link /tmp/tmpvgmgxlqu/cpp_generated_code.c /tmp/tmpvgmgxlqu/tmpx8drf925 -o /data/requests/2fe8aba4-6ea9-4dbf-8d14-aa10a35f776e/input/final_linked_ir.bc
+Output: /data/requests/2fe8aba4-6ea9-4dbf-8d14-aa10a35f776e/input/final_linked_ir.bc
+
+Loaded Config JSON file
+Parsing conditional policies...
+[policy] ACTION : e1_fixed_policy
+
+=== Conditional Policy Summary ===
+  MEM_CONDITION: 0  ACTION: 1
+  ACTION roots:  e1_fixed_policy 
+==================================
+
+
+========== Conditional Policy Statistics ==========
+Policy Name                     Applicable    Violated Not Applic.  Coverage %
+------------------------------------------------------------------------------
+e1_fixed_policy                          1           0           0      100.0%
+------------------------------------------------------------------------------
+TOTAL                                    1           0           0      100.0%
+===================================================
+
+No use of restricted function detected in any execution path
+
+=== Conditional Policy Summary ===
+Conditional policy mode enabled
+Total test cases: 1
+Results written to: conditional_policy.results.txt
+==================================
+Elapsed time in milliseconds: 384
