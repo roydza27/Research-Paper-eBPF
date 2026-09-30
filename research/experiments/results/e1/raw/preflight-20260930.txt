@@ -1,0 +1,36 @@
+E1 preflight attempt — 2026-09-30
+
+Repository path requested:
+  /home/cy3pher/Documents/WorkSpace-Research/eBPF
+
+Observed:
+  path not mounted in this execution environment
+
+GitHub repository inspected:
+  roydza27/Research-Paper-eBPF
+
+Current main includes:
+  e7dfe291e6a49e5e2c498bfc9c76051f42c0ae7d
+  research: add Phase 4 E1 complexity corpus (#9)
+
+E1 corpus commit:
+  134259d89e9ebff27ccd7c2ed3d6557d270e765f
+
+Environment probes:
+  clang: 17.0.0 (Swift LLVM build)
+  clang BPF target: unavailable
+  llvm-config: unavailable
+  bpftool: unavailable
+  docker: unavailable
+  docker compose: unavailable
+  python3: 3.13.5
+
+Official BPF compilation diagnostic:
+  clang -target bpf ...
+  error: unable to create target: 'No available targets are compatible with triple "bpf"'
+
+Decision:
+  stop before P0/P7 smoke tests
+  classify as environment/reproducibility issue
+  do not run full matrix
+  do not fabricate measurements
