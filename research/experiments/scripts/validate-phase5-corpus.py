@@ -116,7 +116,15 @@ def preflight_reference_environment(policy_hash):
     if digest not in observed_digests:
         raise RuntimeError(f"container image digest mismatch: manifest={digest}, observed={observed_digests}")
 
+    repo_root = ROOT_DIR.parent
+    repo_branch = _run_text(["git", "-C", str(repo_root), "branch", "--show-current"])
+    repo_head = _run_text(["git", "-C", str(repo_root), "rev-parse", "HEAD"])
+    repo_tree = _run_text(["git", "-C", str(repo_root), "rev-parse", "HEAD^{tree}"])
+
     return {
+        "git_branch": repo_branch,
+        "git_head": repo_head,
+        "git_tree": repo_tree,
         "krakenguard_commit": baseline_head,
         "compiler": EXPECTED_COMPILER,
         "compiler_version": EXPECTED_COMPILER_VERSION,
@@ -128,6 +136,7 @@ def preflight_reference_environment(policy_hash):
         "container_image_digest": digest,
         "policy_sha256": policy_hash,
     }
+
 
 PROGRAM_SPECS = [
     # Category A: Provable Compliant (Target: SAFE, Ref: COMPLIANT)
@@ -170,16 +179,31 @@ def extract_krakenguard_verdict(ref_resp):
             f"KRAKENGUARD execution failed (return code {ref_resp.execution.return_code}): {stderr[:300]}"
         )
     out_dir = ref_resp.output.directory or ""
+    if not out_dir:
+        raise RuntimeError("KRAKENGUARD response missing output directory")
     host_out_dir = Path(out_dir.replace("/data", str(BASELINE_DIR / "data")))
     cond_file = host_out_dir / "conditional_policy.results.txt"
-    if cond_file.exists():
-        text = cond_file.read_text()
-        if "Status: POLICY VIOLATIONS DETECTED" in text:
-            return False, "POLICY VIOLATION"
-        if "Status: NO VIOLATIONS" in text:
-            return True, "COMPLIANT"
-    passed = bool(ref_resp.verification_result and ref_resp.verification_result.passed)
-    return passed, ("COMPLIANT" if passed else "POLICY VIOLATION")
+    if not cond_file.exists():
+        raise RuntimeError(
+            f"Mandatory conditional policy output missing: {cond_file}. "
+            "Authoritative verdict extraction must fail closed."
+        )
+    text = cond_file.read_text().strip()
+    if not text:
+        raise RuntimeError(
+            f"Mandatory conditional policy output is empty: {cond_file}. "
+            "Authoritative verdict extraction must fail closed."
+        )
+    if "Status: POLICY VIOLATIONS DETECTED" in text:
+        return False, "POLICY VIOLATION"
+    elif "Status: NO VIOLATIONS" in text:
+        return True, "COMPLIANT"
+    else:
+        raise RuntimeError(
+            f"Unrecognized or ambiguous conditional policy output in {cond_file}: {text[:200]!r}. "
+            "Authoritative verdict extraction must fail closed."
+        )
+
 
 
 
@@ -257,8 +281,9 @@ def freeze_metadata():
     return policy_hash
 
 
-def run_validation(policy_hash: str):
+def run_validation(policy_hash: str, env: Dict[str, Any] = None):
     print("\n--- Running Stage 1 (Abstract Analysis) & Stage 2 (Reference Verifier) ---")
+
     socket_path = BASELINE_DIR / "socket" / "krakenguard.sock"
     if not socket_path.exists():
         raise RuntimeError(f"KRAKENGUARD socket not found at {socket_path}")
@@ -420,6 +445,7 @@ def run_validation(policy_hash: str):
     with open(json_file, "w") as f:
         json.dump({
             "schema": "phase5-validation-results/v1",
+            "provenance": env,
             "policy_sha256": policy_hash,
             "total_programs": len(results),
             "abstract_discharged_count": abstract_discharged,
@@ -436,6 +462,7 @@ def run_validation(policy_hash: str):
         json.dump({
             "audit_status": "AUDIT_PASS",
             "timestamp": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+            "provenance": env,
             "total_programs": len(results),
             "soundness_guarantee": "VERIFIED_ZERO_DEFECTS",
             "false_safes": false_safes,
@@ -462,11 +489,17 @@ def run_validation(policy_hash: str):
         f.write("# Phase 5 Corpus Validation & Correctness Audit Report\n\n")
         f.write("## 1. Executive Summary\n\n")
         f.write("**Status**: **`AUDIT PASS — 100% SOUND & VALIDATED`**  \n")
+        if env:
+            f.write(f"**Git Branch**: `{env.get('git_branch')}`  \n")
+            f.write(f"**Git HEAD**: `{env.get('git_head')}`  \n")
+            f.write(f"**Git Tree**: `{env.get('git_tree')}`  \n")
+            f.write(f"**Container Digest**: `{env.get('container_image_digest')}`  \n")
         f.write(f"**Policy Hash**: `{policy_hash}`  \n")
         f.write(f"**Corpus Size**: 24 programs (6 per category A–D)  \n")
         f.write(f"**Abstract Stage Discharge Rate**: {abstract_discharged}/24 ({discharge_rate:.1f}%)  \n")
         f.write(f"**False SAFEs**: {false_safes}  \n")
         f.write(f"**False VIOLATIONs**: {false_violations}  \n\n")
+
         
         f.write("## 2. Category Behavior Verification Matrix\n\n")
         f.write("| Category | Role | Expected Abstract | Expected Reference | Observed Abstract | Observed Reference | Agreement | Result |\n")
@@ -515,7 +548,7 @@ def main():
     frozen_policy_hash = freeze_metadata()
     if frozen_policy_hash != policy_hash:
         raise RuntimeError("frozen metadata policy hash differs from preflight policy hash")
-    run_validation(frozen_policy_hash)
+    run_validation(frozen_policy_hash, env)
 
 
 if __name__ == "__main__":
