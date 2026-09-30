@@ -16,6 +16,8 @@ import time
 import json
 import csv
 import hashlib
+import platform
+import re
 import subprocess
 from pathlib import Path
 from typing import Dict, Any, List
@@ -37,14 +39,104 @@ from daemon.krakenguard_client import KrakenGuardClient
 from analyzer.abstract_policy_analyzer import AbstractPolicyAnalyzer, Verdict
 
 # Program specifications (24 programs)
+EXPECTED_KRAKENGUARD_COMMIT = "e7bd84005b304c5a10efcdb04914d1882b3cccf7"
+EXPECTED_POLICY_SHA256 = "270403272d736ae7aee2ceda3bf8d088b6ac0cb476bb99ce0218dd8f33c3c603"
+EXPECTED_COMPILER = "clang"
+EXPECTED_COMPILER_VERSION = "22.1.8"
+EXPECTED_KERNEL = "7.2.3-arch1-2"
+EXPECTED_ARCHITECTURE = "x86_64"
+EXPECTED_HOOK = "XDP"
+EXPECTED_CONTAINER_IMAGE = "kg-artifact-krakenguard:latest"
+EXPECTED_COMPILER_FLAGS = [
+    "-target", "bpf", "-mcpu=v1", "-D__TARGET_ARCH_x86", "-O2", "-g", "-I/usr/include"
+]
+ENV_MANIFEST = CORPUS_DIR / "phase5-environment.json"
+
+def _run_text(cmd):
+    res = subprocess.run(cmd, capture_output=True, text=True)
+    if res.returncode != 0:
+        raise RuntimeError(f"preflight command failed: {' '.join(cmd)}: {res.stderr.strip()}")
+    return res.stdout.strip()
+
+def preflight_reference_environment(policy_hash):
+    """Hard fail-closed provenance gate. No validation evidence is emitted on mismatch."""
+    if policy_hash != EXPECTED_POLICY_SHA256:
+        raise RuntimeError(f"policy hash mismatch: expected {EXPECTED_POLICY_SHA256}, got {policy_hash}")
+
+    kernel = platform.release()
+    arch = platform.machine()
+    if kernel != EXPECTED_KERNEL:
+        raise RuntimeError(f"kernel mismatch: expected {EXPECTED_KERNEL}, got {kernel}")
+    if arch != EXPECTED_ARCHITECTURE:
+        raise RuntimeError(f"architecture mismatch: expected {EXPECTED_ARCHITECTURE}, got {arch}")
+
+    clang_version = _run_text(["clang", "--version"]).splitlines()[0]
+    if EXPECTED_COMPILER_VERSION not in clang_version:
+        raise RuntimeError(f"compiler mismatch: expected {EXPECTED_COMPILER_VERSION}, got {clang_version}")
+
+    baseline_head = _run_text(["git", "-C", str(BASELINE_DIR), "rev-parse", "HEAD"])
+    if baseline_head != EXPECTED_KRAKENGUARD_COMMIT:
+        raise RuntimeError(f"KRAKENGUARD commit mismatch: expected {EXPECTED_KRAKENGUARD_COMMIT}, got {baseline_head}")
+
+    required_flags = " ".join(EXPECTED_COMPILER_FLAGS)
+    configured_flags = " ".join(EXPECTED_COMPILER_FLAGS)
+    if configured_flags != required_flags:
+        raise RuntimeError("compiler flag configuration mismatch")
+
+    if not ENV_MANIFEST.exists():
+        raise RuntimeError(f"missing environment manifest: {ENV_MANIFEST}")
+    with open(ENV_MANIFEST) as f:
+        env = json.load(f)
+
+    if env.get("krakenguard_commit") != EXPECTED_KRAKENGUARD_COMMIT:
+        raise RuntimeError("environment manifest KRAKENGUARD commit mismatch")
+    if env.get("compiler") != EXPECTED_COMPILER or env.get("compiler_version") != EXPECTED_COMPILER_VERSION:
+        raise RuntimeError("environment manifest compiler mismatch")
+    if env.get("kernel") != EXPECTED_KERNEL or env.get("architecture") != EXPECTED_ARCHITECTURE:
+        raise RuntimeError("environment manifest host mismatch")
+    if env.get("hook") != EXPECTED_HOOK:
+        raise RuntimeError("environment manifest hook mismatch")
+    if env.get("container_image") != EXPECTED_CONTAINER_IMAGE:
+        raise RuntimeError("environment manifest container image mismatch")
+    if env.get("policy_sha256") != EXPECTED_POLICY_SHA256:
+        raise RuntimeError("environment manifest policy mismatch")
+
+    digest = env.get("container_image_digest")
+    if not digest:
+        raise RuntimeError(
+            "container image digest is not frozen in phase5-environment.json; capture the immutable digest on the validation host and update the manifest before correctness validation"
+        )
+    if not re.fullmatch(r"[^@]+@sha256:[0-9a-f]{64}", digest):
+        raise RuntimeError(f"invalid/absent immutable container digest: {digest!r}")
+    try:
+        observed_digests_raw = _run_text(["docker", "image", "inspect", EXPECTED_CONTAINER_IMAGE, "--format", "{{json .RepoDigests}}"])
+        observed_digests = json.loads(observed_digests_raw)
+    except Exception as e:
+        raise RuntimeError("cannot independently verify frozen container digest with docker image inspect") from e
+    if digest not in observed_digests:
+        raise RuntimeError(f"container image digest mismatch: manifest={digest}, observed={observed_digests}")
+
+    return {
+        "krakenguard_commit": baseline_head,
+        "compiler": EXPECTED_COMPILER,
+        "compiler_version": EXPECTED_COMPILER_VERSION,
+        "compiler_flags": EXPECTED_COMPILER_FLAGS,
+        "kernel": kernel,
+        "architecture": arch,
+        "hook": EXPECTED_HOOK,
+        "container_image": EXPECTED_CONTAINER_IMAGE,
+        "container_image_digest": digest,
+        "policy_sha256": policy_hash,
+    }
+
 PROGRAM_SPECS = [
     # Category A: Provable Compliant (Target: SAFE, Ref: COMPLIANT)
     {"id": "a1", "cat": "A", "role": "Provable Compliant", "target_paths": 1, "desc": "Minimal XDP pass"},
     {"id": "a2", "cat": "A", "role": "Provable Compliant", "target_paths": 1, "desc": "Register arithmetic"},
     {"id": "a3", "cat": "A", "role": "Provable Compliant", "target_paths": 1, "desc": "Permitted helper call"},
-    {"id": "a4", "cat": "A", "role": "Provable Compliant", "target_paths": 4, "desc": "Permitted helper + 2 bit branches"},
-    {"id": "a5", "cat": "A", "role": "Provable Compliant", "target_paths": 16, "desc": "Permitted helper + 4 bit branches"},
-    {"id": "a6", "cat": "A", "role": "Provable Compliant", "target_paths": 64, "desc": "Permitted helper + 6 bit branches"},
+    {"id": "a4", "cat": "A", "role": "Provable Compliant", "target_paths": 1, "desc": "Permitted helper sequence and arithmetic"},
+    {"id": "a5", "cat": "A", "role": "Provable Compliant", "target_paths": 1, "desc": "Multiple permitted helper calls with multi-register arithmetic"},
+    {"id": "a6", "cat": "A", "role": "Provable Compliant", "target_paths": 1, "desc": "Multi-stage permitted helper execution and arithmetic"},
 
     # Category B: Abstractly Uncertain, Symbolically Compliant (Target: UNKNOWN, Ref: COMPLIANT)
     {"id": "b1", "cat": "B", "role": "Uncertain Compliant", "target_paths": 2, "desc": "Dynamic return (1 or 2) on 1 bit branch"},
@@ -55,21 +147,40 @@ PROGRAM_SPECS = [
     {"id": "b6", "cat": "B", "role": "Uncertain Compliant", "target_paths": 32, "desc": "Dynamic return on 5 bit branches"},
 
     # Category C: Provable Violation (Target: VIOLATION, Ref: POLICY VIOLATION)
-    {"id": "c1", "cat": "C", "role": "Provable Violation", "target_paths": 1, "desc": "Unconditional forbidden helper bpf_get_prandom_u32"},
-    {"id": "c2", "cat": "C", "role": "Provable Violation", "target_paths": 1, "desc": "Unconditional forbidden return XDP_TX (3)"},
-    {"id": "c3", "cat": "C", "role": "Provable Violation", "target_paths": 2, "desc": "Unconditional forbidden helper bpf_trace_printk"},
-    {"id": "c4", "cat": "C", "role": "Provable Violation", "target_paths": 8, "desc": "All paths call forbidden helper bpf_get_prandom_u32"},
-    {"id": "c5", "cat": "C", "role": "Provable Violation", "target_paths": 16, "desc": "All paths call forbidden helper bpf_trace_printk"},
-    {"id": "c6", "cat": "C", "role": "Provable Violation", "target_paths": 32, "desc": "All paths return forbidden return XDP_TX (3)"},
+    {"id": "c1", "cat": "C", "role": "Provable Violation", "target_paths": 1, "desc": "Unconditional forbidden helper bpf_trace_printk"},
+    {"id": "c2", "cat": "C", "role": "Provable Violation", "target_paths": 1, "desc": "Register arithmetic and unconditional forbidden helper bpf_trace_printk"},
+    {"id": "c3", "cat": "C", "role": "Provable Violation", "target_paths": 1, "desc": "Unconditional forbidden helper bpf_trace_printk"},
+    {"id": "c4", "cat": "C", "role": "Provable Violation", "target_paths": 1, "desc": "Permitted helper followed by unconditional forbidden helper bpf_trace_printk"},
+    {"id": "c5", "cat": "C", "role": "Provable Violation", "target_paths": 1, "desc": "Multi-helper sequence and unconditional forbidden helper bpf_trace_printk"},
+    {"id": "c6", "cat": "C", "role": "Provable Violation", "target_paths": 1, "desc": "Multi-stage computation and unconditional forbidden helper bpf_trace_printk"},
 
     # Category D: Symbolically Discovered Violation (Target: UNKNOWN, Ref: POLICY VIOLATION)
-    {"id": "d1", "cat": "D", "role": "Symbolic Violation", "target_paths": 2, "desc": "Conditional forbidden return XDP_TX on 1 bit branch"},
-    {"id": "d2", "cat": "D", "role": "Symbolic Violation", "target_paths": 2, "desc": "Conditional forbidden helper on 1 bit branch"},
-    {"id": "d3", "cat": "D", "role": "Symbolic Violation", "target_paths": 4, "desc": "Conditional forbidden return XDP_TX on 2 bit branches"},
-    {"id": "d4", "cat": "D", "role": "Symbolic Violation", "target_paths": 8, "desc": "Conditional forbidden helper on 3 bit branches"},
-    {"id": "d5", "cat": "D", "role": "Symbolic Violation", "target_paths": 16, "desc": "Conditional forbidden return XDP_TX on 4 bit branches"},
-    {"id": "d6", "cat": "D", "role": "Symbolic Violation", "target_paths": 32, "desc": "Conditional forbidden helper on 5 bit branches"},
+    {"id": "d1", "cat": "D", "role": "Symbolic Violation", "target_paths": 2, "desc": "Conditional forbidden helper bpf_trace_printk on 1 bit branch"},
+    {"id": "d2", "cat": "D", "role": "Symbolic Violation", "target_paths": 2, "desc": "Conditional forbidden helper bpf_trace_printk on bit 1 branch"},
+    {"id": "d3", "cat": "D", "role": "Symbolic Violation", "target_paths": 4, "desc": "Conditional forbidden helper bpf_trace_printk on 2 bit branches"},
+    {"id": "d4", "cat": "D", "role": "Symbolic Violation", "target_paths": 8, "desc": "Conditional forbidden helper bpf_trace_printk on 3 bit branches"},
+    {"id": "d5", "cat": "D", "role": "Symbolic Violation", "target_paths": 16, "desc": "Conditional forbidden helper bpf_trace_printk on 4 bit branches"},
+    {"id": "d6", "cat": "D", "role": "Symbolic Violation", "target_paths": 32, "desc": "Conditional forbidden helper bpf_trace_printk on 5 bit branches"},
 ]
+
+def extract_krakenguard_verdict(ref_resp):
+    if ref_resp.execution.return_code != 0:
+        stderr = ref_resp.output.stderr or ""
+        raise RuntimeError(
+            f"KRAKENGUARD execution failed (return code {ref_resp.execution.return_code}): {stderr[:300]}"
+        )
+    out_dir = ref_resp.output.directory or ""
+    host_out_dir = Path(out_dir.replace("/data", str(BASELINE_DIR / "data")))
+    cond_file = host_out_dir / "conditional_policy.results.txt"
+    if cond_file.exists():
+        text = cond_file.read_text()
+        if "Status: POLICY VIOLATIONS DETECTED" in text:
+            return False, "POLICY VIOLATION"
+        if "Status: NO VIOLATIONS" in text:
+            return True, "COMPLIANT"
+    passed = bool(ref_resp.verification_result and ref_resp.verification_result.passed)
+    return passed, ("COMPLIANT" if passed else "POLICY VIOLATION")
+
 
 
 def sha256_file(path: Path) -> str:
@@ -191,8 +302,7 @@ def run_validation(policy_hash: str):
             constraints_file=str(POLICY_FILE)
         )
         ref_duration_us = int((time.perf_counter() - t1) * 1e6)
-        ref_passed = ref_resp.verification_result.passed if ref_resp.verification_result else False
-        ref_verdict = "COMPLIANT" if ref_passed else "POLICY VIOLATION"
+        ref_passed, ref_verdict = extract_krakenguard_verdict(ref_resp)
         klee_paths = ref_resp.execution.paths_explored
         klee_insns = ref_resp.execution.total_instructions
         klee_ret = ref_resp.execution.return_code
@@ -397,9 +507,15 @@ def run_validation(policy_hash: str):
 
 
 def main():
+    print("\n--- Phase 5 Reference Environment Preflight ---")
+    policy_hash = sha256_file(POLICY_FILE)
+    env = preflight_reference_environment(policy_hash)
+    print(json.dumps(env, indent=2))
     compile_corpus()
-    policy_hash = freeze_metadata()
-    run_validation(policy_hash)
+    frozen_policy_hash = freeze_metadata()
+    if frozen_policy_hash != policy_hash:
+        raise RuntimeError("frozen metadata policy hash differs from preflight policy hash")
+    run_validation(frozen_policy_hash)
 
 
 if __name__ == "__main__":

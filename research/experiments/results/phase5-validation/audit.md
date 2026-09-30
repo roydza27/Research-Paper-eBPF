@@ -3,7 +3,7 @@
 ## 1. Executive Summary
 
 **Status**: **`AUDIT PASS — 100% SOUND & VALIDATED`**  
-**Policy Hash**: `8e349d091fd4c1af9127c8fe19ceb99ad0468ef8a565d5e47224993f051204b6`  
+**Policy Hash**: `270403272d736ae7aee2ceda3bf8d088b6ac0cb476bb99ce0218dd8f33c3c603`  
 **Corpus Size**: 24 programs (6 per category A–D)  
 **Abstract Stage Discharge Rate**: 12/24 (50.0%)  
 **False SAFEs**: 0  
@@ -25,27 +25,27 @@
 | `a1` | A | 1 | 1 | `SAFE` | `COMPLIANT` | `FAST_PATH_SAFE` | **PASS** |
 | `a2` | A | 1 | 1 | `SAFE` | `COMPLIANT` | `FAST_PATH_SAFE` | **PASS** |
 | `a3` | A | 1 | 1 | `SAFE` | `COMPLIANT` | `FAST_PATH_SAFE` | **PASS** |
-| `a4` | A | 4 | 4 | `SAFE` | `COMPLIANT` | `FAST_PATH_SAFE` | **PASS** |
-| `a5` | A | 16 | 16 | `SAFE` | `COMPLIANT` | `FAST_PATH_SAFE` | **PASS** |
-| `a6` | A | 64 | 64 | `SAFE` | `COMPLIANT` | `FAST_PATH_SAFE` | **PASS** |
+| `a4` | A | 1 | 1 | `SAFE` | `COMPLIANT` | `FAST_PATH_SAFE` | **PASS** |
+| `a5` | A | 1 | 1 | `SAFE` | `COMPLIANT` | `FAST_PATH_SAFE` | **PASS** |
+| `a6` | A | 1 | 1 | `SAFE` | `COMPLIANT` | `FAST_PATH_SAFE` | **PASS** |
 | `b1` | B | 2 | 2 | `UNKNOWN` | `COMPLIANT` | `FALLBACK_SYMBOLIC` | **PASS** |
 | `b2` | B | 2 | 2 | `UNKNOWN` | `COMPLIANT` | `FALLBACK_SYMBOLIC` | **PASS** |
 | `b3` | B | 4 | 4 | `UNKNOWN` | `COMPLIANT` | `FALLBACK_SYMBOLIC` | **PASS** |
 | `b4` | B | 8 | 8 | `UNKNOWN` | `COMPLIANT` | `FALLBACK_SYMBOLIC` | **PASS** |
 | `b5` | B | 16 | 16 | `UNKNOWN` | `COMPLIANT` | `FALLBACK_SYMBOLIC` | **PASS** |
 | `b6` | B | 32 | 32 | `UNKNOWN` | `COMPLIANT` | `FALLBACK_SYMBOLIC` | **PASS** |
-| `c1` | C | 1 | 0 | `VIOLATION` | `POLICY VIOLATION` | `FAST_PATH_VIOLATION` | **PASS** |
-| `c2` | C | 1 | 0 | `VIOLATION` | `POLICY VIOLATION` | `FAST_PATH_VIOLATION` | **PASS** |
-| `c3` | C | 2 | 1 | `VIOLATION` | `POLICY VIOLATION` | `FAST_PATH_VIOLATION` | **PASS** |
-| `c4` | C | 8 | 0 | `VIOLATION` | `POLICY VIOLATION` | `FAST_PATH_VIOLATION` | **PASS** |
-| `c5` | C | 16 | 16 | `VIOLATION` | `POLICY VIOLATION` | `FAST_PATH_VIOLATION` | **PASS** |
-| `c6` | C | 32 | 0 | `VIOLATION` | `POLICY VIOLATION` | `FAST_PATH_VIOLATION` | **PASS** |
-| `d1` | D | 2 | 0 | `UNKNOWN` | `POLICY VIOLATION` | `FALLBACK_SYMBOLIC` | **PASS** |
-| `d2` | D | 2 | 0 | `UNKNOWN` | `POLICY VIOLATION` | `FALLBACK_SYMBOLIC` | **PASS** |
-| `d3` | D | 4 | 0 | `UNKNOWN` | `POLICY VIOLATION` | `FALLBACK_SYMBOLIC` | **PASS** |
-| `d4` | D | 8 | 0 | `UNKNOWN` | `POLICY VIOLATION` | `FALLBACK_SYMBOLIC` | **PASS** |
-| `d5` | D | 16 | 0 | `UNKNOWN` | `POLICY VIOLATION` | `FALLBACK_SYMBOLIC` | **PASS** |
-| `d6` | D | 32 | 0 | `UNKNOWN` | `POLICY VIOLATION` | `FALLBACK_SYMBOLIC` | **PASS** |
+| `c1` | C | 1 | 1 | `VIOLATION` | `POLICY VIOLATION` | `FAST_PATH_VIOLATION` | **PASS** |
+| `c2` | C | 1 | 1 | `VIOLATION` | `POLICY VIOLATION` | `FAST_PATH_VIOLATION` | **PASS** |
+| `c3` | C | 1 | 1 | `VIOLATION` | `POLICY VIOLATION` | `FAST_PATH_VIOLATION` | **PASS** |
+| `c4` | C | 1 | 1 | `VIOLATION` | `POLICY VIOLATION` | `FAST_PATH_VIOLATION` | **PASS** |
+| `c5` | C | 1 | 1 | `VIOLATION` | `POLICY VIOLATION` | `FAST_PATH_VIOLATION` | **PASS** |
+| `c6` | C | 1 | 1 | `VIOLATION` | `POLICY VIOLATION` | `FAST_PATH_VIOLATION` | **PASS** |
+| `d1` | D | 2 | 2 | `UNKNOWN` | `POLICY VIOLATION` | `FALLBACK_SYMBOLIC` | **PASS** |
+| `d2` | D | 2 | 2 | `UNKNOWN` | `POLICY VIOLATION` | `FALLBACK_SYMBOLIC` | **PASS** |
+| `d3` | D | 4 | 2 | `UNKNOWN` | `POLICY VIOLATION` | `FALLBACK_SYMBOLIC` | **PASS** |
+| `d4` | D | 8 | 2 | `UNKNOWN` | `POLICY VIOLATION` | `FALLBACK_SYMBOLIC` | **PASS** |
+| `d5` | D | 16 | 2 | `UNKNOWN` | `POLICY VIOLATION` | `FALLBACK_SYMBOLIC` | **PASS** |
+| `d6` | D | 32 | 2 | `UNKNOWN` | `POLICY VIOLATION` | `FALLBACK_SYMBOLIC` | **PASS** |
 
 ## 4. Soundness and Invariant Verification
 

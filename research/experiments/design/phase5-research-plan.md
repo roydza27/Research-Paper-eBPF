@@ -183,7 +183,7 @@ Initial support must cover the corpus:
 - XDP returns;
 - CFG joins.
 
-Unsupported instructions or policy predicates conservatively produce UNKNOWN.
+Unsupported instructions or policy predicates conservatively produce UNKNOWN. Unknown helper IDs produce UNKNOWN. Map identity or access-mode behavior that cannot be established from the object and frozen policy produces UNKNOWN. Memory stores are policy-neutral only while the frozen policy contains no memory predicates; if memory policy becomes constrained, unresolved range/provenance behavior produces UNKNOWN.
 
 ### Join
 
@@ -222,13 +222,19 @@ Policy SHA-256:
 270403272d736ae7aee2ceda3bf8d088b6ac0cb476bb99ce0218dd8f33c3c603
 ~~~
 
-### Conditional policy family
+### Phase 5 policy resolution
 
-For path-sensitive cases, use the existing KRAKENGUARD MEM_CONDITION + ACTION policy mechanism demonstrated by the frozen baseline examples.
+Phase 5 uses the E1 fixed policy unchanged as the authoritative reference/control policy. The previous Phase 5 policy added a top-level `helper_func` restriction list and explicit `return_value` entries; those additions were not part of the E1 frozen policy and therefore created an avoidable provenance ambiguity.
 
-The exact policy files must be frozen and hashed before corpus execution.
+Resolution: **reuse E1 policy unchanged**. The authoritative Phase 5 policy file is:
 
-No new policy dimension may be introduced unless its semantics are demonstrated against the frozen KRAKENGUARD policy engine.
+`research/experiments/corpus/phase5/policies/phase5_policy.json`
+
+Its frozen SHA-256 is:
+
+`270403272d736ae7aee2ceda3bf8d088b6ac0cb476bb99ce0218dd8f33c3c603`
+
+Path-sensitive experiments may still exercise unresolved program behavior, but they do not introduce a second policy semantics. Any future policy extension must be a separately frozen experiment and cannot silently replace the E1 control.
 
 ## 7. Validation corpus
 
@@ -614,7 +620,13 @@ research/experiments/
 
 Do not create result files during design. Do not modify Phase 3, E1, E2 or frozen baseline evidence.
 
-## 24. Execution gate
+## 24. Correction-stage execution gate
+
+The independent review identified soundness and provenance defects. The correction branch must therefore keep the execution gate closed until correctness-only revalidation and a fresh independent review succeed.
+
+The immutable KRAKENGUARD container digest is a required provenance field. A missing digest is a hard preflight failure; no validation evidence is considered frozen until the digest is captured.
+
+## 25. Execution gate
 
 Design conditions are specified, but implementation and independent validation are not complete.
 
@@ -633,7 +645,7 @@ Implementation-time gates:
 
 All must be true before execution approval.
 
-## 25. Research decision
+## 26. Research decision
 
 **PHASE 5 DESIGN: READY FOR IMPLEMENTATION — NOT READY FOR EXECUTION**
 

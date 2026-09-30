@@ -1,9 +1,5 @@
 {
-  "helper_func": [
-    "bpf_trace_printk",
-    "bpf_get_prandom_u32"
-  ],
-  "phase5_policy": {
+  "e1_fixed_policy": {
     "type": "ACTION",
     "dependencies": {
       "memory": [],
@@ -11,23 +7,10 @@
     },
     "actions": {
       "map_access": [
-        {
-          "name": "e1_map",
-          "access": "Read"
-        },
-        {
-          "name": "e1_state",
-          "access": "Read"
-        }
+        {"name":"e1_map","access":"Read"},
+        {"name":"e1_state","access":"Read"}
       ],
-      "helper_access": [
-        "bpf_map_lookup_elem",
-        "bpf_ktime_get_ns"
-      ],
-      "return_value": [
-        1,
-        2
-      ]
+      "helper_access": ["bpf_map_lookup_elem","bpf_ktime_get_ns"]
     }
   }
 }

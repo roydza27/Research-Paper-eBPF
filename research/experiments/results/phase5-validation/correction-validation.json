@@ -1,0 +1,90 @@
+{
+  "schema": "phase5-correction-validation/v1",
+  "timestamp": "2026-09-30T17:36:32Z",
+  "status": "CORRECTION_VALIDATION_COMPLETE",
+  "provenance": {
+    "branch": "phase5-experimental-design",
+    "head": "799412ed885d2e7dd754f4bee55849a71b8e4e0a",
+    "krakenguard_commit": "e7bd84005b304c5a10efcdb04914d1882b3cccf7",
+    "container_image": "kg-artifact-krakenguard:latest",
+    "container_digest": "kg-artifact-krakenguard@sha256:9633a6922518589803a4c9b8123d0549e54b5f57c1d04f9e383e822fd9ae3bd4",
+    "policy_sha256": "270403272d736ae7aee2ceda3bf8d088b6ac0cb476bb99ce0218dd8f33c3c603",
+    "compiler": "clang",
+    "compiler_version": "22.1.8",
+    "compiler_flags": [
+      "-target",
+      "bpf",
+      "-mcpu=v1",
+      "-D__TARGET_ARCH_x86",
+      "-O2",
+      "-g",
+      "-I/usr/include"
+    ],
+    "kernel": "7.2.3-arch1-2",
+    "architecture": "x86_64",
+    "hook": "XDP"
+  },
+  "soundness": {
+    "test_command": "python3 -m pytest -v research/tests/test_phase5_abstract_soundness.py",
+    "test_count": 9,
+    "passed": 9,
+    "failed": 0,
+    "exit_code": 0
+  },
+  "correctness": {
+    "total_cases": 24,
+    "category_a": {
+      "count": 6,
+      "passed": 6,
+      "abstract_verdict": "SAFE",
+      "reference_verdict": "COMPLIANT"
+    },
+    "category_b": {
+      "count": 6,
+      "passed": 6,
+      "abstract_verdict": "UNKNOWN",
+      "reference_verdict": "COMPLIANT"
+    },
+    "category_c": {
+      "count": 6,
+      "passed": 6,
+      "abstract_verdict": "VIOLATION",
+      "reference_verdict": "POLICY VIOLATION"
+    },
+    "category_d": {
+      "count": 6,
+      "passed": 6,
+      "abstract_verdict": "UNKNOWN",
+      "reference_verdict": "POLICY VIOLATION"
+    },
+    "false_safe": 0,
+    "false_violation": 0,
+    "category_agreement_rate_pct": 100.0,
+    "abstract_discharge_rate_pct": 50.0
+  },
+  "fallback": {
+    "unknown_compliant_fixture": {
+      "program_id": "b1",
+      "abstract_verdict": "UNKNOWN",
+      "actual_krakenguard_verdict": "COMPLIANT",
+      "request_id": "7c764064-19b3-4c85-8581-e7cf7374b139"
+    },
+    "unknown_violating_fixture": {
+      "program_id": "d1",
+      "abstract_verdict": "UNKNOWN",
+      "actual_krakenguard_verdict": "POLICY VIOLATION",
+      "request_id": "fe1dcc81-38dc-4c27-9a10-25ccb8213a9f"
+    }
+  },
+  "boundary": {
+    "e3_executed": false,
+    "e4_executed": false,
+    "e5_executed": false,
+    "matrix_432_executed": false
+  },
+  "gate_status": {
+    "execution_approved": false,
+    "independent_review_complete": false,
+    "state": "CORRECTION VALIDATION COMPLETE — READY FOR INDEPENDENT RE-REVIEW"
+  }
+}
