@@ -1,0 +1,134 @@
+{
+  "schema": "phase5-execution-gate-review/v1",
+  "repository": "roydza27/Research-Paper-eBPF",
+  "research": "Scalable Fine-Grained eBPF Isolation through Hybrid Policy Verification",
+  "reviewed_at": "2026-10-01",
+  "current_main": {
+    "sha": "35f482747de2b72f0462dadcfdb12bcf125efc39",
+    "tree": "f8ca8810ad81530d0fcedb1e81d36cfce05ee155",
+    "parent": "54672a43bec1d44deff30f2e3470a639e71cb0c3"
+  },
+  "expected_prompt_main": {
+    "sha": "8f574ec83378da4e5d0eaa55ea519af847ba927d",
+    "tree": "d68586fbad503a594c9c239ffc16475ba364b897",
+    "status": "not current origin/main; verified as reconciliation ancestor"
+  },
+  "independent_review": {
+    "verdict": "PASS — READY FOR PHASE 5 EXECUTION GATE REVIEW",
+    "artifact_md": "research/experiments/results/phase5-validation/independent-re-review-final.md",
+    "artifact_json": "research/experiments/results/phase5-validation/independent-re-review-final.json",
+    "reviewed_main": "54672a43bec1d44deff30f2e3470a639e71cb0c3",
+    "reconciliation_commit": "8f574ec83378da4e5d0eaa55ea519af847ba927d",
+    "current_head_review_only": true
+  },
+  "correction": {
+    "B01": "PASS — 12/12",
+    "B02": "PASS",
+    "B04": "PASS",
+    "validation_24_of_24": "PASS",
+    "false_safe": 0,
+    "false_violation": 0,
+    "fallback": "PASS",
+    "provenance": "PASS"
+  },
+  "frozen_controls": {
+    "krakenguard_commit": "e7bd84005b304c5a10efcdb04914d1882b3cccf7",
+    "policy_sha256": "270403272d736ae7aee2ceda3bf8d088b6ac0cb476bb99ce0218dd8f33c3c603",
+    "container": "kg-artifact-krakenguard@sha256:9633a6922518589803a4c9b8123d0549e54b5f57c1d04f9e383e822fd9ae3bd4",
+    "kernel": "Linux 7.2.3-arch1-2",
+    "architecture": "x86_64",
+    "cpu": "AMD Ryzen 5 5600H",
+    "compiler": "Clang 22.1.8",
+    "compiler_flags": [
+      "-target",
+      "bpf",
+      "-mcpu=v1",
+      "-D__TARGET_ARCH_x86",
+      "-O2",
+      "-g",
+      "-I/usr/include"
+    ],
+    "hook": "XDP"
+  },
+  "design": {
+    "E3": {
+      "status": "PROTOCOL_VERIFIED",
+      "primary_endpoint": "(SAFE + VIOLATION) / total",
+      "programs": 24,
+      "warmups": 2,
+      "measured": 7
+    },
+    "E4": {
+      "status": "PROTOCOL_VERIFIED",
+      "programs": 24,
+      "conditions": [
+        "symbolic_only",
+        "hybrid"
+      ],
+      "warmups": 2,
+      "measured": 7,
+      "total_executions": 432,
+      "primary_endpoint": "paired per-program median end-to-end wall time",
+      "delta": "Hybrid - Symbolic-only",
+      "ratio": "Hybrid / Symbolic-only",
+      "savings": "1 - Ratio"
+    },
+    "E5": {
+      "status": "PROTOCOL_VERIFIED",
+      "path_strata": [
+        1,
+        2,
+        4,
+        8,
+        16,
+        32,
+        64
+      ],
+      "distinguishes": [
+        "abstract-analysis cost",
+        "symbolic fallback cost",
+        "total hybrid end-to-end cost"
+      ],
+      "no_claim_that_abstract_makes_krakenguard_faster": true
+    }
+  },
+  "statistical_design": {
+    "status": "PASS",
+    "warmups_separated": true,
+    "seven_measured_repetitions": true,
+    "conditions_interleaved_randomized": true,
+    "deterministic_seed_recorded": true,
+    "no_silent_retries": true,
+    "no_outlier_deletion": true,
+    "timeout_seconds": 300,
+    "timeout_error_unsupported_not_policy_rejection": true,
+    "primary_metrics_predefined": true,
+    "process_time_limitation_documented": true,
+    "memory_solver_time_only_when_directly_exposed": true,
+    "raw_telemetry_preserved": true,
+    "unique_run_ids_required": true,
+    "environment_provenance_captured": true
+  },
+  "gate_before": {
+    "execution_approved": false,
+    "independent_review_complete": false,
+    "design_status": "CORRECTION_VALIDATED",
+    "correction_status": "CORRECTION_VALIDATED — INDEPENDENT_REVIEW_PENDING — EXECUTION_GATE_CLOSED"
+  },
+  "gate_after": {
+    "execution_approved": true,
+    "independent_review_complete": false,
+    "design_status": "CORRECTION_VALIDATED",
+    "authorization_status": "EXECUTION_APPROVED"
+  },
+  "boundary": {
+    "E3_executed": false,
+    "E4_executed": false,
+    "E5_executed": false,
+    "matrix_432_executed": false,
+    "performance_replication_executed": false
+  },
+  "authoritative_gate_file": "research/experiments/design/phase5-execution-gate.json",
+  "non_authoritative_requested_path_absent": "research/experiments/results/phase5-validation/phase5-execution-gate.json",
+  "final_decision": "EXECUTION APPROVED — READY TO RUN PHASE 5 EXPERIMENTS"
+}
