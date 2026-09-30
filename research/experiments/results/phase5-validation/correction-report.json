@@ -1,0 +1,71 @@
+{
+  "schema": "phase5-correction-report/v1",
+  "status": "CORRECTIONS_INCOMPLETE",
+  "gate": {
+    "independent_review_complete": false,
+    "execution_approved": false
+  },
+  "performance_execution": {
+    "e3": false,
+    "e4": false,
+    "e5": false,
+    "matrix_432": false
+  },
+  "findings": {
+    "P5-B01": {
+      "status": "IMPLEMENTED_AWAITING_REVALIDATION",
+      "fixes": [
+        "fail-closed unsupported instruction handling",
+        "unknown helper -> UNKNOWN",
+        "conservative map semantics",
+        "conservative constrained-memory semantics",
+        "analysis failure -> UNKNOWN"
+      ],
+      "tests": "research/tests/test_phase5_abstract_soundness.py"
+    },
+    "P5-B02": {
+      "status": "RESOLVED_IN_IMPLEMENTATION",
+      "resolution": "Reuse E1 fixed policy unchanged",
+      "old_policy_sha256": "8e349d091fd4c1af9127c8fe19ceb99ad0468ef8a565d5e47224993f051204b6",
+      "frozen_policy_sha256": "270403272d736ae7aee2ceda3bf8d088b6ac0cb476bb99ce0218dd8f33c3c603"
+    },
+    "P5-B03": {
+      "status": "IMPLEMENTED_AWAITING_ENVIRONMENT",
+      "checks": [
+        "krakenguard_commit",
+        "compiler/version",
+        "compiler_flags",
+        "kernel",
+        "architecture",
+        "hook",
+        "container_image",
+        "container_image_digest",
+        "policy_sha256",
+        "environment_manifest"
+      ],
+      "failure_mode": "non-zero / fail closed"
+    },
+    "P5-B04": {
+      "status": "BLOCKED",
+      "environment_manifest": "research/experiments/corpus/phase5/phase5-environment.json",
+      "container_image": "kg-artifact-krakenguard:latest",
+      "container_image_digest": null
+    }
+  },
+  "fallback_validation": {
+    "script": "research/experiments/scripts/validate-phase5-fallback.py",
+    "status": "PENDING_ENVIRONMENT_PREFLIGHT",
+    "performance_matrix": false
+  },
+  "correctness": {
+    "post_correction_results_claimed": false,
+    "required": [
+      "24/24 category behavior",
+      "0 false SAFE",
+      "0 false VIOLATION",
+      "actual UNKNOWN compliant fallback",
+      "actual UNKNOWN violating fallback"
+    ]
+  },
+  "next_step": "Capture immutable container digest on the validation host, freeze environment manifest, run correctness-only validation and fallback pilot, then request independent re-review."
+}
