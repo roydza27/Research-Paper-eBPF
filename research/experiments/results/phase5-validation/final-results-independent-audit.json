@@ -1,0 +1,145 @@
+{
+  "schema": "phase5-final-results-independent-audit/v1",
+  "repository": "roydza27/Research-Paper-eBPF",
+  "audit_type": "independent_results_provenance_audit",
+  "audit_date": "2026-10-01",
+  "main_commit": "33c1fc6f3fd40555cc4c3483803d6d01c84e50b4",
+  "main_tree": "6824c66b82e973714d074b9c15e3cb86227beb58",
+  "execution_commit": "0e1d96cf13574222e58de349ce885b28b6e0ac9d",
+  "execution_parent": "b8593f35fde7c6281eacc272feaa166af89c5527",
+  "execution_tree": "c105b05fa8719433598f05814d42ccb3fe8978f0",
+  "recovery_branch": "phase5-execution-evidence-recovery",
+  "recovery_branch_sha": "0e1d96cf13574222e58de349ce885b28b6e0ac9d",
+  "verdict": "PASS — PHASE 5 EXPERIMENTAL EVIDENCE VERIFIED",
+  "execution_rerun": false,
+  "e3_verified": true,
+  "e4_verified": true,
+  "e5_verified": true,
+  "raw_e4_runs_verified": 432,
+  "provenance_verified": true,
+  "main_contains_execution_evidence": true,
+  "main_result_tree_comparison": {
+    "e3": {
+      "execution": 364,
+      "main": 364,
+      "missing": 0,
+      "changed": 0
+    },
+    "e4": {
+      "execution": 3461,
+      "main": 3461,
+      "missing": 0,
+      "changed": 0
+    },
+    "e5": {
+      "execution": 3,
+      "main": 3,
+      "missing": 0,
+      "changed": 0
+    },
+    "total_relevant_files": 3828,
+    "total_missing": 0,
+    "total_changed": 0
+  },
+  "e3": {
+    "total_records": 216,
+    "warmups": 48,
+    "measured": 168,
+    "programs": 24,
+    "unique_run_ids": 216,
+    "discharged_programs": 12,
+    "unknown_programs": 12,
+    "discharge_fraction": 0.5,
+    "false_safe": 0,
+    "false_violation": 0,
+    "correctness_agreement": "24/24",
+    "wilson_95_ci": [
+      0.3142713163,
+      0.6857286837
+    ]
+  },
+  "e4": {
+    "total_records": 432,
+    "warmups": 96,
+    "measured": 336,
+    "programs": 24,
+    "conditions": [
+      "symbolic_only",
+      "hybrid"
+    ],
+    "unique_run_ids": 432,
+    "raw_run_directories": 432,
+    "failures": 0,
+    "timeouts": 0,
+    "correctness_mismatches": 0,
+    "primary_endpoint": "paired per-program median end-to-end wall time",
+    "symbolic_median_ms": 694.277,
+    "hybrid_median_ms": 382.3205,
+    "median_per_program_savings_pct": 45.52705777,
+    "discharged_programs": 12,
+    "discharged_symbolic_median_ms": 684.362,
+    "discharged_hybrid_median_ms": 38.801,
+    "discharged_median_savings_pct": 94.3350892,
+    "fallback_programs": 12,
+    "fallback_symbolic_median_ms": 702.7205,
+    "fallback_hybrid_median_ms": 736.722,
+    "fallback_median_savings_pct": -4.94727485,
+    "paired_analysis_rows": 24,
+    "paired_analysis_discrepancies": 0
+  },
+  "e5": {
+    "reachable_strata": [
+      1,
+      2,
+      4,
+      8,
+      16,
+      32
+    ],
+    "unreachable_strata": [
+      64
+    ],
+    "stratum_1": {
+      "programs": 12,
+      "discharged": 12,
+      "fallback": 0
+    },
+    "strata_2_4_8_16_32_fallback_fraction": 1,
+    "independently_derived_from_e4_raw": true
+  },
+  "provenance": {
+    "krakenguard_commit": "e7bd84005b304c5a10efcdb04914d1882b3cccf7",
+    "policy_sha256": "270403272d736ae7aee2ceda3bf8d088b6ac0cb476bb99ce0218dd8f33c3c603",
+    "container_digest": "kg-artifact-krakenguard@sha256:9633a6922518589803a4c9b8123d0549e54b5f57c1d04f9e383e822fd9ae3bd4",
+    "kernel": "Linux 7.2.3-arch1-2",
+    "architecture": "x86_64",
+    "compiler": "clang",
+    "compiler_version": "22.1.8",
+    "compiler_flags": [
+      "-target",
+      "bpf",
+      "-mcpu=v1",
+      "-D__TARGET_ARCH_x86",
+      "-O2",
+      "-g",
+      "-I/usr/include"
+    ],
+    "hook": "XDP",
+    "seed": 42,
+    "timeout_seconds": 300,
+    "corpus_metadata_sha256": "0afd9ceeb34240c0398381a54b745f10516eb5fd536f310c3c3e6fa71ff31e2a"
+  },
+  "gate_state": {
+    "execution_approved": true,
+    "e3_executed": true,
+    "e4_executed": true,
+    "e5_executed": true,
+    "independent_review_complete": false,
+    "correction_status": "CORRECTION_VALIDATED — EXECUTION_APPROVED"
+  },
+  "anomalies": [
+    "E3/E4 result provenance git_head/git_tree/git_branch fields reflect the execution-environment repository snapshot (pre-execution authorization state), not the final immutable execution ref; this distinction is documented and does not replace the Git commit binding.",
+    "E5 has no separate raw-run directory family; its stored scaling analysis is independently derivable from preserved E4 measured raw telemetry."
+  ],
+  "phase5_evidence_acceptance": true
+}
