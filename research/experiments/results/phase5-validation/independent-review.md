@@ -190,7 +190,7 @@ The validator also does not assert the environment against the gate's declared c
 The E3/E4/E5 design itself is structurally coherent:
 
 - E3: 24 programs × 2 warmups × 7 measured = 216 executions.
-- E4: 24 programs × 2 conditions × 2 warmups × 7 measured = 672? **Correction:** the approved E4 accounting is 24 × 2 conditions × 9 total executions = 432.
+- E4: 24 programs × 2 conditions × 2 warmups × 7 measured = 432 executions.
 - E5 is correctly deferred until path strata are validated.
 
 The approved E4 endpoint is per-program median end-to-end wall time, with paired program-level comparisons and uncertainty/effect-size reporting.
