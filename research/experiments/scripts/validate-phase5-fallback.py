@@ -16,11 +16,14 @@ BASELINE_DIR = ROOT_DIR / "baselines" / "krakenguard" / "artifact"
 
 from analyzer.abstract_policy_analyzer import AbstractPolicyAnalyzer, Verdict
 from daemon.krakenguard_client import KrakenGuardClient
-from experiments.scripts.validate_phase5_corpus import (
-    EXPECTED_KRAKENGUARD_COMMIT,
-    preflight_reference_environment,
-    sha256_file,
-)
+import importlib.util
+_validator_path = Path(__file__).with_name("validate-phase5-corpus.py")
+_spec = importlib.util.spec_from_file_location("phase5_validator", _validator_path)
+_validator = importlib.util.module_from_spec(_spec)
+_spec.loader.exec_module(_validator)
+EXPECTED_KRAKENGUARD_COMMIT = _validator.EXPECTED_KRAKENGUARD_COMMIT
+preflight_reference_environment = _validator.preflight_reference_environment
+sha256_file = _validator.sha256_file
 
 FIXTURES = {"b1": "UNKNOWN compliant fixture", "d1": "UNKNOWN violating fixture"}
 
