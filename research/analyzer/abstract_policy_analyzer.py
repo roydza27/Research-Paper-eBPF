@@ -181,6 +181,20 @@ class AbstractPolicyAnalyzer:
             name=BPF_HELPER_MAP[hid]; path_helpers.append(name)
             if name in self.forbidden_helpers: return "VIOLATION"
             if self.allowed_helpers and name not in self.allowed_helpers: return "VIOLATION"
+
+            # Map semantics are policy-sensitive. Do not silently treat an
+            # allowed helper as an allowed map operation.
+            if name in {"bpf_map_lookup_elem","bpf_map_update_elem","bpf_map_delete_elem","bpf_redirect_map"}:
+                map_name = self.relocations.get(ins.pc * 8) or self.relocations.get(ins.pc)
+                if not map_name:
+                    unknowns.append(f"unresolved map identity for {name} at {ins.pc}")
+                    return "UNKNOWN"
+                if map_name not in self.allowed_maps:
+                    return "VIOLATION"
+                if name != "bpf_map_lookup_elem":
+                    unknowns.append(f"map write/redirect semantics not supported for {map_name} at {ins.pc}")
+                    return "UNKNOWN"
+
             regs["r0"]=AbstractValue.symbolic(name)
             for r in ["r1","r2","r3","r4","r5"]: regs[r]=AbstractValue.unknown()
             return "OK"
