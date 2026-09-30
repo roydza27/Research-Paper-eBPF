@@ -258,7 +258,7 @@ class AbstractPolicyAnalyzer:
             initial={f"r{i}":AbstractValue.unknown() for i in range(11)}
             initial["r10"]=AbstractValue.const(0)
             work=[(self.instructions[0].pc,initial,[],[],set())]
-            exits=[]; reasons=[]; steps=0; max_states=4096
+            exits=[]; reasons=[]; steps=0; max_states=4096; unresolved_branch_seen=False
             while work:
                 pc,regs,preds,helpers,visited=work.pop(0); steps+=1
                 if steps>max_states: return self._unknown(reasons+["abstract state limit exceeded"],steps)
@@ -288,6 +288,7 @@ class AbstractPolicyAnalyzer:
                     elif c is False:
                         work.append((bb.fallthrough,regs,preds+[f"NOT_TAKEN({last.pc})"],helpers,visited))
                     else:
+                        unresolved_branch_seen = True
                         work.append((bb.cond_target,regs,preds+[f"TAKEN({last.pc})"],helpers,visited))
                         work.append((bb.fallthrough,regs,preds+[f"NOT_TAKEN({last.pc})"],helpers,visited))
                     continue
@@ -298,12 +299,14 @@ class AbstractPolicyAnalyzer:
 
             if not exits: return self._unknown(reasons+["no reachable exit"],steps)
             kinds={x[0] for x in exits}
-            if kinds=={"SAFE"}:
+            if kinds=={"SAFE"} and not unresolved_branch_seen:
                 return {"verdict":"SAFE","proof":f"All {len(exits)} reachable exits return policy-allowed values and all modeled reachable operations are supported.",
                         "discharged":True,"metrics":{"instructions":len(self.instructions),"basic_blocks":len(self.basic_blocks),"paths_analyzed":len(exits),"abstract_states":steps}}
             if kinds=={"VIOLATION"}:
                 return {"verdict":"VIOLATION","proof":f"All {len(exits)} reachable terminal paths establish a policy violation.",
                         "discharged":True,"metrics":{"instructions":len(self.instructions),"basic_blocks":len(self.basic_blocks),"paths_analyzed":len(exits),"abstract_states":steps}}
+            if kinds=={"SAFE"} and unresolved_branch_seen:
+                return self._unknown(reasons+["all observed exits are compliant but an unresolved branch condition prevents a direct discharge"],steps)
             return self._unknown(reasons+["mixed or unresolved reachable outcomes"],steps)
         except Exception as e:
             return self._unknown([f"analysis failure: {e}"],0)
