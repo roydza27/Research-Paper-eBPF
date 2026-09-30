@@ -1,0 +1,8 @@
+program_id,source_file,predicate_count,target_paths,symbolic_source,helper_count,map_count,hook,role,validation_status
+E2-P0,research/experiments/corpus/e2/programs/e2_p0.c,0,1,bpf_ktime_get_ns,1,0,XDP,symbolic baseline,UNVALIDATED
+E2-P1,research/experiments/corpus/e2/programs/e2_p1.c,1,2,bpf_ktime_get_ns,1,0,XDP,one symbolic split,UNVALIDATED
+E2-P2,research/experiments/corpus/e2/programs/e2_p2.c,2,4,bpf_ktime_get_ns,1,0,XDP,two symbolic splits,UNVALIDATED
+E2-P3,research/experiments/corpus/e2/programs/e2_p3.c,3,8,bpf_ktime_get_ns,1,0,XDP,three symbolic splits,UNVALIDATED
+E2-P4,research/experiments/corpus/e2/programs/e2_p4.c,4,16,bpf_ktime_get_ns,1,0,XDP,pilot upper gate,UNVALIDATED
+E2-P5,research/experiments/corpus/e2/programs/e2_p5.c,5,32,bpf_ktime_get_ns,1,0,XDP,full matrix level,UNVALIDATED
+E2-P6,research/experiments/corpus/e2/programs/e2_p6.c,6,64,bpf_ktime_get_ns,1,0,XDP,full matrix upper level,UNVALIDATED
