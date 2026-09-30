@@ -1,0 +1,35 @@
+{
+  "schema": "phase4-e2-design-gate/v1",
+  "status": "CONDITIONALLY_ACCEPTED_FOR_PILOT",
+  "execution_approved": false,
+  "design_branch": "phase4-e2-design",
+  "baseline": {
+    "krakenguard_commit": "e7bd84005b304c5a10efcdb04914d1882b3cccf7",
+    "policy_file": "research/experiments/corpus/e1/policies/e1_fixed_policy.json",
+    "policy_sha256": "270403272d736ae7aee2ceda3bf8d088b6ac0cb476bb99ce0218dd8f33c3c603"
+  },
+  "primary_independent_variable": "observed KLEE explored/completed symbolic paths",
+  "symbolic_source": "bpf_ktime_get_ns",
+  "proposed_levels": [1,2,4,8,16,32,64],
+  "pilot_levels": ["E2-P0","E2-P1","E2-P2","E2-P3","E2-P4"],
+  "warmups_per_level": 2,
+  "measured_runs_per_level": 7,
+  "timeout_seconds": 300,
+  "full_matrix_if_all_levels_valid": 63,
+  "pilot_gate": {
+    "minimum_reachable_level": 8,
+    "requires_strictly_increasing_observed_paths": true,
+    "requires_compiled_branches_to_survive": true,
+    "requires_single_symbolic_helper": true,
+    "requires_fixed_policy_and_baseline": true
+  },
+  "disallowed": [
+    "using ingress_ifindex as the symbolic driver",
+    "treating source branch count as authoritative",
+    "silently replacing collapsed candidates",
+    "removing timing outliers",
+    "rerunning failed measurements solely to fill quotas",
+    "fabricating memory or solver-time measurements",
+    "executing the full matrix before pilot review"
+  ]
+}
