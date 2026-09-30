@@ -1,0 +1,355 @@
+{
+  "total_programs": 24,
+  "discharged_programs": 12,
+  "discharge_rate": 0.5,
+  "ci95_lower": 0.3142745836737379,
+  "ci95_upper": 0.685725416326262,
+  "category_summary": {
+    "A": {
+      "total": 6,
+      "discharged": 6,
+      "discharge_rate": 1.0,
+      "verdicts": [
+        "SAFE",
+        "SAFE",
+        "SAFE",
+        "SAFE",
+        "SAFE",
+        "SAFE"
+      ],
+      "correctness": true
+    },
+    "B": {
+      "total": 6,
+      "discharged": 0,
+      "discharge_rate": 0.0,
+      "verdicts": [
+        "UNKNOWN",
+        "UNKNOWN",
+        "UNKNOWN",
+        "UNKNOWN",
+        "UNKNOWN",
+        "UNKNOWN"
+      ],
+      "correctness": true
+    },
+    "C": {
+      "total": 6,
+      "discharged": 6,
+      "discharge_rate": 1.0,
+      "verdicts": [
+        "VIOLATION",
+        "VIOLATION",
+        "VIOLATION",
+        "VIOLATION",
+        "VIOLATION",
+        "VIOLATION"
+      ],
+      "correctness": true
+    },
+    "D": {
+      "total": 6,
+      "discharged": 0,
+      "discharge_rate": 0.0,
+      "verdicts": [
+        "UNKNOWN",
+        "UNKNOWN",
+        "UNKNOWN",
+        "UNKNOWN",
+        "UNKNOWN",
+        "UNKNOWN"
+      ],
+      "correctness": true
+    }
+  },
+  "per_program": {
+    "a1": {
+      "program_id": "a1",
+      "category": "A",
+      "target_paths": 1,
+      "verdict": "SAFE",
+      "discharged": true,
+      "reference_verdict": "COMPLIANT",
+      "correctness_agreement": true,
+      "median_wall_time_us": 33609,
+      "mean_wall_time_us": 34398.142857142855,
+      "std_wall_time_us": 2348.7606255620167
+    },
+    "a2": {
+      "program_id": "a2",
+      "category": "A",
+      "target_paths": 1,
+      "verdict": "SAFE",
+      "discharged": true,
+      "reference_verdict": "COMPLIANT",
+      "correctness_agreement": true,
+      "median_wall_time_us": 33676,
+      "mean_wall_time_us": 34085.857142857145,
+      "std_wall_time_us": 2126.309198946336
+    },
+    "a3": {
+      "program_id": "a3",
+      "category": "A",
+      "target_paths": 1,
+      "verdict": "SAFE",
+      "discharged": true,
+      "reference_verdict": "COMPLIANT",
+      "correctness_agreement": true,
+      "median_wall_time_us": 32407,
+      "mean_wall_time_us": 33689.57142857143,
+      "std_wall_time_us": 2532.9612352042855
+    },
+    "a4": {
+      "program_id": "a4",
+      "category": "A",
+      "target_paths": 1,
+      "verdict": "SAFE",
+      "discharged": true,
+      "reference_verdict": "COMPLIANT",
+      "correctness_agreement": true,
+      "median_wall_time_us": 33867,
+      "mean_wall_time_us": 34487.0,
+      "std_wall_time_us": 2048.874162395859
+    },
+    "a5": {
+      "program_id": "a5",
+      "category": "A",
+      "target_paths": 1,
+      "verdict": "SAFE",
+      "discharged": true,
+      "reference_verdict": "COMPLIANT",
+      "correctness_agreement": true,
+      "median_wall_time_us": 34633,
+      "mean_wall_time_us": 34601.857142857145,
+      "std_wall_time_us": 621.5693655501984
+    },
+    "a6": {
+      "program_id": "a6",
+      "category": "A",
+      "target_paths": 1,
+      "verdict": "SAFE",
+      "discharged": true,
+      "reference_verdict": "COMPLIANT",
+      "correctness_agreement": true,
+      "median_wall_time_us": 32947,
+      "mean_wall_time_us": 33995.71428571428,
+      "std_wall_time_us": 2981.8573470398005
+    },
+    "b1": {
+      "program_id": "b1",
+      "category": "B",
+      "target_paths": 2,
+      "verdict": "UNKNOWN",
+      "discharged": false,
+      "reference_verdict": "COMPLIANT",
+      "correctness_agreement": true,
+      "median_wall_time_us": 35264,
+      "mean_wall_time_us": 34288.142857142855,
+      "std_wall_time_us": 1544.3260049367198
+    },
+    "b2": {
+      "program_id": "b2",
+      "category": "B",
+      "target_paths": 2,
+      "verdict": "UNKNOWN",
+      "discharged": false,
+      "reference_verdict": "COMPLIANT",
+      "correctness_agreement": true,
+      "median_wall_time_us": 33389,
+      "mean_wall_time_us": 34651.857142857145,
+      "std_wall_time_us": 3003.975112445254
+    },
+    "b3": {
+      "program_id": "b3",
+      "category": "B",
+      "target_paths": 4,
+      "verdict": "UNKNOWN",
+      "discharged": false,
+      "reference_verdict": "COMPLIANT",
+      "correctness_agreement": true,
+      "median_wall_time_us": 33100,
+      "mean_wall_time_us": 33430.42857142857,
+      "std_wall_time_us": 1345.7856264580003
+    },
+    "b4": {
+      "program_id": "b4",
+      "category": "B",
+      "target_paths": 8,
+      "verdict": "UNKNOWN",
+      "discharged": false,
+      "reference_verdict": "COMPLIANT",
+      "correctness_agreement": true,
+      "median_wall_time_us": 34121,
+      "mean_wall_time_us": 35243.71428571428,
+      "std_wall_time_us": 3506.2398051799837
+    },
+    "b5": {
+      "program_id": "b5",
+      "category": "B",
+      "target_paths": 16,
+      "verdict": "UNKNOWN",
+      "discharged": false,
+      "reference_verdict": "COMPLIANT",
+      "correctness_agreement": true,
+      "median_wall_time_us": 34132,
+      "mean_wall_time_us": 34689.57142857143,
+      "std_wall_time_us": 2636.6377489233555
+    },
+    "b6": {
+      "program_id": "b6",
+      "category": "B",
+      "target_paths": 32,
+      "verdict": "UNKNOWN",
+      "discharged": false,
+      "reference_verdict": "COMPLIANT",
+      "correctness_agreement": true,
+      "median_wall_time_us": 34051,
+      "mean_wall_time_us": 34939.57142857143,
+      "std_wall_time_us": 2512.8480427025997
+    },
+    "c1": {
+      "program_id": "c1",
+      "category": "C",
+      "target_paths": 1,
+      "verdict": "VIOLATION",
+      "discharged": true,
+      "reference_verdict": "POLICY VIOLATION",
+      "correctness_agreement": true,
+      "median_wall_time_us": 33113,
+      "mean_wall_time_us": 33418.57142857143,
+      "std_wall_time_us": 1750.6875656098528
+    },
+    "c2": {
+      "program_id": "c2",
+      "category": "C",
+      "target_paths": 1,
+      "verdict": "VIOLATION",
+      "discharged": true,
+      "reference_verdict": "POLICY VIOLATION",
+      "correctness_agreement": true,
+      "median_wall_time_us": 33546,
+      "mean_wall_time_us": 33521.57142857143,
+      "std_wall_time_us": 606.8456303275315
+    },
+    "c3": {
+      "program_id": "c3",
+      "category": "C",
+      "target_paths": 1,
+      "verdict": "VIOLATION",
+      "discharged": true,
+      "reference_verdict": "POLICY VIOLATION",
+      "correctness_agreement": true,
+      "median_wall_time_us": 33321,
+      "mean_wall_time_us": 33687.857142857145,
+      "std_wall_time_us": 1502.1955519140895
+    },
+    "c4": {
+      "program_id": "c4",
+      "category": "C",
+      "target_paths": 1,
+      "verdict": "VIOLATION",
+      "discharged": true,
+      "reference_verdict": "POLICY VIOLATION",
+      "correctness_agreement": true,
+      "median_wall_time_us": 32587,
+      "mean_wall_time_us": 33041.142857142855,
+      "std_wall_time_us": 1571.9844601194832
+    },
+    "c5": {
+      "program_id": "c5",
+      "category": "C",
+      "target_paths": 1,
+      "verdict": "VIOLATION",
+      "discharged": true,
+      "reference_verdict": "POLICY VIOLATION",
+      "correctness_agreement": true,
+      "median_wall_time_us": 34277,
+      "mean_wall_time_us": 34511.142857142855,
+      "std_wall_time_us": 1185.1212917632001
+    },
+    "c6": {
+      "program_id": "c6",
+      "category": "C",
+      "target_paths": 1,
+      "verdict": "VIOLATION",
+      "discharged": true,
+      "reference_verdict": "POLICY VIOLATION",
+      "correctness_agreement": true,
+      "median_wall_time_us": 34849,
+      "mean_wall_time_us": 35164.28571428572,
+      "std_wall_time_us": 1324.7930296573013
+    },
+    "d1": {
+      "program_id": "d1",
+      "category": "D",
+      "target_paths": 2,
+      "verdict": "UNKNOWN",
+      "discharged": false,
+      "reference_verdict": "POLICY VIOLATION",
+      "correctness_agreement": true,
+      "median_wall_time_us": 33549,
+      "mean_wall_time_us": 33587.42857142857,
+      "std_wall_time_us": 938.860809197838
+    },
+    "d2": {
+      "program_id": "d2",
+      "category": "D",
+      "target_paths": 2,
+      "verdict": "UNKNOWN",
+      "discharged": false,
+      "reference_verdict": "POLICY VIOLATION",
+      "correctness_agreement": true,
+      "median_wall_time_us": 34251,
+      "mean_wall_time_us": 34002.142857142855,
+      "std_wall_time_us": 969.8014278829504
+    },
+    "d3": {
+      "program_id": "d3",
+      "category": "D",
+      "target_paths": 4,
+      "verdict": "UNKNOWN",
+      "discharged": false,
+      "reference_verdict": "POLICY VIOLATION",
+      "correctness_agreement": true,
+      "median_wall_time_us": 32373,
+      "mean_wall_time_us": 33903.57142857143,
+      "std_wall_time_us": 2733.62889807321
+    },
+    "d4": {
+      "program_id": "d4",
+      "category": "D",
+      "target_paths": 8,
+      "verdict": "UNKNOWN",
+      "discharged": false,
+      "reference_verdict": "POLICY VIOLATION",
+      "correctness_agreement": true,
+      "median_wall_time_us": 33123,
+      "mean_wall_time_us": 33256.142857142855,
+      "std_wall_time_us": 529.4054616804996
+    },
+    "d5": {
+      "program_id": "d5",
+      "category": "D",
+      "target_paths": 16,
+      "verdict": "UNKNOWN",
+      "discharged": false,
+      "reference_verdict": "POLICY VIOLATION",
+      "correctness_agreement": true,
+      "median_wall_time_us": 33406,
+      "mean_wall_time_us": 34578.0,
+      "std_wall_time_us": 4976.142280924049
+    },
+    "d6": {
+      "program_id": "d6",
+      "category": "D",
+      "target_paths": 32,
+      "verdict": "UNKNOWN",
+      "discharged": false,
+      "reference_verdict": "POLICY VIOLATION",
+      "correctness_agreement": true,
+      "median_wall_time_us": 33123,
+      "mean_wall_time_us": 34141.57142857143,
+      "std_wall_time_us": 2025.3258056539
+    }
+  }
+}

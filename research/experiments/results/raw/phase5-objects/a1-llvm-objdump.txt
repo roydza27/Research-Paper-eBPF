@@ -1,0 +1,7 @@
+/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/corpus/phase5/programs/a1.o:	file format elf64-bpf
+
+Disassembly of section xdp:
+
+0000000000000000 <a1>:
+       0:	b7 00 00 00 02 00 00 00	r0 = 0x2
+       1:	95 00 00 00 00 00 00 00	exit

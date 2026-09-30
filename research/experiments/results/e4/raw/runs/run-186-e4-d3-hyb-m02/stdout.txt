@@ -1,0 +1,59 @@
+
+[Step 1] Lifting object file: /data/requests/2b30292c-549d-48c0-95ad-f8371c0b4848/input/d3.o
+Working dir: /tmp/tmpxx5gzfbc
+[Optimize IR] Running: opt -O3 -S /tmp/tmpxx5gzfbc/tmpid2_879e -o /tmp/tmpxx5gzfbc/tmpid2_879e
+[Step 2] Extracting relocation info
+Found relocation section: .relxdp
+Detected program type: xdp
+[relocation data] (hex) : 18000000000000000100000004000000
+Number of relocation entries in .relxdp: 1
+Function start offsets: [0]
+Has .relxdp: True
+[Step 3] Applying function pass to remove map globals
+[Remove map globals] Running: opt -load /opt/krakenguard/lifting_tools/llvm_func_pass/build/libfunc_pass.so -load-pass-plugin=/opt/krakenguard/lifting_tools/llvm_func_pass/build/libfunc_pass.so -passes=custom-bpf-pass -map-config /tmp/tmpxx5gzfbc/map_offset_mapping /tmp/tmpxx5gzfbc/tmpid2_879e -o /tmp/tmpxx5gzfbc/tmpid2_879e
+simple helper: bpf_ktime_get_ns
+simple helper: bpf_trace_printk
+call to replace :: bpf_trace_printk.toreplace
+trying to erase : bpf_trace_printk.toreplace
+ERASED
+call to replace :: bpf_ktime_get_ns.toreplace
+trying to erase : bpf_ktime_get_ns.toreplace
+ERASED
+transformMapLookups done
+
+[Step 4] Generating template code
+Function: d3, Maps: 0
+[Step 5] Compiling template
+[Compile template] Running: clang-13 -target bpf -DKLEE_VERIFICATION -DVERIFY_INTERACTIONS -I/opt/krakenguard/examples/headers -I/usr/include/x86_64-linux-gnu -I/opt/krakenguard/ebpf-se/libbpf-stubbed/src/build/usr/include -I /opt/krakenguard/klee/include -D__USE_VMLINUX__ -D__TARGET_ARCH_x86 -DBPF_NO_PRESERVE_ACCESS_INDEX -Wall -Wno-unused-value -Wno-unused-variable -Wno-pointer-sign -Wno-compare-distinct-pointer-types -Wno-unused-function -fno-discard-value-names -fno-builtin -O0 -emit-llvm -c -g /tmp/tmpxx5gzfbc/cpp_generated_code.c -o /tmp/tmpxx5gzfbc/cpp_generated_code.c
+[Step 6] Applying ext sym pass
+[Ext sym pass] Running: opt -load-pass-plugin=/opt/krakenguard/lifting_tools/llvm_ext_sym_pass/build/libext_sym_pass.so -passes=int-to-ext /tmp/tmpxx5gzfbc/cpp_generated_code.c -o /tmp/tmpxx5gzfbc/cpp_generated_code.c
+[Step 7] Linking IRs
+[Link IRs] Running: llvm-link /tmp/tmpxx5gzfbc/cpp_generated_code.c /tmp/tmpxx5gzfbc/tmpid2_879e -o /data/requests/2b30292c-549d-48c0-95ad-f8371c0b4848/input/final_linked_ir.bc
+Output: /data/requests/2b30292c-549d-48c0-95ad-f8371c0b4848/input/final_linked_ir.bc
+
+Loaded Config JSON file
+Parsing conditional policies...
+[policy] ACTION : e1_fixed_policy
+
+=== Conditional Policy Summary ===
+  MEM_CONDITION: 0  ACTION: 1
+  ACTION roots:  e1_fixed_policy 
+==================================
+
+
+========== Conditional Policy Statistics ==========
+Policy Name                     Applicable    Violated Not Applic.  Coverage %
+------------------------------------------------------------------------------
+e1_fixed_policy                          3           1           0      100.0%
+------------------------------------------------------------------------------
+TOTAL                                    3           1           0      100.0%
+===================================================
+
+No use of restricted function detected in any execution path
+
+=== Conditional Policy Summary ===
+Conditional policy mode enabled
+Total test cases: 2
+Results written to: conditional_policy.results.txt
+==================================
+Elapsed time in milliseconds: 410

@@ -1,0 +1,35 @@
+{
+  "run_record": {
+    "execution_order": 177,
+    "run_id": "e3-b3-m06",
+    "program_id": "b3",
+    "category": "B",
+    "role": "Uncertain Compliant",
+    "target_paths": 4,
+    "repetition_type": "measured",
+    "repeat_number": 6,
+    "abstract_verdict": "UNKNOWN",
+    "discharged": false,
+    "abstract_wall_time_us": 33420,
+    "abstract_cpu_time_us": 1711,
+    "reference_verdict": "COMPLIANT",
+    "hybrid_verdict": "COMPLIANT",
+    "correctness_agreement": true,
+    "abstract_proof": "Conservative UNKNOWN: unsupported instruction at 1: w3 = *(u32 *)(r1 + 0x4)",
+    "instructions": 0,
+    "basic_blocks": 0,
+    "paths_analyzed": 0,
+    "abstract_states": 1,
+    "source_sha256": "4d74e31d48ac69142db1a745c2dc8ee2730b2eae91cd02b503f1ee13dd914695",
+    "object_sha256": "5819ee511bcdce3287ab7a7ed5f7422e2735ed21308d265e7591d048bddac580",
+    "policy_sha256": "270403272d736ae7aee2ceda3bf8d088b6ac0cb476bb99ce0218dd8f33c3c603"
+  },
+  "analyzer_full_result": {
+    "verdict": "UNKNOWN",
+    "proof": "Conservative UNKNOWN: unsupported instruction at 1: w3 = *(u32 *)(r1 + 0x4)",
+    "discharged": false,
+    "metrics": {
+      "abstract_states": 1
+    }
+  }
+}

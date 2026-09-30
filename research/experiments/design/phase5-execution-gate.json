@@ -48,7 +48,7 @@
       "warmups": 2,
       "measured": 7,
       "total_executions": 216,
-      "executed": false
+      "executed": true
     },
     "E4": {
       "programs": 24,
@@ -59,12 +59,12 @@
       "warmups": 2,
       "measured": 7,
       "total_executions": 432,
-      "executed": false
+      "executed": true
     },
     "E5": {
       "path_levels": "validated 1–64 where reachable",
-      "execution_count": "TBD after corpus validation",
-      "executed": false
+      "execution_count": 7,
+      "executed": true
     }
   },
   "disallowed": [

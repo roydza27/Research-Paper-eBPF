@@ -1,0 +1,34 @@
+
+KLEE: WARNING: Module and host target triples do not match: 'bpf' != 'x86_64-unknown-linux-gnu'
+This may cause unexpected crashes or assertion violations.
+KLEE: NOTE: Using klee-uclibc : /opt/krakenguard/klee/build/runtime/lib/klee-uclibc.bca
+KLEE: output directory is "/data/requests/0d20c762-5e8f-4b67-885e-32df78b763ad/output"
+KLEE: Using Z3 solver backend
+KLEE: Deterministic allocator: Using quarantine queue size 8
+KLEE: Deterministic allocator: globals (start-address=0x7f93ec000000 size=10 GiB)
+KLEE: Deterministic allocator: constants (start-address=0x7f916c000000 size=10 GiB)
+KLEE: Deterministic allocator: heap (start-address=0x40000000 size=1 GiB)
+KLEE: Deterministic allocator: stack (start-address=0x7f716c000000 size=128 GiB)
+warning: Linking two modules of different data layouts: '/data/requests/0d20c762-5e8f-4b67-885e-32df78b763ad/input/final_linked_ir.bc' is 'e-m:e-p:64:64-i64:64-i128:128-n32:64-S128' whereas '__uClibc_main.os' is 'e-m:e-p270:32:32-p271:32:32-p272:64:64-i64:64-f80:128-n8:16:32:64-S128'
+
+warning: Linking two modules of different target triples: '/data/requests/0d20c762-5e8f-4b67-885e-32df78b763ad/input/final_linked_ir.bc' is 'bpf' whereas '__uClibc_main.os' is 'x86_64-unknown-linux-gnu'
+
+KLEE: WARNING: undefined reference to function: __syscall_rt_sigaction
+KLEE: WARNING: undefined reference to function: fcntl
+KLEE: WARNING: undefined reference to function: fstat
+KLEE: WARNING: undefined reference to function: ioctl
+KLEE: WARNING: undefined reference to function: lseek64
+KLEE: WARNING: undefined reference to function: mmap
+KLEE: WARNING: undefined reference to function: open
+KLEE: WARNING: undefined reference to function: write
+KLEE: WARNING: undefined reference to function: kill (UNSAFE)!
+KLEE: WARNING ONCE: calling external: ioctl(0, 21505, 140170217127936) at libc/termios/tcgetattr.c:43 12
+KLEE: WARNING ONCE: calling __user_main with extra arguments.
+KLEE: WARNING ONCE: Alignment of memory from call "malloc" is not modelled. Using alignment of 8.
+Policy e1_fixed_policy failed at line 5615
+Policy e1_fixed_policy failed at line 5615
+
+KLEE: done: total instructions = 12732
+KLEE: done: completed paths = 1
+KLEE: done: partially completed paths = 0
+KLEE: done: generated tests = 1

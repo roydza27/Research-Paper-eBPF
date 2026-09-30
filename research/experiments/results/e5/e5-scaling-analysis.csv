@@ -1,0 +1,8 @@
+path_stratum,reachable,programs_reaching,program_count,discharged_count,fallback_count,fallback_fraction,abstract_median_ms,symbolic_fallback_median_ms,total_hybrid_median_ms,symbolic_only_median_ms,savings_median_pct,klee_paths_explored_median,klee_queries_median
+1,True,"a1,a2,a3,a4,a5,a6,c1,c2,c3,c4,c5,c6",12,12,0,0.0,39.118,0.0,39.118,684.362,94.34,0,0
+2,True,"b1,b2,d1,d2",4,0,4,1.0,36.236,696.041,731.327,699.784,-4.76,2,2
+4,True,"b3,d3",2,0,2,1.0,41.05,709.357,749.731,706.801,-5.32,3,3
+8,True,"b4,d4",2,0,2,1.0,37.077,734.4,768.282,721.582,-5.06,5,5
+16,True,"b5,d5",2,0,2,1.0,40.9,737.685,781.843,752.331,-4.11,9,9
+32,True,"b6,d6",2,0,2,1.0,40.223,810.497,852.676,802.375,-5.56,17,17
+64,False,NONE,0,0,0,N/A,N/A,N/A,N/A,N/A,N/A,N/A,N/A
