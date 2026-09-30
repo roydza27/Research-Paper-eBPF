@@ -1,7 +1,7 @@
 {
   "schema": "phase5-execution-gate/v1",
   "execution_approved": false,
-  "design_status": "IMPLEMENTATION_AND_VALIDATION_COMPLETE_EXECUTION_GATED",
+  "design_status": "CORRECTION_IN_PROGRESS_EXECUTION_GATED",
   "evidence_sources": {
     "e1_ref": "main",
     "e2_ref": "phase4-e2-full-matrix",
@@ -59,7 +59,8 @@
     "discard correctness disagreements",
     "remove timing outliers",
     "modify E1 or E2 evidence",
-    "claim hybrid performance improvement before measurement"
+    "claim hybrid performance improvement before measurement",
+    "treat pre-correction Phase 5 validation artifacts as post-correction evidence"
   ],
   "correction_status": "IN_PROGRESS — correctness revalidation blocked until immutable container digest is frozen"
 }
