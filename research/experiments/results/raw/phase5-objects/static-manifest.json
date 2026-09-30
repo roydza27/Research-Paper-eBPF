@@ -1,0 +1,170 @@
+{
+  "a1": {
+    "object_file": "a1.o",
+    "object_sha256": "afdf76a0a4465ad311a341f5b9312804dbc313d23b656b65297bcb80c489b1a7",
+    "size_bytes": 4840,
+    "instruction_count": 5,
+    "branch_count": 0
+  },
+  "a2": {
+    "object_file": "a2.o",
+    "object_sha256": "9dc5de0fd13a0d6a8104849d86653ed5790f140dda8cd1b7c0407c623963c8c7",
+    "size_bytes": 4856,
+    "instruction_count": 5,
+    "branch_count": 0
+  },
+  "a3": {
+    "object_file": "a3.o",
+    "object_sha256": "df252c1e63a2bbbbb661bbea3de41e44367397f62a660378584b07f22eb42f27",
+    "size_bytes": 5344,
+    "instruction_count": 8,
+    "branch_count": 1
+  },
+  "a4": {
+    "object_file": "a4.o",
+    "object_sha256": "c96c78c0957df2931e2424f8f6380d8df1a0826778f7b14a174f08c329160082",
+    "size_bytes": 5736,
+    "instruction_count": 11,
+    "branch_count": 2
+  },
+  "a5": {
+    "object_file": "a5.o",
+    "object_sha256": "833923e85039a9e4e70c159d28396673db94a91b5a2abf062ad6c6432d2413aa",
+    "size_bytes": 6056,
+    "instruction_count": 16,
+    "branch_count": 4
+  },
+  "a6": {
+    "object_file": "a6.o",
+    "object_sha256": "60b146058a4a1389ca16d81def94d88f7fbeef981fae7f86077258d8d50fa64f",
+    "size_bytes": 6400,
+    "instruction_count": 21,
+    "branch_count": 6
+  },
+  "b1": {
+    "object_file": "b1.o",
+    "object_sha256": "fb95faa51b5eef338fdad8ee9b3ffa6cd965433ed4a1c991e83c85674b7c1350",
+    "size_bytes": 6136,
+    "instruction_count": 18,
+    "branch_count": 3
+  },
+  "b2": {
+    "object_file": "b2.o",
+    "object_sha256": "f0f1d2e7aceef4c4ce77a19423fbb798d169877bfb0d55e5ba1e34f7786ab7bd",
+    "size_bytes": 6144,
+    "instruction_count": 18,
+    "branch_count": 3
+  },
+  "b3": {
+    "object_file": "b3.o",
+    "object_sha256": "5819ee511bcdce3287ab7a7ed5f7422e2735ed21308d265e7591d048bddac580",
+    "size_bytes": 6496,
+    "instruction_count": 28,
+    "branch_count": 5
+  },
+  "b4": {
+    "object_file": "b4.o",
+    "object_sha256": "5a536ce8292d996b0c076ffadfeff24d9ce6e37ad567e31296a55e3c8c7cc365",
+    "size_bytes": 6752,
+    "instruction_count": 34,
+    "branch_count": 6
+  },
+  "b5": {
+    "object_file": "b5.o",
+    "object_sha256": "eac933d8779c23116afa822902e219156037f28f0ccdd6daaba70e6fff0c82f2",
+    "size_bytes": 7016,
+    "instruction_count": 40,
+    "branch_count": 7
+  },
+  "b6": {
+    "object_file": "b6.o",
+    "object_sha256": "4844435af8708232beb8297750e352df11ba463fb893228bbd1ce8951fe6a3fa",
+    "size_bytes": 7264,
+    "instruction_count": 46,
+    "branch_count": 8
+  },
+  "c1": {
+    "object_file": "c1.o",
+    "object_sha256": "d6a1ceab0a167d80255aa7ba022314c70b73173bd0022218fdb726cf1fb9e5e2",
+    "size_bytes": 5600,
+    "instruction_count": 8,
+    "branch_count": 1
+  },
+  "c2": {
+    "object_file": "c2.o",
+    "object_sha256": "a2bea244afc287c6e2da021d7845f058806a3ee24f91436c2081c3d34b4e6ef1",
+    "size_bytes": 5640,
+    "instruction_count": 8,
+    "branch_count": 1
+  },
+  "c3": {
+    "object_file": "c3.o",
+    "object_sha256": "085df780e31d965efd5261c68b524bbe0c1951a2b85429931ad374eb8d3232d5",
+    "size_bytes": 5592,
+    "instruction_count": 8,
+    "branch_count": 1
+  },
+  "c4": {
+    "object_file": "c4.o",
+    "object_sha256": "0a996dcf4f20aa4ee7218f0ed8a7b9d7504f422b57ffd09278a699ad748a414c",
+    "size_bytes": 5864,
+    "instruction_count": 9,
+    "branch_count": 2
+  },
+  "c5": {
+    "object_file": "c5.o",
+    "object_sha256": "eab4a175f3742333528356ac6542b45a4eb8f5124ec45bd40194073f2e4a32b6",
+    "size_bytes": 6384,
+    "instruction_count": 14,
+    "branch_count": 3
+  },
+  "c6": {
+    "object_file": "c6.o",
+    "object_sha256": "51ead398a1a6e6281bcbeb4057df283dd6282b95299b660c4728dba300b7821a",
+    "size_bytes": 6576,
+    "instruction_count": 17,
+    "branch_count": 4
+  },
+  "d1": {
+    "object_file": "d1.o",
+    "object_sha256": "de480574ea955b9d273ecfbd0e39d5c5a7c6421d1070d1a4bcd6a50a861f244c",
+    "size_bytes": 6128,
+    "instruction_count": 11,
+    "branch_count": 3
+  },
+  "d2": {
+    "object_file": "d2.o",
+    "object_sha256": "d43770c56ce04f6743b96b9a2d5ae747f1d187f3db42daf852755d8cc4d6c4bd",
+    "size_bytes": 6128,
+    "instruction_count": 11,
+    "branch_count": 3
+  },
+  "d3": {
+    "object_file": "d3.o",
+    "object_sha256": "b4d0639980dffdbd3cd5d0dedcef3db54822237a9543208513455db9c95031c5",
+    "size_bytes": 6136,
+    "instruction_count": 11,
+    "branch_count": 3
+  },
+  "d4": {
+    "object_file": "d4.o",
+    "object_sha256": "57184dd8a4623696440b54f78f23b8f1628c16c06edcfaf589874680f5865f3d",
+    "size_bytes": 6136,
+    "instruction_count": 11,
+    "branch_count": 3
+  },
+  "d5": {
+    "object_file": "d5.o",
+    "object_sha256": "cb87ad04d7742795888acde9f608ca31c4279f281d11050319d17e0f6d0a2dc3",
+    "size_bytes": 6136,
+    "instruction_count": 11,
+    "branch_count": 3
+  },
+  "d6": {
+    "object_file": "d6.o",
+    "object_sha256": "fb59f1e91dfa860ff91e6f8cd847d708923f3854809c9dd3b16c7e0457a394a0",
+    "size_bytes": 6136,
+    "instruction_count": 11,
+    "branch_count": 3
+  }
+}

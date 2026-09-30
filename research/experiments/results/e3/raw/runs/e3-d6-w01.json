@@ -1,0 +1,35 @@
+{
+  "run_record": {
+    "execution_order": 24,
+    "run_id": "e3-d6-w01",
+    "program_id": "d6",
+    "category": "D",
+    "role": "Symbolic Violation",
+    "target_paths": 32,
+    "repetition_type": "warmup",
+    "repeat_number": 1,
+    "abstract_verdict": "UNKNOWN",
+    "discharged": false,
+    "abstract_wall_time_us": 35740,
+    "abstract_cpu_time_us": 1861,
+    "reference_verdict": "POLICY VIOLATION",
+    "hybrid_verdict": "POLICY VIOLATION",
+    "correctness_agreement": true,
+    "abstract_proof": "Conservative UNKNOWN: mixed or unresolved reachable outcomes",
+    "instructions": 0,
+    "basic_blocks": 0,
+    "paths_analyzed": 0,
+    "abstract_states": 3,
+    "source_sha256": "58f9150e1f16a441da9249b28b870ce4b1dc9566fe4ca31ecdc3a3e733df4893",
+    "object_sha256": "fb59f1e91dfa860ff91e6f8cd847d708923f3854809c9dd3b16c7e0457a394a0",
+    "policy_sha256": "270403272d736ae7aee2ceda3bf8d088b6ac0cb476bb99ce0218dd8f33c3c603"
+  },
+  "analyzer_full_result": {
+    "verdict": "UNKNOWN",
+    "proof": "Conservative UNKNOWN: mixed or unresolved reachable outcomes",
+    "discharged": false,
+    "metrics": {
+      "abstract_states": 3
+    }
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "run_record": {
+    "execution_order": 146,
+    "run_id": "e3-a2-m05",
+    "program_id": "a2",
+    "category": "A",
+    "role": "Provable Compliant",
+    "target_paths": 1,
+    "repetition_type": "measured",
+    "repeat_number": 5,
+    "abstract_verdict": "SAFE",
+    "discharged": true,
+    "abstract_wall_time_us": 36049,
+    "abstract_cpu_time_us": 1911,
+    "reference_verdict": "COMPLIANT",
+    "hybrid_verdict": "COMPLIANT",
+    "correctness_agreement": true,
+    "abstract_proof": "All 1 reachable exits return policy-allowed values and all modeled reachable operations are supported.",
+    "instructions": 2,
+    "basic_blocks": 1,
+    "paths_analyzed": 1,
+    "abstract_states": 1,
+    "source_sha256": "91b6ceff73cd825370ecc13aa0e0776fa6d9c48b9555cc8afb5e66bda072b017",
+    "object_sha256": "9dc5de0fd13a0d6a8104849d86653ed5790f140dda8cd1b7c0407c623963c8c7",
+    "policy_sha256": "270403272d736ae7aee2ceda3bf8d088b6ac0cb476bb99ce0218dd8f33c3c603"
+  },
+  "analyzer_full_result": {
+    "verdict": "SAFE",
+    "proof": "All 1 reachable exits return policy-allowed values and all modeled reachable operations are supported.",
+    "discharged": true,
+    "metrics": {
+      "instructions": 2,
+      "basic_blocks": 1,
+      "paths_analyzed": 1,
+      "abstract_states": 1
+    }
+  }
+}

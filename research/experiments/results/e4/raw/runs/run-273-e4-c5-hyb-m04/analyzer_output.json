@@ -1,0 +1,11 @@
+{
+  "verdict": "VIOLATION",
+  "proof": "All 1 reachable terminal paths establish a policy violation.",
+  "discharged": true,
+  "metrics": {
+    "instructions": 11,
+    "basic_blocks": 1,
+    "paths_analyzed": 1,
+    "abstract_states": 1
+  }
+}

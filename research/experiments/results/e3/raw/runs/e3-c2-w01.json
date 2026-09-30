@@ -1,0 +1,38 @@
+{
+  "run_record": {
+    "execution_order": 14,
+    "run_id": "e3-c2-w01",
+    "program_id": "c2",
+    "category": "C",
+    "role": "Provable Violation",
+    "target_paths": 1,
+    "repetition_type": "warmup",
+    "repeat_number": 1,
+    "abstract_verdict": "VIOLATION",
+    "discharged": true,
+    "abstract_wall_time_us": 32731,
+    "abstract_cpu_time_us": 1538,
+    "reference_verdict": "POLICY VIOLATION",
+    "hybrid_verdict": "POLICY VIOLATION",
+    "correctness_agreement": true,
+    "abstract_proof": "All 1 reachable terminal paths establish a policy violation.",
+    "instructions": 5,
+    "basic_blocks": 1,
+    "paths_analyzed": 1,
+    "abstract_states": 1,
+    "source_sha256": "23668b6ce0e8c902fce01b534c941b4bff5614b733f56b5616f36aa80224cd42",
+    "object_sha256": "a2bea244afc287c6e2da021d7845f058806a3ee24f91436c2081c3d34b4e6ef1",
+    "policy_sha256": "270403272d736ae7aee2ceda3bf8d088b6ac0cb476bb99ce0218dd8f33c3c603"
+  },
+  "analyzer_full_result": {
+    "verdict": "VIOLATION",
+    "proof": "All 1 reachable terminal paths establish a policy violation.",
+    "discharged": true,
+    "metrics": {
+      "instructions": 5,
+      "basic_blocks": 1,
+      "paths_analyzed": 1,
+      "abstract_states": 1
+    }
+  }
+}

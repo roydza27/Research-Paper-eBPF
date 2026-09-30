@@ -1,0 +1,8 @@
+{
+  "verdict": "UNKNOWN",
+  "proof": "Conservative UNKNOWN: unsupported instruction at 1: w3 = *(u32 *)(r1 + 0x4)",
+  "discharged": false,
+  "metrics": {
+    "abstract_states": 1
+  }
+}

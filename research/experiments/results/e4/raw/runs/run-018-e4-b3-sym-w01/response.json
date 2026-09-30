@@ -1,0 +1,40 @@
+{
+  "version": "1.0",
+  "request_id": "2a060bf7-c5ab-4b12-b920-a7cde7e866b0",
+  "status": "success",
+  "retained": true,
+  "verification_result": {
+    "passed": true,
+    "helper_functions": {
+      "valid": true,
+      "message": "No use of restricted function detected in any execution path",
+      "restricted_helpers": []
+    },
+    "map_access": {
+      "valid": true,
+      "message": "mapAccess.results not generated (legacy map-access-control disabled in conditional policy mode)",
+      "violations": []
+    }
+  },
+  "execution": {
+    "duration_seconds": 0.7097415924072266,
+    "paths_explored": 4,
+    "total_instructions": 13009,
+    "return_code": 0
+  },
+  "output": {
+    "stdout": "\n[Step 1] Lifting object file: /data/requests/2a060bf7-c5ab-4b12-b920-a7cde7e866b0/input/b3.o\nWorking dir: /tmp/tmpgadkymah\n[Optimize IR] Running: opt -O3 -S /tmp/tmpgadkymah/tmpqfw01vc7 -o /tmp/tmpgadkymah/tmpqfw01vc7\n[Step 2] Extracting relocation info\nHas .relxdp: False\n[Step 3] Applying function pass to remove map globals\n[Remove map globals] Running: opt -load /opt/krakenguard/lifting_tools/llvm_func_pass/build/libfunc_pass.so -load-pass-plugin=/opt/krakenguard/lifting_tools/llvm_func_pass/build/libfunc_pass.so -passes=custom-bpf-pass -map-config /tmp/tmpgadkymah/map_offset_mapping /tmp/tmpgadkymah/tmpqfw01vc7 -o /tmp/tmpgadkymah/tmpqfw01vc7\nsimple helper: bpf_ktime_get_ns\ncall to replace :: bpf_ktime_get_ns.toreplace\ntrying to erase : bpf_ktime_get_ns.toreplace\nERASED\ntransformMapLookups done\n\n[Step 4] Generating template code\nFunction: b3, Maps: 0\n[Step 5] Compiling template\n[Compile template] Running: clang-13 -target bpf -DKLEE_VERIFICATION -DVERIFY_INTERACTIONS -I/opt/krakenguard/examples/headers -I/usr/include/x86_64-linux-gnu -I/opt/krakenguard/ebpf-se/libbpf-stubbed/src/build/usr/include -I /opt/krakenguard/klee/include -D__USE_VMLINUX__ -D__TARGET_ARCH_x86 -DBPF_NO_PRESERVE_ACCESS_INDEX -Wall -Wno-unused-value -Wno-unused-variable -Wno-pointer-sign -Wno-compare-distinct-pointer-types -Wno-unused-function -fno-discard-value-names -fno-builtin -O0 -emit-llvm -c -g /tmp/tmpgadkymah/cpp_generated_code.c -o /tmp/tmpgadkymah/cpp_generated_code.c\n[Step 6] Applying ext sym pass\n[Ext sym pass] Running: opt -load-pass-plugin=/opt/krakenguard/lifting_tools/llvm_ext_sym_pass/build/libext_sym_pass.so -passes=int-to-ext /tmp/tmpgadkymah/cpp_generated_code.c -o /tmp/tmpgadkymah/cpp_generated_code.c\n[Step 7] Linking IRs\n[Link IRs] Running: llvm-link /tmp/tmpgadkymah/cpp_generated_code.c /tmp/tmpgadkymah/tmpqfw01vc7 -o /data/requests/2a060bf7-c5ab-4b12-b920-a7cde7e866b0/input/final_linked_ir.bc\nOutput: /data/requests/2a060bf7-c5ab-4b12-b920-a7cde7e866b0/input/final_linked_ir.bc\n\nLoaded Config JSON file\nParsing conditional policies...\n[policy] ACTION : e1_fixed_policy\n\n=== Conditional Policy Summary ===\n  MEM_CONDITION: 0  ACTION: 1\n  ACTION roots:  e1_fixed_policy \n==================================\n\n\n========== Conditional Policy Statistics ==========\nPolicy Name                     Applicable    Violated Not Applic.  Coverage %\n------------------------------------------------------------------------------\ne1_fixed_policy                          6           0           0      100.0%\n------------------------------------------------------------------------------\nTOTAL                                    6           0           0      100.0%\n===================================================\n\nNo use of restricted function detected in any execution path\n\n=== Conditional Policy Summary ===\nConditional policy mode enabled\nTotal test cases: 4\nResults written to: conditional_policy.results.txt\n==================================\nElapsed time in milliseconds: 422\n",
+    "stderr": "\nKLEE: WARNING: Module and host target triples do not match: 'bpf' != 'x86_64-unknown-linux-gnu'\nThis may cause unexpected crashes or assertion violations.\nKLEE: NOTE: Using klee-uclibc : /opt/krakenguard/klee/build/runtime/lib/klee-uclibc.bca\nKLEE: output directory is \"/data/requests/2a060bf7-c5ab-4b12-b920-a7cde7e866b0/output\"\nKLEE: Using Z3 solver backend\nKLEE: Deterministic allocator: Using quarantine queue size 8\nKLEE: Deterministic allocator: globals (start-address=0x7f70d1400000 size=10 GiB)\nKLEE: Deterministic allocator: constants (start-address=0x7f6e51400000 size=10 GiB)\nKLEE: Deterministic allocator: heap (start-address=0x40000000 size=1 GiB)\nKLEE: Deterministic allocator: stack (start-address=0x7f4e51400000 size=128 GiB)\nwarning: Linking two modules of different data layouts: '/data/requests/2a060bf7-c5ab-4b12-b920-a7cde7e866b0/input/final_linked_ir.bc' is 'e-m:e-p:64:64-i64:64-i128:128-n32:64-S128' whereas '__uClibc_main.os' is 'e-m:e-p270:32:32-p271:32:32-p272:64:64-i64:64-f80:128-n8:16:32:64-S128'\n\nwarning: Linking two modules of different target triples: '/data/requests/2a060bf7-c5ab-4b12-b920-a7cde7e866b0/input/final_linked_ir.bc' is 'bpf' whereas '__uClibc_main.os' is 'x86_64-unknown-linux-gnu'\n\nKLEE: WARNING: undefined reference to function: __syscall_rt_sigaction\nKLEE: WARNING: undefined reference to function: fcntl\nKLEE: WARNING: undefined reference to function: fstat\nKLEE: WARNING: undefined reference to function: ioctl\nKLEE: WARNING: undefined reference to function: lseek64\nKLEE: WARNING: undefined reference to function: mmap\nKLEE: WARNING: undefined reference to function: open\nKLEE: WARNING: undefined reference to function: write\nKLEE: WARNING: undefined reference to function: kill (UNSAFE)!\nKLEE: WARNING ONCE: calling external: ioctl(0, 21505, 140019444482048) at libc/termios/tcgetattr.c:43 12\nKLEE: WARNING ONCE: calling __user_main with extra arguments.\nKLEE: WARNING ONCE: Alignment of memory from call \"malloc\" is not modelled. Using alignment of 8.\n\nKLEE: done: total instructions = 13009\nKLEE: done: completed paths = 4\nKLEE: done: partially completed paths = 0\nKLEE: done: generated tests = 4\n",
+    "directory": "/data/requests/2a060bf7-c5ab-4b12-b920-a7cde7e866b0/output",
+    "files": {
+      "helperFunc.results": "/data/requests/2a060bf7-c5ab-4b12-b920-a7cde7e866b0/output/helperFunc.results",
+      "info": "/data/requests/2a060bf7-c5ab-4b12-b920-a7cde7e866b0/output/info",
+      "warnings.txt": "/data/requests/2a060bf7-c5ab-4b12-b920-a7cde7e866b0/output/warnings.txt",
+      "messages.txt": "/data/requests/2a060bf7-c5ab-4b12-b920-a7cde7e866b0/output/messages.txt",
+      "test000001.ktest": "/data/requests/2a060bf7-c5ab-4b12-b920-a7cde7e866b0/output/test000001.ktest",
+      "test000004.ktest": "/data/requests/2a060bf7-c5ab-4b12-b920-a7cde7e866b0/output/test000004.ktest",
+      "test000002.ktest": "/data/requests/2a060bf7-c5ab-4b12-b920-a7cde7e866b0/output/test000002.ktest",
+      "test000003.ktest": "/data/requests/2a060bf7-c5ab-4b12-b920-a7cde7e866b0/output/test000003.ktest"
+    }
+  }
+}

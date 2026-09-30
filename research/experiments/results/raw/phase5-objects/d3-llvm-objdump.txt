@@ -1,0 +1,13 @@
+/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/corpus/phase5/programs/d3.o:	file format elf64-bpf
+
+Disassembly of section xdp:
+
+0000000000000000 <d3>:
+       0:	85 00 00 00 05 00 00 00	call 0x5
+       1:	57 00 00 00 03 00 00 00	r0 &= 0x3
+       2:	55 00 04 00 03 00 00 00	if r0 != 0x3 goto +0x4 <d3+0x38>
+       3:	18 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00	r1 = 0x0 ll
+       5:	b7 02 00 00 0e 00 00 00	r2 = 0xe
+       6:	85 00 00 00 06 00 00 00	call 0x6
+       7:	b7 00 00 00 02 00 00 00	r0 = 0x2
+       8:	95 00 00 00 00 00 00 00	exit

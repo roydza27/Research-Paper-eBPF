@@ -1,0 +1,8 @@
+{
+  "verdict": "UNKNOWN",
+  "proof": "Conservative UNKNOWN: mixed or unresolved reachable outcomes",
+  "discharged": false,
+  "metrics": {
+    "abstract_states": 3
+  }
+}

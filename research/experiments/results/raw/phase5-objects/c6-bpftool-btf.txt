@@ -1,0 +1,25 @@
+[1] PTR '(anon)' type_id=2
+[2] STRUCT 'xdp_md' size=24 vlen=6
+	'data' type_id=3 bits_offset=0
+	'data_end' type_id=3 bits_offset=32
+	'data_meta' type_id=3 bits_offset=64
+	'ingress_ifindex' type_id=3 bits_offset=96
+	'rx_queue_index' type_id=3 bits_offset=128
+	'egress_ifindex' type_id=3 bits_offset=160
+[3] TYPEDEF '__u32' type_id=4
+[4] INT 'unsigned int' size=4 bits_offset=0 nr_bits=32 encoding=(none)
+[5] FUNC_PROTO '(anon)' ret_type_id=6 vlen=1
+	'ctx' type_id=1
+[6] INT 'int' size=4 bits_offset=0 nr_bits=32 encoding=SIGNED
+[7] FUNC 'c6' type_id=5 linkage=global
+[8] CONST '(anon)' type_id=9
+[9] INT 'char' size=1 bits_offset=0 nr_bits=8 encoding=SIGNED
+[10] ARRAY '(anon)' type_id=8 index_type_id=11 nr_elems=14
+[11] INT '__ARRAY_SIZE_TYPE__' size=4 bits_offset=0 nr_bits=32 encoding=(none)
+[12] VAR 'c6.fmt' type_id=10, linkage=static
+[13] ARRAY '(anon)' type_id=9 index_type_id=11 nr_elems=4
+[14] VAR 'LICENSE' type_id=13, linkage=global
+[15] DATASEC '.rodata' size=0 vlen=1
+	type_id=12 offset=0 size=14 (VAR 'c6.fmt')
+[16] DATASEC 'license' size=0 vlen=1
+	type_id=14 offset=0 size=4 (VAR 'LICENSE')

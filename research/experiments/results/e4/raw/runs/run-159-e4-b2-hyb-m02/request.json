@@ -1,0 +1,5 @@
+{
+  "request_id": "094a2a61-d64c-44a1-9cd3-00dbf3c9cbe9",
+  "object_file": "/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/corpus/phase5/programs/b2.o",
+  "policy_file": "/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/corpus/phase5/policies/phase5_policy.json"
+}
