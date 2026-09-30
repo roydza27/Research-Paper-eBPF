@@ -1,6 +1,6 @@
 {
   "schema": "phase5-environment/v1",
-  "status": "PENDING_CONTAINER_DIGEST_CAPTURE",
+  "status": "PROVENANCE_FROZEN",
   "krakenguard_commit": "e7bd84005b304c5a10efcdb04914d1882b3cccf7",
   "compiler": "clang",
   "compiler_version": "22.1.8",
@@ -16,9 +16,9 @@
   "architecture": "x86_64",
   "hook": "XDP",
   "container_image": "kg-artifact-krakenguard:latest",
-  "container_image_digest": null,
+  "container_image_digest": "kg-artifact-krakenguard@sha256:9633a6922518589803a4c9b8123d0549e54b5f57c1d04f9e383e822fd9ae3bd4",
   "policy_sha256": "270403272d736ae7aee2ceda3bf8d088b6ac0cb476bb99ce0218dd8f33c3c603",
-  "digest_capture_requirement": "Run docker image inspect kg-artifact-krakenguard:latest --format '{{index .RepoDigests 0}}' on the actual validation host and freeze the immutable digest before correctness validation.",
+  "digest_capture_requirement": "Run docker image inspect kg-artifact-krakenguard:latest --format '{{json .RepoDigests}}' on the actual validation host and freeze the immutable digest before correctness validation.",
   "notes": [
     "The image tag is recorded from the repository build provenance.",
     "No digest is fabricated. Validation must fail closed until an immutable digest is captured.",

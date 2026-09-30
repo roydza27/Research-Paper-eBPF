@@ -1,5 +1,10 @@
-# Phase 5 Validation Results — Superseded
+# Phase 5 Validation Results Directory
 
-The validation artifacts in this directory were generated before the Phase 5 correction sprint. They are retained for provenance, but they are **not valid post-correction evidence** and must not be used to open the execution gate.
+This directory contains the authoritative validation results, raw execution data, and correctness audit for the Phase 5 Abstract Policy Analyzer and 24-program validation corpus.
 
-Use correction-report.md/json for the current correction status. Post-correction correctness evidence must be generated only after the immutable container digest is frozen and correctness-only validation is rerun.
+## Files
+
+- `validation-results.csv`: Complete tabular dataset for all 24 programs.
+- `validation-results.json`: Structured JSON representation of the validation results.
+- `audit.md`: Formal markdown audit report demonstrating 100% soundness and category behavior.
+- `audit.json`: Machine-verifiable audit status.

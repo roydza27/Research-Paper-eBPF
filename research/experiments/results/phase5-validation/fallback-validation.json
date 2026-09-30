@@ -1,0 +1,53 @@
+{
+  "schema": "phase5-fallback-validation/v1",
+  "execution_type": "correctness_only",
+  "performance_matrix": false,
+  "environment": {
+    "krakenguard_commit": "e7bd84005b304c5a10efcdb04914d1882b3cccf7",
+    "compiler": "clang",
+    "compiler_version": "22.1.8",
+    "compiler_flags": [
+      "-target",
+      "bpf",
+      "-mcpu=v1",
+      "-D__TARGET_ARCH_x86",
+      "-O2",
+      "-g",
+      "-I/usr/include"
+    ],
+    "kernel": "7.2.3-arch1-2",
+    "architecture": "x86_64",
+    "hook": "XDP",
+    "container_image": "kg-artifact-krakenguard:latest",
+    "container_image_digest": "kg-artifact-krakenguard@sha256:9633a6922518589803a4c9b8123d0549e54b5f57c1d04f9e383e822fd9ae3bd4",
+    "policy_sha256": "270403272d736ae7aee2ceda3bf8d088b6ac0cb476bb99ce0218dd8f33c3c603"
+  },
+  "fixtures": [
+    {
+      "program_id": "b1",
+      "description": "UNKNOWN compliant fixture",
+      "abstract_verdict": "UNKNOWN",
+      "fallback_invoked": true,
+      "reference_verdict": "COMPLIANT",
+      "reference_request_id": "7c764064-19b3-4c85-8581-e7cf7374b139",
+      "reference_status": "success",
+      "abstract_duration_us": 33107,
+      "reference_duration_us": 692996,
+      "policy_sha256": "270403272d736ae7aee2ceda3bf8d088b6ac0cb476bb99ce0218dd8f33c3c603",
+      "krakenguard_commit": "e7bd84005b304c5a10efcdb04914d1882b3cccf7"
+    },
+    {
+      "program_id": "d1",
+      "description": "UNKNOWN violating fixture",
+      "abstract_verdict": "UNKNOWN",
+      "fallback_invoked": true,
+      "reference_verdict": "POLICY VIOLATION",
+      "reference_request_id": "fe1dcc81-38dc-4c27-9a10-25ccb8213a9f",
+      "reference_status": "success",
+      "abstract_duration_us": 31191,
+      "reference_duration_us": 712530,
+      "policy_sha256": "270403272d736ae7aee2ceda3bf8d088b6ac0cb476bb99ce0218dd8f33c3c603",
+      "krakenguard_commit": "e7bd84005b304c5a10efcdb04914d1882b3cccf7"
+    }
+  ]
+}

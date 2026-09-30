@@ -13,6 +13,9 @@ PROGRAMS_DIR = CORPUS_DIR / "programs"
 POLICY_FILE = CORPUS_DIR / "policies" / "phase5_policy.json"
 RESULTS_DIR = ROOT_DIR / "experiments" / "results" / "phase5-validation"
 BASELINE_DIR = ROOT_DIR / "baselines" / "krakenguard" / "artifact"
+import sys
+sys.path.insert(0, str(BASELINE_DIR))
+sys.path.insert(0, str(ROOT_DIR))
 
 from analyzer.abstract_policy_analyzer import AbstractPolicyAnalyzer, Verdict
 from daemon.krakenguard_client import KrakenGuardClient
@@ -24,6 +27,7 @@ _spec.loader.exec_module(_validator)
 EXPECTED_KRAKENGUARD_COMMIT = _validator.EXPECTED_KRAKENGUARD_COMMIT
 preflight_reference_environment = _validator.preflight_reference_environment
 sha256_file = _validator.sha256_file
+extract_krakenguard_verdict = _validator.extract_krakenguard_verdict
 
 FIXTURES = {"b1": "UNKNOWN compliant fixture", "d1": "UNKNOWN violating fixture"}
 
@@ -53,8 +57,7 @@ def main():
         t1 = time.perf_counter()
         response = client.verify(object_file=str(object_file), constraints_file=str(POLICY_FILE))
         reference_us = int((time.perf_counter() - t1) * 1e6)
-        passed = bool(response.verification_result and response.verification_result.passed)
-        final_verdict = "COMPLIANT" if passed else "POLICY VIOLATION"
+        passed, final_verdict = extract_krakenguard_verdict(response)
         rows.append({
             "program_id": program_id,
             "description": description,

@@ -56,7 +56,7 @@ class AbstractPolicyAnalyzer:
         with open(self.policy_path) as f: self.policy=json.load(f)
         self.allowed_helpers=self._allowed_helpers()
         self.forbidden_helpers=set(self.policy.get("helper_func",[]))
-        self.allowed_returns=self._allowed_returns()
+        self.has_return_rule, self.allowed_returns = self._allowed_returns()
         self.allowed_maps=self._allowed_maps()
         self.instructions=[]; self.basic_blocks={}; self.relocations={}
 
@@ -68,11 +68,14 @@ class AbstractPolicyAnalyzer:
         return set(out)
 
     def _allowed_returns(self):
-        out=[]
+        has_rule = False
+        out = []
         for v in self.policy.values():
-            if isinstance(v,dict) and isinstance(v.get("actions"),dict):
-                out += v["actions"].get("return_value",[])
-        return set(out or [1,2])
+            if isinstance(v, dict) and isinstance(v.get("actions"), dict):
+                if "return_value" in v["actions"]:
+                    has_rule = True
+                    out += v["actions"].get("return_value", [])
+        return (has_rule, set(out))
 
     def _allowed_maps(self):
         out=[]
@@ -207,8 +210,15 @@ class AbstractPolicyAnalyzer:
             lhs,rhs=ins.text.split(" = ",1); lhs=lhs.strip(); rhs=rhs.strip()
             if re.fullmatch(r"r(?:10|[0-9])",rhs):
                 regs[lhs]=regs.get(rhs,AbstractValue.unknown()); return "OK"
-            if re.fullmatch(r"-?(?:0x[0-9A-Fa-f]+|\d+)",rhs):
-                regs[lhs]=AbstractValue.const(self._imm(rhs)); return "OK"
+            if re.fullmatch(r"-?(?:0x[0-9A-Fa-f]+|\d+)(?:\s+ll)?",rhs):
+                rel_name = self.relocations.get(ins.pc * 8) or self.relocations.get(ins.pc)
+                if rel_name:
+                    regs[lhs]=AbstractValue.symbolic(rel_name)
+                else:
+                    regs[lhs]=AbstractValue.const(self._imm(rhs))
+                return "OK"
+            if re.fullmatch(r"[A-Za-z_][A-Za-z0-9_.]*(?:\s+ll)?",rhs):
+                regs[lhs]=AbstractValue.symbolic(rhs.split()[0]); return "OK"
             # Memory load: result is unknown, but the load is modeled.
             if re.fullmatch(r"\*\([^)]*\)\(r(?:10|[0-9])(?:\s*[+-]\s*(?:0x[0-9A-Fa-f]+|\d+))?\)",rhs):
                 regs[lhs]=AbstractValue.unknown(); return "OK"
@@ -224,6 +234,9 @@ class AbstractPolicyAnalyzer:
         m=re.fullmatch(r"(r(?:10|[0-9]))\s*([+\-*/&|^]|<<|>>)\=\s*(-?(?:0x[0-9A-Fa-f]+|\d+))",ins.text)
         if m:
             self._eval_binary(m.group(1),m.group(2),AbstractValue.const(self._imm(m.group(3))),regs); return "OK"
+        m=re.fullmatch(r"(r(?:10|[0-9]))\s*([+\-*/&|^]|<<|>>)\=\s*(r(?:10|[0-9]))",ins.text)
+        if m:
+            self._eval_binary(m.group(1),m.group(2),regs.get(m.group(3),AbstractValue.unknown()),regs); return "OK"
 
         # Memory stores are policy-neutral only because the frozen Phase 5
         # policy has no memory predicates. If memory policy becomes constrained,
@@ -274,8 +287,11 @@ class AbstractPolicyAnalyzer:
                         exits.append(("VIOLATION",preds,ins.pc)); terminal=True; break
                     if status=="EXIT":
                         rv=regs.get("r0",AbstractValue.unknown())
-                        exits.append(("SAFE" if rv.is_const() and rv.value in self.allowed_returns else
-                                      "VIOLATION" if rv.is_const() else "UNKNOWN",preds,ins.pc))
+                        if not self.has_return_rule:
+                            exits.append(("SAFE",preds,ins.pc))
+                        else:
+                            exits.append(("SAFE" if rv.is_const() and rv.value in self.allowed_returns else
+                                          "VIOLATION" if rv.is_const() else "UNKNOWN",preds,ins.pc))
                         terminal=True; break
                 if terminal: continue
                 last=bb.instructions[-1]

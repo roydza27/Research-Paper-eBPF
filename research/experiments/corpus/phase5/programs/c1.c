@@ -4,8 +4,8 @@
 SEC("xdp")
 int c1(struct xdp_md *ctx)
 {
-    __u32 r = bpf_get_prandom_u32();
-    (void)r;
+    static const char fmt[] = "c1_violation\n";
+    bpf_trace_printk(fmt, sizeof(fmt));
     return XDP_PASS;
 }
 

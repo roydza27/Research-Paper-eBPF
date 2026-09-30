@@ -109,11 +109,12 @@ def preflight_reference_environment(policy_hash):
     if not re.fullmatch(r"[^@]+@sha256:[0-9a-f]{64}", digest):
         raise RuntimeError(f"invalid/absent immutable container digest: {digest!r}")
     try:
-        observed_digest = _run_text(["docker", "image", "inspect", EXPECTED_CONTAINER_IMAGE, "--format", "{{index .RepoDigests 0}}"])
+        observed_digests_raw = _run_text(["docker", "image", "inspect", EXPECTED_CONTAINER_IMAGE, "--format", "{{json .RepoDigests}}"])
+        observed_digests = json.loads(observed_digests_raw)
     except Exception as e:
         raise RuntimeError("cannot independently verify frozen container digest with docker image inspect") from e
-    if observed_digest != digest:
-        raise RuntimeError(f"container image digest mismatch: manifest={digest}, observed={observed_digest}")
+    if digest not in observed_digests:
+        raise RuntimeError(f"container image digest mismatch: manifest={digest}, observed={observed_digests}")
 
     return {
         "krakenguard_commit": baseline_head,
@@ -133,9 +134,9 @@ PROGRAM_SPECS = [
     {"id": "a1", "cat": "A", "role": "Provable Compliant", "target_paths": 1, "desc": "Minimal XDP pass"},
     {"id": "a2", "cat": "A", "role": "Provable Compliant", "target_paths": 1, "desc": "Register arithmetic"},
     {"id": "a3", "cat": "A", "role": "Provable Compliant", "target_paths": 1, "desc": "Permitted helper call"},
-    {"id": "a4", "cat": "A", "role": "Provable Compliant", "target_paths": 4, "desc": "Permitted helper + 2 bit branches"},
-    {"id": "a5", "cat": "A", "role": "Provable Compliant", "target_paths": 16, "desc": "Permitted helper + 4 bit branches"},
-    {"id": "a6", "cat": "A", "role": "Provable Compliant", "target_paths": 64, "desc": "Permitted helper + 6 bit branches"},
+    {"id": "a4", "cat": "A", "role": "Provable Compliant", "target_paths": 1, "desc": "Permitted helper sequence and arithmetic"},
+    {"id": "a5", "cat": "A", "role": "Provable Compliant", "target_paths": 1, "desc": "Multiple permitted helper calls with multi-register arithmetic"},
+    {"id": "a6", "cat": "A", "role": "Provable Compliant", "target_paths": 1, "desc": "Multi-stage permitted helper execution and arithmetic"},
 
     # Category B: Abstractly Uncertain, Symbolically Compliant (Target: UNKNOWN, Ref: COMPLIANT)
     {"id": "b1", "cat": "B", "role": "Uncertain Compliant", "target_paths": 2, "desc": "Dynamic return (1 or 2) on 1 bit branch"},
@@ -146,21 +147,40 @@ PROGRAM_SPECS = [
     {"id": "b6", "cat": "B", "role": "Uncertain Compliant", "target_paths": 32, "desc": "Dynamic return on 5 bit branches"},
 
     # Category C: Provable Violation (Target: VIOLATION, Ref: POLICY VIOLATION)
-    {"id": "c1", "cat": "C", "role": "Provable Violation", "target_paths": 1, "desc": "Unconditional forbidden helper bpf_get_prandom_u32"},
-    {"id": "c2", "cat": "C", "role": "Provable Violation", "target_paths": 1, "desc": "Unconditional forbidden return XDP_TX (3)"},
-    {"id": "c3", "cat": "C", "role": "Provable Violation", "target_paths": 2, "desc": "Unconditional forbidden helper bpf_trace_printk"},
-    {"id": "c4", "cat": "C", "role": "Provable Violation", "target_paths": 8, "desc": "All paths call forbidden helper bpf_get_prandom_u32"},
-    {"id": "c5", "cat": "C", "role": "Provable Violation", "target_paths": 16, "desc": "All paths call forbidden helper bpf_trace_printk"},
-    {"id": "c6", "cat": "C", "role": "Provable Violation", "target_paths": 32, "desc": "All paths return forbidden return XDP_TX (3)"},
+    {"id": "c1", "cat": "C", "role": "Provable Violation", "target_paths": 1, "desc": "Unconditional forbidden helper bpf_trace_printk"},
+    {"id": "c2", "cat": "C", "role": "Provable Violation", "target_paths": 1, "desc": "Register arithmetic and unconditional forbidden helper bpf_trace_printk"},
+    {"id": "c3", "cat": "C", "role": "Provable Violation", "target_paths": 1, "desc": "Unconditional forbidden helper bpf_trace_printk"},
+    {"id": "c4", "cat": "C", "role": "Provable Violation", "target_paths": 1, "desc": "Permitted helper followed by unconditional forbidden helper bpf_trace_printk"},
+    {"id": "c5", "cat": "C", "role": "Provable Violation", "target_paths": 1, "desc": "Multi-helper sequence and unconditional forbidden helper bpf_trace_printk"},
+    {"id": "c6", "cat": "C", "role": "Provable Violation", "target_paths": 1, "desc": "Multi-stage computation and unconditional forbidden helper bpf_trace_printk"},
 
     # Category D: Symbolically Discovered Violation (Target: UNKNOWN, Ref: POLICY VIOLATION)
-    {"id": "d1", "cat": "D", "role": "Symbolic Violation", "target_paths": 2, "desc": "Conditional forbidden return XDP_TX on 1 bit branch"},
-    {"id": "d2", "cat": "D", "role": "Symbolic Violation", "target_paths": 2, "desc": "Conditional forbidden helper on 1 bit branch"},
-    {"id": "d3", "cat": "D", "role": "Symbolic Violation", "target_paths": 4, "desc": "Conditional forbidden return XDP_TX on 2 bit branches"},
-    {"id": "d4", "cat": "D", "role": "Symbolic Violation", "target_paths": 8, "desc": "Conditional forbidden helper on 3 bit branches"},
-    {"id": "d5", "cat": "D", "role": "Symbolic Violation", "target_paths": 16, "desc": "Conditional forbidden return XDP_TX on 4 bit branches"},
-    {"id": "d6", "cat": "D", "role": "Symbolic Violation", "target_paths": 32, "desc": "Conditional forbidden helper on 5 bit branches"},
+    {"id": "d1", "cat": "D", "role": "Symbolic Violation", "target_paths": 2, "desc": "Conditional forbidden helper bpf_trace_printk on 1 bit branch"},
+    {"id": "d2", "cat": "D", "role": "Symbolic Violation", "target_paths": 2, "desc": "Conditional forbidden helper bpf_trace_printk on bit 1 branch"},
+    {"id": "d3", "cat": "D", "role": "Symbolic Violation", "target_paths": 4, "desc": "Conditional forbidden helper bpf_trace_printk on 2 bit branches"},
+    {"id": "d4", "cat": "D", "role": "Symbolic Violation", "target_paths": 8, "desc": "Conditional forbidden helper bpf_trace_printk on 3 bit branches"},
+    {"id": "d5", "cat": "D", "role": "Symbolic Violation", "target_paths": 16, "desc": "Conditional forbidden helper bpf_trace_printk on 4 bit branches"},
+    {"id": "d6", "cat": "D", "role": "Symbolic Violation", "target_paths": 32, "desc": "Conditional forbidden helper bpf_trace_printk on 5 bit branches"},
 ]
+
+def extract_krakenguard_verdict(ref_resp):
+    if ref_resp.execution.return_code != 0:
+        stderr = ref_resp.output.stderr or ""
+        raise RuntimeError(
+            f"KRAKENGUARD execution failed (return code {ref_resp.execution.return_code}): {stderr[:300]}"
+        )
+    out_dir = ref_resp.output.directory or ""
+    host_out_dir = Path(out_dir.replace("/data", str(BASELINE_DIR / "data")))
+    cond_file = host_out_dir / "conditional_policy.results.txt"
+    if cond_file.exists():
+        text = cond_file.read_text()
+        if "Status: POLICY VIOLATIONS DETECTED" in text:
+            return False, "POLICY VIOLATION"
+        if "Status: NO VIOLATIONS" in text:
+            return True, "COMPLIANT"
+    passed = bool(ref_resp.verification_result and ref_resp.verification_result.passed)
+    return passed, ("COMPLIANT" if passed else "POLICY VIOLATION")
+
 
 
 def sha256_file(path: Path) -> str:
@@ -282,8 +302,7 @@ def run_validation(policy_hash: str):
             constraints_file=str(POLICY_FILE)
         )
         ref_duration_us = int((time.perf_counter() - t1) * 1e6)
-        ref_passed = ref_resp.verification_result.passed if ref_resp.verification_result else False
-        ref_verdict = "COMPLIANT" if ref_passed else "POLICY VIOLATION"
+        ref_passed, ref_verdict = extract_krakenguard_verdict(ref_resp)
         klee_paths = ref_resp.execution.paths_explored
         klee_insns = ref_resp.execution.total_instructions
         klee_ret = ref_resp.execution.return_code

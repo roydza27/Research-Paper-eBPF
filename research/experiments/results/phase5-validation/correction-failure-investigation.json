@@ -1,0 +1,40 @@
+{
+  "schema": "phase5-correction-failure-investigation/v1",
+  "investigation_timestamp": "2026-09-30T17:28:00Z",
+  "host": {
+    "os": "archlinux",
+    "kernel": "7.2.3-arch1-2",
+    "architecture": "x86_64",
+    "compiler": "clang version 22.1.8",
+    "docker": "Docker version 29.7.2, build a7dcaa6fdb"
+  },
+  "provenance": {
+    "krakenguard_commit": "e7bd84005b304c5a10efcdb04914d1882b3cccf7",
+    "container_image": "kg-artifact-krakenguard:latest",
+    "container_digest": "kg-artifact-krakenguard@sha256:9633a6922518589803a4c9b8123d0549e54b5f57c1d04f9e383e822fd9ae3bd4",
+    "policy_sha256": "270403272d736ae7aee2ceda3bf8d088b6ac0cb476bb99ce0218dd8f33c3c603"
+  },
+  "initial_validation_status": {
+    "b04_provenance": "PASS",
+    "b01_soundness_tests": "PASS (9/9)",
+    "category_a": "3/6 PASS (a4-a6 UNKNOWN)",
+    "category_b": "6/6 PASS",
+    "category_c": "2/6 PASS (c2 false VIOLATION, c3/c5/c6 MISMATCH)",
+    "category_d": "3/6 PASS (d1/d3/d5 MISMATCH)"
+  },
+  "root_causes": {
+    "return_value_policy_absence": "Frozen E1 policy lacks return_value; KRAKENGUARD allows all returns (c2, c6, d1, d3, d5 affected)",
+    "klee_unstubbed_helper_crash": "bpf_get_prandom_u32 is not stubbed in KRAKENGUARD lifter/runtime; KLEE crashes with execution error (c1, c4, d2, d4, d6 affected)",
+    "krakenguard_daemon_wrapper_gap": "Daemon pipeline.py only parsed legacy helperFunc.results and missed conditional_policy.results.txt (c3, c5 affected)",
+    "abstract_analyzer_immediate_parser": "Regex in abstract_policy_analyzer.py rejected BPF 64-bit immediate ll suffix (c3, c5 affected)",
+    "category_a_unresolved_branch_stratification": "Unresolved symbolic branch condition in a4-a6 soundly forces UNKNOWN per eb23fbd8"
+  },
+  "reconciliation_strategy": {
+    "policy_modified": false,
+    "analyzer_modified": true,
+    "validator_modified": true,
+    "corpus_stratified": true,
+    "performance_experiments_executed": false,
+    "gate_opened": false
+  }
+}

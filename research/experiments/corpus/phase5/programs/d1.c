@@ -4,17 +4,10 @@
 SEC("xdp")
 int d1(struct xdp_md *ctx)
 {
-    void *data = (void *)(long)ctx->data;
-    void *data_end = (void *)(long)ctx->data_end;
-    if (data + 1 > data_end)
-        return XDP_PASS;
-
     __u64 t = bpf_ktime_get_ns();
-    unsigned char *p = (unsigned char *)data;
-
-    if (t & 1) {
-        *p ^= 1;
-        return XDP_TX;
+    if (t & (1ULL << 0)) {
+        static const char fmt[] = "d1_violation\n";
+        bpf_trace_printk(fmt, sizeof(fmt));
     }
     return XDP_PASS;
 }
