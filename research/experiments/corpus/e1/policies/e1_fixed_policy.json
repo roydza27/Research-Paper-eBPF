@@ -1,0 +1,16 @@
+{
+  "e1_fixed_policy": {
+    "type": "ACTION",
+    "dependencies": {
+      "memory": [],
+      "previous_actions": []
+    },
+    "actions": {
+      "map_access": [
+        {"name":"e1_map","access":"Read"},
+        {"name":"e1_state","access":"Read"}
+      ],
+      "helper_access": ["bpf_map_lookup_elem","bpf_ktime_get_ns"]
+    }
+  }
+}

@@ -1,0 +1,9 @@
+program,class,instructions,branches,helpers,maps,policy_dimensions,expected_label
+programs/p0_minimal_xdp.c,P0,2,0,0,0,0,compliant
+programs/p1_arithmetic_xdp.c,P1,5,1,0,0,0,compliant
+programs/p2_one_branch_xdp.c,P2,4,0,0,0,0,compliant
+programs/p3_multi_branch_xdp.c,P3,18,3,0,0,0,compliant
+programs/p4_helper_xdp.c,P4,6,1,1,0,1,compliant
+programs/p5_map_xdp.c,P5,11,1,1,1,2,compliant
+programs/p6_map_branch_xdp.c,P6,17,3,1,1,2,compliant
+programs/p7_combined_xdp.c,P7,20,4,2,1,2,compliant
