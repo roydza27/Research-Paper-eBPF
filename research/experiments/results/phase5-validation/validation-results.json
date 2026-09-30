@@ -3,7 +3,7 @@
   "policy_sha256": "8e349d091fd4c1af9127c8fe19ceb99ad0468ef8a565d5e47224993f051204b6",
   "total_programs": 24,
   "abstract_discharged_count": 12,
-  "abstract_discharge_rate_pct": 50.0,
+  "abstract_discharge_rate_pct": 50,
   "false_safe_count": 0,
   "false_violation_count": 0,
   "category_summary": {
@@ -541,5 +541,7 @@
       "abstract_proof": "Abstract Uncertainty: Forbidden helper 'bpf_get_prandom_u32' is present on a conditional branch guarded by unresolved symbolic predicates (['NOT_TAKEN(insn_4: if r1 > r2 goto +0x22 <d6+0x138>)', 'TAKEN(insn_8: if r1 == 0x0 goto +0x3 <d6+0x60>)', 'TAKEN(insn_14: if r1 == 0x0 goto +0x3 <d6+0x90>)', 'TAKEN(insn_20: if r1 == 0x0 goto +0x3 <d6+0xc0>)', 'TAKEN(insn_26: if r1 == 0x0 goto +0x3 <d6+0xf0>)', 'TAKEN(insn_32: if r1 == 0x0 goto +0x3 <d6+0x120>)', 'NOT_TAKEN(insn_37: if r0 != 0x1f goto +0x1 <d6+0x138>)']). Abstract stage cannot prove or refute reachability; selective symbolic fallback required.",
       "description": "Conditional forbidden helper on 5 bit branches"
     }
-  ]
+  ],
+  "status": "SUPERSEDED_PRE_CORRECTION",
+  "note": "These results were produced before the Phase 5 correction sprint and are not post-correction correctness evidence."
 }
