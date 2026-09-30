@@ -1,0 +1,13 @@
+
+/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/results/raw/e2-pilot-objects/e2_p0.o:	file format elf64-bpf
+
+Disassembly of section xdp:
+
+0000000000000000 <e2_p0>:
+       0:	61 12 04 00 00 00 00 00	w2 = *(u32 *)(r1 + 0x4)
+       1:	61 11 00 00 00 00 00 00	w1 = *(u32 *)(r1 + 0x0)
+       2:	07 01 00 00 01 00 00 00	r1 += 0x1
+       3:	2d 21 01 00 00 00 00 00	if r1 > r2 goto +0x1 <e2_p0+0x28>
+       4:	85 00 00 00 05 00 00 00	call 0x5
+       5:	b7 00 00 00 02 00 00 00	r0 = 0x2
+       6:	95 00 00 00 00 00 00 00	exit

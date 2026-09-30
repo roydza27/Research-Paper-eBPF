@@ -23,6 +23,12 @@
     "requires_single_symbolic_helper": true,
     "requires_fixed_policy_and_baseline": true
   },
+  "pilot_result": {
+    "status": "PILOT_PASS",
+    "gate_verdict": "PILOT PASS — READY FOR FULL MATRIX PROPOSAL",
+    "observed_paths": [1, 2, 4, 8, 16],
+    "evaluated_at": "2026-09-30T13:41:03+05:30"
+  },
   "disallowed": [
     "using ingress_ifindex as the symbolic driver",
     "treating source branch count as authoritative",
