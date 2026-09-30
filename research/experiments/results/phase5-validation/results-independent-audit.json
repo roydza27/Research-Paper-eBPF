@@ -1,0 +1,82 @@
+{
+  "schema": "phase5-results-independent-audit/v1",
+  "repository": "roydza27/Research-Paper-eBPF",
+  "research": "Scalable Fine-Grained eBPF Isolation through Hybrid Policy Verification",
+  "audit_date": "2026-10-01",
+  "verdict": "FAIL — EXPERIMENTAL EVIDENCE REQUIRES CORRECTION",
+  "current_main": "6c42798a94e647ce558d60f562ac5d1546996c60",
+  "claimed_execution": {
+    "branch": "phase5-execution-e3-e4-e5",
+    "commit": "0e1d96cf13574222e58de349ce885b28b6e0ac9d",
+    "parent_authorization": "b8593f35fde7c6281eacc272feaa166af89c5527"
+  },
+  "verification": {
+    "parent_authorization_exists": true,
+    "execution_commit_exists": false,
+    "execution_branch_exists": false,
+    "completed_e3_results_available": false,
+    "completed_e4_results_available": false,
+    "completed_e5_results_available": false,
+    "authoritative_gate_execution_approved": true,
+    "authoritative_gate_E3_executed": false,
+    "authoritative_gate_E4_executed": false,
+    "authoritative_gate_E5_executed": false
+  },
+  "frozen_controls": {
+    "krakenguard_commit": "e7bd84005b304c5a10efcdb04914d1882b3cccf7",
+    "policy_sha256": "270403272d736ae7aee2ceda3bf8d088b6ac0cb476bb99ce0218dd8f33c3c603",
+    "container": "kg-artifact-krakenguard@sha256:9633a6922518589803a4c9b8123d0549e54b5f57c1d04f9e383e822fd9ae3bd4",
+    "kernel": "Linux 7.2.3-arch1-2",
+    "compiler": "Clang 22.1.8",
+    "architecture": "x86_64",
+    "hook": "XDP",
+    "seed_claimed": 42
+  },
+  "e3": {
+    "claimed_executions": 216,
+    "auditable_executions": 0,
+    "claimed_discharge_fraction": 0.5,
+    "claimed_correctness": "24/24",
+    "status": "NOT INDEPENDENTLY AUDITABLE"
+  },
+  "e4": {
+    "claimed_executions": 432,
+    "claimed_warmups": 96,
+    "claimed_measured": 336,
+    "auditable_executions": 0,
+    "status": "NOT INDEPENDENTLY AUDITABLE"
+  },
+  "e5": {
+    "claimed_reachable_strata": [
+      1,
+      2,
+      4,
+      8,
+      16,
+      32
+    ],
+    "claimed_unreachable_stratum": 64,
+    "auditable_results": false,
+    "status": "NOT INDEPENDENTLY AUDITABLE"
+  },
+  "raw_telemetry": {
+    "preexecution_fallback_raw_present": true,
+    "complete_E3_E4_E5_raw_present": false,
+    "all_432_E4_traceable": false
+  },
+  "anomalies": [
+    "Claimed execution commit 0e1d96cf13574222e58de349ce885b28b6e0ac9d is not present in the repository.",
+    "Claimed execution branch phase5-execution-e3-e4-e5 is not present in the repository.",
+    "Authoritative gate still records E3/E4/E5 as not executed.",
+    "No committed completed E3/E4/E5 machine-readable result set is present in the current repository tree."
+  ],
+  "manipulation_assessment": "No manipulation is alleged; absence of the execution evidence prevents the requested determination.",
+  "experiments_rerun": false,
+  "results_modified": false,
+  "telemetry_modified": false,
+  "analyzer_modified": false,
+  "corpus_modified": false,
+  "policy_modified": false,
+  "protocol_modified": false,
+  "next_action": "Make the actual immutable execution commit and complete E3/E4/E5 evidence reachable, then rerun this audit against those committed artifacts without rerunning experiments."
+}
