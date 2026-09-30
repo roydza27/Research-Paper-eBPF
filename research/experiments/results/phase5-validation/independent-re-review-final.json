@@ -1,0 +1,141 @@
+{
+  "schema": "phase5-independent-re-review-final/v1",
+  "verdict": "FAIL — FURTHER CORRECTION REQUIRED",
+  "reviewed_at": "2026-09-30",
+  "scope": {
+    "purpose": "Independent provenance/state reconciliation review only",
+    "implementation_modified": false,
+    "corpus_modified": false,
+    "policy_modified": false,
+    "execution_gate_opened": false,
+    "e3_executed": false,
+    "e4_executed": false,
+    "e5_executed": false,
+    "matrix_432_executed": false
+  },
+  "provenance": {
+    "origin_main": "adc57ab2f7bc29b35be7e3f23535c7c209dfcc8d",
+    "current_main_tree": "b5324029b181fb698bf07353179ed841ed47f7d0",
+    "reconciliation_branch": "phase5-provenance-state-reconciliation",
+    "reconciliation_commit": "8f574ec83378da4e5d0eaa55ea519af847ba927d",
+    "reconciliation_tree": "d68586fbad503a594c9c239ffc16475ba364b897",
+    "reconciliation_parent": "adc57ab2f7bc29b35be7e3f23535c7c209dfcc8d",
+    "tested_implementation_tree": "f4062862e73b3f17e1c15ff02737bc9d00cee0c2",
+    "historical_premerge_implementation_sha": "f2c70717ac2b7acc8faa7d303d4085d577f61668",
+    "historical_reported_evidence_sha": "b13d22384a8ff0ee2b730f7384a56a6a9be7e6f8",
+    "historical_actual_branch_evidence_sha": "b13d2230b0c283fbe747aab41097c91a52521400",
+    "pr17_squash_merge": "adc57ab2f7bc29b35be7e3f23535c7c209dfcc8d",
+    "reconciliation_commit_is_single_parent_on_main": true,
+    "reconciliation_changed_files": 13,
+    "reconciliation_changes_only_metadata_evidence_gate_and_generator": true,
+    "tested_tree_relevant_implementation_corpus_script_blobs_match_current_main": true,
+    "tested_tree_equals_current_main": false
+  },
+  "checks": {
+    "b01": {
+      "status": "PASS",
+      "reported_tests": "12/12",
+      "production_paths": true,
+      "coverage": [
+        "supported compliant behavior -> SAFE",
+        "supported provable violation -> VIOLATION",
+        "unresolved conditional -> UNKNOWN",
+        "unknown helper -> UNKNOWN",
+        "forbidden helper -> VIOLATION",
+        "unsupported memory -> UNKNOWN",
+        "unsupported instruction -> UNKNOWN",
+        "analysis failure -> UNKNOWN",
+        "unsupported map update -> UNKNOWN",
+        "64-bit ll immediate parsing",
+        "absent return_value policy semantics",
+        "fail-closed verdict extraction"
+      ]
+    },
+    "b02": {
+      "status": "PASS",
+      "policy_sha256": "270403272d736ae7aee2ceda3bf8d088b6ac0cb476bb99ce0218dd8f33c3c603"
+    },
+    "b04": {
+      "status": "PASS",
+      "container_image": "kg-artifact-krakenguard:latest",
+      "immutable_digest": "kg-artifact-krakenguard@sha256:9633a6922518589803a4c9b8123d0549e54b5f57c1d04f9e383e822fd9ae3bd4"
+    },
+    "correctness": {
+      "status": "PASS_AS_COMMITTED_EVIDENCE",
+      "total_cases": 24,
+      "A": "6/6 SAFE + COMPLIANT",
+      "B": "6/6 UNKNOWN + COMPLIANT",
+      "C": "6/6 VIOLATION + POLICY VIOLATION",
+      "D": "6/6 UNKNOWN + POLICY VIOLATION",
+      "false_safe": 0,
+      "false_violation": 0,
+      "category_agreement_pct": 100,
+      "abstract_discharge_rate_pct": 50
+    },
+    "fallback": {
+      "status": "PASS",
+      "pipeline": "UNKNOWN -> actual KRAKENGUARD invocation -> mandatory conditional_policy.results.txt -> final verdict",
+      "fail_closed_on_missing_empty_malformed_or_unrecognized_output": true,
+      "verification_result_passed_not_used_as_authoritative_verdict": true,
+      "b1_request_id": "5f45e5c0-b6bb-46eb-bab9-a4e3574c0405",
+      "d1_request_id": "6f61566d-c437-48b5-b794-b12c5cf33568",
+      "raw_artifacts_committed": true
+    },
+    "merge_integrity": {
+      "status": "PASS",
+      "conflict_markers_found": {
+        "<<<<<<<": false,
+        ">>>>>>>": false
+      },
+      "ordinary_equals_separators_present": true
+    },
+    "execution_boundary": {
+      "status": "PASS",
+      "E3": false,
+      "E4": false,
+      "E5": false,
+      "matrix_432": false
+    }
+  },
+  "authoritative_current_main": {
+    "gate_file": "research/experiments/design/phase5-execution-gate.json",
+    "design_status": "CORRECTION_IN_PROGRESS_EXECUTION_GATED",
+    "implementation_complete": false,
+    "corpus_implemented": true,
+    "reference_verdicts_validated": false,
+    "abstract_soundness_reviewed": false,
+    "category_behavior_validated": false,
+    "immutable_container_identity_verified": false,
+    "correction_validation_complete": false,
+    "execution_approved": false,
+    "independent_review_complete": false,
+    "correction_validation_head": "f2c70717ac2b7acc8faa7d303d4085d577f61668",
+    "correction_validation_tree": "f4062862e73b3f17e1c15ff02737bc9d00cee0c2",
+    "correction_report_status": "CORRECTIONS_INCOMPLETE"
+  },
+  "reconciliation_branch_state": {
+    "design_status": "CORRECTION_VALIDATED",
+    "implementation_complete": true,
+    "corpus_implemented": true,
+    "reference_verdicts_validated": true,
+    "abstract_soundness_reviewed": true,
+    "category_behavior_validated": true,
+    "immutable_container_identity_verified": true,
+    "correction_validation_complete": true,
+    "execution_approved": false,
+    "independent_review_complete": false,
+    "correction_status": "CORRECTION_VALIDATED — INDEPENDENT_REVIEW_PENDING — EXECUTION_GATE_CLOSED"
+  },
+  "stale_reference_assessment": {
+    "old_premerge_shas_are_historical": true,
+    "old_premerge_shas_required_to_exist": false,
+    "supplied_799412_sha_current_authoritative_reference": false,
+    "supplied_51e1dc268_and_51e1dc285_only_historical_review_references": true,
+    "current_main_still_has_material_stale_state": true
+  },
+  "blockers": [
+    "The reconciliation commit 8f574ec83378da4e5d0eaa55ea519af847ba927d is not on current main.",
+    "Current main still contains stale correction-validation provenance and stale execution-gate metadata; the corrected authoritative state exists only on the reconciliation branch."
+  ],
+  "required_next_step": "Merge or otherwise incorporate the equivalent provenance/state reconciliation into main while keeping execution_approved=false and independent_review_complete=false, then perform another independent review against the resulting current main."
+}
