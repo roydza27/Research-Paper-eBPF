@@ -23,7 +23,7 @@ Prior programmable syscall-security work, BPF-LSM and production runtime-securit
 
 ## Current Gap A — Scalable fine-grained policy verification
 
-**Existing work:** KRAKENGUARD uses symbolic execution for helper, memory, return-value and interference policies.
+**Existing work:** KRAKENGUARD uses symbolic execution for -helper, memory, return-value and interference policies.
 
 **Unresolved issue:** symbolic path/expression explosion can make admission checking slow or non-terminating. The KRAKENGUARD paper explicitly identifies hybrid abstract interpretation + symbolic execution as future work.
 
