@@ -25,3 +25,23 @@ research/baselines/veritas/vm-image.tar.gz
 research/baselines/veritas/fuzzing-dir/vm-image/
 research/baselines/veritas/fuzzing-dir/linux-kernel/vmlinux
 research/baselines/veritas/fuzzing-dir/linux-kernel.tar.gz
+
+# Python generated files
+__pycache__/
+*.py[cod]
+
+# Local research working directory
+research/work/
+
+# Generated eBPF object files
+research/experiments/corpus/phase5/programs/*.o
+
+# Generated experiment object artifacts
+research/experiments/results/raw/e1-objects/
+research/experiments/results/raw/e2-objects/
+research/experiments/results/raw/e2-pilot-objects/
+
+# Local baseline reproductions
+research/baselines/bcf/
+research/baselines/krakenguard/artifact-diagnostic-helper-state/
+research/baselines/veritas/
