@@ -101,3 +101,9 @@ The analysis script reports:
 - conservative complexity-fit summaries
 
 A performance claim is only reported over successfully measured observations under the verified controls.
+
+## Real-world workload evaluation
+
+A separate real-world XDP workload study is under `work/real-world/`. It evaluates pinned public workloads such as Katran, hXDP firewall, Fluvia, CRAB, XDP SYNPROXY, xdp-filter and xdp-forward without modifying the validated Phase 5 evidence or the synthetic scaling runtime.
+
+See [`work/real-world/README.md`](real-world/README.md) for the corpus, provenance, compatibility workflow, timing protocol and analysis commands.
