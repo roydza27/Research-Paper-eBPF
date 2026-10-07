@@ -23,6 +23,11 @@ def read_rows(path: Path) -> List[Dict]:
             r["scale"]=int(r["scale"]); r["target_paths"]=int(r["target_paths"])
             r["instructions"]=int(r["instructions"])
             r["wall_time_ms"]=float(r["wall_time_ms"])
+            r["klee_paths_explored"] = (
+                int(r["klee_paths_explored"])
+                if r.get("klee_paths_explored") not in (None, "", "None")
+                else None
+            )
             r["fallback_invoked"]=r["fallback_invoked"]=="True"
             r["verdict_correct"]=None if r["verdict_correct"] in ("","None") else r["verdict_correct"]=="True"
             out.append(r)
@@ -39,6 +44,10 @@ def median_table(rows: List[Dict], mode: str) -> Dict[str, Dict]:
         result[pid]={
             "program_id":pid,"family":rs[0]["family"],"scale":rs[0]["scale"],
             "target_paths":rs[0]["target_paths"],"instructions":rs[0]["instructions"],
+            "observed_klee_paths":statistics.median(
+                x["klee_paths_explored"] for x in rs
+                if x["klee_paths_explored"] is not None
+            ) if any(x["klee_paths_explored"] is not None for x in rs) else None,
             "median_ms":statistics.median(x["wall_time_ms"] for x in rs),
             "mean_ms":statistics.fmean(x["wall_time_ms"] for x in rs),
             "min_ms":min(x["wall_time_ms"] for x in rs),
@@ -97,11 +106,19 @@ def summarize(rows:List[Dict])->Dict:
             if s["family"]!=fam: continue
             h=tabs["hybrid"].get(pid)
             if not h: continue
-            x=s["instructions"] if "size" in fam.lower() else s["target_paths"]
+            if "size" in fam.lower():
+                x=s["instructions"]
+            else:
+                x=s.get("observed_klee_paths")
+                if x is None:
+                    raise RuntimeError(
+                        f"missing observed KLEE path count for {pid}; "
+                        "refusing to substitute target_paths"
+                    )
             pts.append((float(x),s["median_ms"],h["median_ms"]))
         if pts:
             scaling[fam]={
-                "x_axis":"compiled_instructions" if "size" in fam.lower() else "target_paths",
+                "x_axis":"compiled_instructions" if "size" in fam.lower() else "observed_klee_paths",
                 "symbolic_fit":fit([p[0] for p in pts],[p[1] for p in pts]),
                 "hybrid_fit":fit([p[0] for p in pts],[p[2] for p in pts]),
                 "points":pts,
@@ -123,8 +140,12 @@ def summarize(rows:List[Dict])->Dict:
         },
         "coverage":{
             "hybrid_measured":sum(r["mode"]=="hybrid" and r["repetition_type"]=="measured" for r in rows),
-            "fallback_fraction":statistics.fmean(r["fallback_invoked"] for r in unknown_hybrid) if unknown_hybrid else 0.0,
-            "fast_path_fraction":len(discharged)/(len(unknown_hybrid)+len(discharged)) if (unknown_hybrid or discharged) else None,
+            "fallback_fraction":len(unknown_hybrid) / (
+                len(unknown_hybrid) + len(discharged)
+            ) if (unknown_hybrid or discharged) else None,
+            "fast_path_fraction":len(discharged) / (
+                len(unknown_hybrid) + len(discharged)
+            ) if (unknown_hybrid or discharged) else None,
         },
         "family_summary":family,
         "scaling":scaling,
