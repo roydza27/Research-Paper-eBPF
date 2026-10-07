@@ -108,7 +108,13 @@ def preflight(config: Dict[str, Any], programs: List[Dict[str, Any]]) -> Dict[st
         "measurement_policy": {
             "kernel": "recorded_at_run",
             "compiler": "recorded_at_run",
-            "immutable_baseline": True
+            "immutable_baseline": True,
+            "timing": {
+                "symbolic": "client.verify + verdict extraction; archive excluded",
+                "abstract": "in-process AbstractPolicyAnalyzer.analyze()",
+                "hybrid": "abstract section + symbolic section on UNKNOWN",
+                "memory_sampling": "disabled_in_primary_timing"
+            }
         },
     }
 
@@ -356,7 +362,17 @@ def run_one(
             symbolic = measure_symbolic(client, program, policy, timeout, run_id + "-symbolic")
             final = symbolic["verdict"]
 
-    total_elapsed = (time.perf_counter_ns() - start) // 1000
+    # Primary timing is the sum of measured verification sections. Raw evidence
+    # archival happens after those sections and is intentionally excluded.
+    if mode == "symbolic_only":
+        total_elapsed = symbolic["wall_time_us"]
+    elif mode == "abstract_only":
+        total_elapsed = abstract["wall_time_us"]
+    else:
+        total_elapsed = abstract["wall_time_us"]
+        if symbolic is not None:
+            total_elapsed += symbolic["wall_time_us"]
+
     ref = oracle[program["program_id"]]["reference_verdict"]
     correctness = None if final == "UNKNOWN" else (final == ref)
     metrics: Dict[str, Any] = {}
