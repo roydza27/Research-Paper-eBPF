@@ -69,7 +69,7 @@ Results are written only under:
 work/results/
 ```
 
-The benchmark refuses to run when the frozen controls cannot be verified.
+Reference verdicts are loaded from the previously audited Phase 5 validation manifest after verifying its program IDs, policy hash and KRAKENGUARD revision. No reference-verdict daemon calls are made before timed measurements, avoiding an avoidable cache/warm-state disturbance.
 
 ## Evidence model
 
