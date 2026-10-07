@@ -364,6 +364,8 @@ def run_one(
     timeout: int,
     run_id: str,
 ) -> Dict[str, Any]:
+    raw_run_dir = RAW_DIR / run_id
+    raw_run_dir.mkdir(parents=True, exist_ok=True)
     abstract = None
     symbolic = None
     start = time.perf_counter_ns()
@@ -414,7 +416,11 @@ def run_one(
         "reference_verdict": ref,
         "verdict_correct": correctness,
         "fallback_invoked": route == "FALLBACK_SYMBOLIC",
-        "status": "ok" if final in ("COMPLIANT", "POLICY VIOLATION") else "error",
+        "status": (
+            "ok"
+            if final in ("COMPLIANT", "POLICY VIOLATION", "UNKNOWN")
+            else "error"
+        ),
         "wall_time_us": total_elapsed,
         "wall_time_ms": round(total_elapsed / 1000.0, 6),
         "abstract_wall_time_us": abstract.get("wall_time_us") if abstract else None,
@@ -429,7 +435,7 @@ def run_one(
         "krakenguard_commit": oracle[program["program_id"]]["krakenguard_commit"],
         "metrics": metrics,
     }
-    (RAW_DIR / run_id / "run.json").write_text(json.dumps(record, indent=2), encoding="utf-8")
+    (raw_run_dir / "run.json").write_text(json.dumps(record, indent=2), encoding="utf-8")
     return record
 
 
