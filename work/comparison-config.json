@@ -15,10 +15,10 @@
   },
   "environment": {
     "architecture": "x86_64",
-    "kernel": "7.2.3-arch1-2",
     "compiler": "clang",
-    "compiler_version": "22.1.8",
-    "hook": "XDP"
+    "hook": "XDP",
+    "kernel_policy": "record_at_run",
+    "compiler_policy": "record_at_run"
   },
   "measurement": {
     "warmups": 2,
