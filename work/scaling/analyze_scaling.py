@@ -18,16 +18,35 @@ RESULTS = ROOT / "work" / "scaling" / "runtime" / "time-results"
 
 def read_rows(path: Path) -> List[Dict]:
     out=[]
+    raw_dir = path.parent / "raw"
+    info_re = re.compile(r"^KLEE: done: completed paths = (\d+)\s*$")
     with path.open(newline="",encoding="utf-8") as fh:
         for r in csv.DictReader(fh):
             r["scale"]=int(r["scale"]); r["target_paths"]=int(r["target_paths"])
             r["instructions"]=int(r["instructions"])
             r["wall_time_ms"]=float(r["wall_time_ms"])
-            r["klee_completed_paths"] = (
-                int(r["klee_completed_paths"])
-                if r.get("klee_completed_paths") not in (None, "", "None")
-                else None
-            )
+
+            raw_value = r.get("klee_completed_paths")
+            if raw_value not in (None, "", "None"):
+                r["klee_completed_paths"] = int(raw_value)
+            else:
+                # The original timing runner attempted an unprefixed regex,
+                # while KRAKENGUARD emits lines such as
+                # "KLEE: done: completed paths = N". Recover the observed
+                # count from the archived raw info file rather than rerunning
+                # the verifier.
+                info_file = raw_dir / r["run_id"] / "info"
+                recovered = None
+                if info_file.exists():
+                    for line in info_file.read_text(
+                        encoding="utf-8", errors="replace"
+                    ).splitlines():
+                        m = info_re.match(line.strip())
+                        if m:
+                            recovered = int(m.group(1))
+                            break
+                r["klee_completed_paths"] = recovered
+
             r["fallback_invoked"]=r["fallback_invoked"]=="True"
             r["verdict_correct"]=None if r["verdict_correct"] in ("","None") else r["verdict_correct"]=="True"
             out.append(r)
@@ -98,8 +117,9 @@ def summarize(rows:List[Dict])->Dict:
         })
 
     scaling={}
-    # Size axis uses compiled instructions; path axis uses observed KLEE paths where available,
-    # falling back to target paths only for static diagnostics.
+    # Size axis uses compiled instructions; path axis uses observed KLEE
+    # completed paths recovered from the captured KRAKENGUARD info files.
+    # Never substitute target paths for the primary path coordinate.
     for fam in sorted({v["family"] for v in tabs["symbolic_only"].values()}):
         pts=[]
         for pid,s in tabs["symbolic_only"].items():
