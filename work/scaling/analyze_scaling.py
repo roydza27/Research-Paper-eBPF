@@ -23,9 +23,9 @@ def read_rows(path: Path) -> List[Dict]:
             r["scale"]=int(r["scale"]); r["target_paths"]=int(r["target_paths"])
             r["instructions"]=int(r["instructions"])
             r["wall_time_ms"]=float(r["wall_time_ms"])
-            r["klee_paths_explored"] = (
-                int(r["klee_paths_explored"])
-                if r.get("klee_paths_explored") not in (None, "", "None")
+            r["klee_completed_paths"] = (
+                int(r["klee_completed_paths"])
+                if r.get("klee_completed_paths") not in (None, "", "None")
                 else None
             )
             r["fallback_invoked"]=r["fallback_invoked"]=="True"
@@ -44,10 +44,10 @@ def median_table(rows: List[Dict], mode: str) -> Dict[str, Dict]:
         result[pid]={
             "program_id":pid,"family":rs[0]["family"],"scale":rs[0]["scale"],
             "target_paths":rs[0]["target_paths"],"instructions":rs[0]["instructions"],
-            "observed_klee_paths":statistics.median(
-                x["klee_paths_explored"] for x in rs
-                if x["klee_paths_explored"] is not None
-            ) if any(x["klee_paths_explored"] is not None for x in rs) else None,
+            "observed_klee_completed_paths":statistics.median(
+                x["klee_completed_paths"] for x in rs
+                if x["klee_completed_paths"] is not None
+            ) if any(x["klee_completed_paths"] is not None for x in rs) else None,
             "median_ms":statistics.median(x["wall_time_ms"] for x in rs),
             "mean_ms":statistics.fmean(x["wall_time_ms"] for x in rs),
             "min_ms":min(x["wall_time_ms"] for x in rs),
@@ -109,16 +109,16 @@ def summarize(rows:List[Dict])->Dict:
             if "size" in fam.lower():
                 x=s["instructions"]
             else:
-                x=s.get("observed_klee_paths")
+                x=s.get("observed_klee_completed_paths")
                 if x is None:
                     raise RuntimeError(
-                        f"missing observed KLEE path count for {pid}; "
+                        f"missing observed KLEE completed-path count for {pid}; "
                         "refusing to substitute target_paths"
                     )
             pts.append((float(x),s["median_ms"],h["median_ms"]))
         if pts:
             scaling[fam]={
-                "x_axis":"compiled_instructions" if "size" in fam.lower() else "observed_klee_paths",
+                "x_axis":"compiled_instructions" if "size" in fam.lower() else "observed_klee_completed_paths",
                 "symbolic_fit":fit([p[0] for p in pts],[p[1] for p in pts]),
                 "hybrid_fit":fit([p[0] for p in pts],[p[2] for p in pts]),
                 "points":pts,
