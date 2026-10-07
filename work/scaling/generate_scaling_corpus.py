@@ -45,7 +45,7 @@ int {fn}(struct xdp_md *ctx)
      * verdict into UNKNOWN merely because stack contents are not abstractly
      * value-precise.
      */
-    volatile __u64 x = (__u64)ctx->ingress_ifindex;
+    volatile __u64 x = 0;
 
 """
 
@@ -160,7 +160,7 @@ def build_corpus(out: Path, padding: List[int], max_bits: int, clang: str) -> Li
 
     # Path families mirror the validated E2 construction.
     for kind, violation in (("B-path", False), ("D-path", True)):
-        for k in range(max_bits + 1):
+        # A fallback path family starts at one predicate (2 feasible paths).\n    # A zero-predicate program has no unresolved branch and therefore should\n    # not be labeled UNKNOWN merely to manufacture a 1-path fallback point.\n    for k in range(1, max_bits + 1):
             target = 1 << k
             pid = f"{kind.lower().replace('-', '')}-p{target:03d}"
             fn = pid.replace("-", "_")
@@ -191,7 +191,7 @@ def main() -> None:
     p = argparse.ArgumentParser()
     p.add_argument("--out", type=Path, default=DEFAULT_OUT)
     p.add_argument("--padding", default="0,16,32,64,128")
-    p.add_argument("--max-bits", type=int, default=6, help="0..6 => 1..64 target paths")
+    p.add_argument("--max-bits", type=int, default=6, help="1..6 => 2..64 target paths")
     p.add_argument("--clang", default="clang")
     args = p.parse_args()
 
