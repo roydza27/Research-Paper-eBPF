@@ -105,6 +105,11 @@ def preflight(config: Dict[str, Any], programs: List[Dict[str, Any]]) -> Dict[st
         "compiler_version": checked(["clang", "--version"]).splitlines()[0],
         "cpu_model": cpu_model(),
         "program_count": len(programs),
+        "measurement_policy": {
+            "kernel": "recorded_at_run",
+            "compiler": "recorded_at_run",
+            "immutable_baseline": true
+        },
     }
 
     if observed["krakenguard_commit"] != config["krakenguard"]["commit"]:
