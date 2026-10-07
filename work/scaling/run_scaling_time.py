@@ -119,9 +119,9 @@ def kg_invoke(client: KrakenGuardClient, obj: Path, timeout: int, run_dir: Path)
         if infof.exists():
             for line in infof.read_text(errors="replace").splitlines():
                 for key, pat in [
-                    ("paths_explored", r"^\s*completed paths = (\d+)\s*$"),
-                    ("total_queries", r"^\s*total queries = (\d+)\s*$"),
-                    ("explored_paths", r"^\s*explored paths = (\d+)\s*$"),
+                    ("completed_paths", r"^\s*KLEE:\s*done:\s*completed paths = (\d+)\s*$"),
+                    ("total_queries", r"^\s*KLEE:\s*done:\s*total queries = (\d+)\s*$"),
+                    ("explored_paths", r"^\s*KLEE:\s*done:\s*explored paths = (\d+)\s*$"),
                 ]:
                     m = re.match(pat, line)
                     if m:
