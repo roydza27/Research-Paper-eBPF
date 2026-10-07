@@ -72,7 +72,8 @@ def load_prepared() -> list[dict[str, Any]]:
             "role": item["role"],
             "object_file": path,
             "object_sha256": sha256_file(path),
-            "source_revision": item.get("upstream", {}).get("revision"),
+            "source_set_revision": item.get("source_set_revision"),
+            "upstream_revision": item.get("upstream", {}).get("revision"),
             "source_status": item.get("source_status"),
         })
     if not rows:
@@ -274,7 +275,8 @@ def run_one(client: KrakenGuardClient, mode: str, program: dict[str, Any], timeo
         "object_sha256": program["object_sha256"],
         "policy_sha256": FROZEN_POLICY_SHA,
         "krakenguard_commit": FROZEN_KG_COMMIT,
-        "source_revision": program["source_revision"],
+        "source_set_revision": program["source_set_revision"],
+        "upstream_revision": program["upstream_revision"],
         "source_status": program["source_status"],
         "error": (symbolic or abstract or {}).get("error"),
     }
@@ -323,7 +325,7 @@ def main() -> None:
         "wall_time_us", "wall_time_ms", "abstract_wall_time_us", "symbolic_wall_time_us",
         "klee_completed_paths", "klee_total_queries", "klee_explored_paths",
         "klee_total_instructions", "object_sha256", "policy_sha256", "krakenguard_commit",
-        "source_revision", "source_status", "error"
+        "source_set_revision", "upstream_revision", "source_status", "error"
     ]
     with (RESULTS / "runs.csv").open("w", newline="", encoding="utf-8") as fh:
         writer = csv.DictWriter(fh, fieldnames=fields)
