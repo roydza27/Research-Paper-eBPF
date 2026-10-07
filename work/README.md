@@ -38,6 +38,22 @@ It does not assume that the hybrid architecture is superior. The result generato
 - Timeout: 300 s
 - Random seed: 42
 
+## Timing boundary
+
+The primary timing endpoint is intentionally narrow and symmetric:
+
+- KRAKENGUARD symbolic section: client.verify(...) plus extraction of the authoritative verdict artifact.
+- Abstract section: in-process AbstractPolicyAnalyzer(...).analyze().
+- Hybrid: the abstract section plus the same timed KRAKENGUARD symbolic section only when the abstract result is UNKNOWN.
+
+Raw evidence archival (response.json, verdict copies, logs) occurs after the timed verifier section. The previous benchmark also sampled docker stats every 50 ms while the verifier ran; that monitoring work is no longer part of the primary benchmark because it can perturb CPU scheduling and inflate wall time.
+
+The repository still contains work/abstract_worker.py as an auxiliary isolated-process probe. Its subprocess launch/IPC cost is not the primary hybrid endpoint because the research architecture is conceptually an integrated analyzer rather than a per-program process spawn.
+
+KRAKENGUARD is a persistent verifier service, so a per-invocation peak container memory value cannot be recovered cleanly without intrusive sampling or restarting the service. Memory peak fields from older raw runs are therefore not used as a primary result. Memory should be treated as a separate secondary campaign once a non-perturbative measurement method is established.
+
+The 24-program oracle is run with the exact same symbolic timing helper used by symbolic_only. Its duration is recorded as a sanity check for timing symmetry, while its verdict is the reference verdict for correctness.
+
 ## Run
 
 From the repository root:
