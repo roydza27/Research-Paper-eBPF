@@ -22,7 +22,7 @@ The generator creates four frozen semantic families:
 | B-path | COMPLIANT / abstract UNKNOWN | measure fallback as symbolic paths grow |
 | D-path | POLICY VIOLATION / abstract UNKNOWN | measure fallback as symbolic paths grow |
 
-The path family reuses the validated E2 construction: one `bpf_ktime_get_ns()` value, independent bit predicates, and externally visible packet-memory mutations so LLVM optimisation does not erase the symbolic control flow.
+The path family reuses the validated E2 construction: one `bpf_ktime_get_ns()` value, independent bit predicates, and externally visible packet-memory mutations so LLVM optimisation does not erase the symbolic control flow. Fallback path scaling starts at one predicate (2 feasible paths); a zero-predicate case has no unresolved branch and is therefore excluded from the B/D scaling families.
 
 ## Timing conditions
 
@@ -50,7 +50,7 @@ For size families:
 
 For path families:
 
-- **observed KLEE explored paths** is the primary coordinate;
+- **observed KLEE explored paths** is the primary coordinate (2, 4, 8, 16, 32, 64 for B/D);
 - target predicate count and target path count are structural variables.
 
 No asymptotic class is assumed in advance.
