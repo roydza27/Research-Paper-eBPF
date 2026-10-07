@@ -108,7 +108,7 @@ def preflight(config: Dict[str, Any], programs: List[Dict[str, Any]]) -> Dict[st
         "measurement_policy": {
             "kernel": "recorded_at_run",
             "compiler": "recorded_at_run",
-            "immutable_baseline": true
+            "immutable_baseline": True
         },
     }
 
@@ -117,11 +117,7 @@ def preflight(config: Dict[str, Any], programs: List[Dict[str, Any]]) -> Dict[st
     if observed["policy_sha256"] != config["corpus"]["policy_sha256"]:
         raise RuntimeError("policy SHA does not match frozen policy")
     if observed["architecture"] != config["environment"]["architecture"]:
-        raise RuntimeError("architecture does not match frozen environment")
-    if observed["kernel"] != config["environment"]["kernel"]:
-        raise RuntimeError("kernel does not match frozen environment")
-    if config["environment"]["compiler_version"] not in observed["compiler_version"]:
-        raise RuntimeError("compiler does not match frozen environment")
+        raise RuntimeError("architecture does not match required environment")
     if not socket.exists():
         raise RuntimeError(f"KRAKENGUARD socket not found: {socket}")
 
