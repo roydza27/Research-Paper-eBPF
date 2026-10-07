@@ -38,7 +38,7 @@ def median_by_program(rows: List[Dict[str, Any]], mode: str) -> Dict[str, Dict[s
     for pid, observations in grouped.items():
         times = [r["wall_time_ms"] for r in observations]
         mem_a = [int(r["peak_abstract_rss_bytes"]) for r in observations if r.get("peak_abstract_rss_bytes")]
-        mem_k = [int(r["peak_krakenguard_container_memory_bytes"]) for r in observations if r.get("peak_krakenguard_container_memory_bytes")]
+        mem_k = [int(r["peak_kg_container_memory_bytes"]) for r in observations if r.get("peak_kg_container_memory_bytes")]
         result[pid] = {
             "program_id": pid,
             "category": observations[0]["category"],
