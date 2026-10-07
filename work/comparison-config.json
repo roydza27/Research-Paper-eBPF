@@ -3,7 +3,8 @@
   "corpus": {
     "metadata_csv": "research/experiments/corpus/phase5/metadata.csv",
     "programs_dir": "research/experiments/corpus/phase5/programs",
-    "policy_file": "research/experiments/corpus/phase5/policies/phase5_policy.json"
+    "policy_file": "research/experiments/corpus/phase5/policies/phase5_policy.json",
+    "policy_sha256": "270403272d736ae7aee2ceda3bf8d088b6ac0cb476bb99ce0218dd8f33c3c603"
   },
   "krakenguard": {
     "artifact_dir": "research/baselines/krakenguard/artifact",
