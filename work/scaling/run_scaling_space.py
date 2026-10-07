@@ -54,7 +54,11 @@ def checked(cmd: List[str]) -> str:
 
 
 def kg_container_cgroup() -> Path:
-    pid = int(checked(["docker", "inspect", KG_IMAGE, "--format", "{{.State.Pid}}"]))
+    ids = checked(["docker", "ps", "--filter", f"ancestor={KG_IMAGE}", "--format", "{{.ID}}"]).splitlines()
+    if len(ids) != 1:
+        raise RuntimeError(f"expected exactly one running KRAKENGUARD container from {KG_IMAGE}, found {len(ids)}")
+    container_id = ids[0]
+    pid = int(checked(["docker", "inspect", container_id, "--format", "{{.State.Pid}}"]))
     if pid <= 0:
         raise RuntimeError("KRAKENGUARD container does not have a running PID")
     text = Path(f"/proc/{pid}/cgroup").read_text(encoding="utf-8")
@@ -99,6 +103,7 @@ def worker_abstract(obj: Path, run_dir: Path) -> Dict[str, Any]:
 
 
 def kg_once(client: KrakenGuardClient, obj: Path, timeout: int, cg: Path, run_dir: Path) -> Dict[str, Any]:
+    run_dir.mkdir(parents=True, exist_ok=True)
     baseline, reset_status = reset_peak(cg)
     start = time.perf_counter_ns()
     try:
@@ -203,6 +208,8 @@ def main() -> None:
 
     if sha256(POLICY) != FROZEN_POLICY_SHA:
         raise SystemExit("frozen policy SHA mismatch")
+    if not SOCKET.exists():
+        raise SystemExit(f"KRAKENGUARD socket missing: {SOCKET}")
     if platform.machine() != "x86_64":
         raise SystemExit("space study requires x86_64")
     cg = kg_container_cgroup()
