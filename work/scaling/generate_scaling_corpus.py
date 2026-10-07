@@ -37,7 +37,15 @@ int {fn}(struct xdp_md *ctx)
      * This gives us straight-line instruction growth without introducing
      * extra symbolic branches, packet-data loads, or helper calls.
      */
-    volatile __u64 x = 0;
+    /*
+     * Seed the volatile stack slot from a context field so initialization is
+     * represented as a normal register-to-stack store. The accumulator is
+     * intentionally independent of the final return value: size scaling must
+     * increase straight-line verifier work without turning the fast-path
+     * verdict into UNKNOWN merely because stack contents are not abstractly
+     * value-precise.
+     */
+    volatile __u64 x = (__u64)ctx->ingress_ifindex;
 
 """
 
@@ -70,7 +78,8 @@ def size_source(fn: str, padding: int, violation: bool) -> str:
         lines.append(f"    x ^= (__u64){i + 1};\n")
     if violation:
         lines.append('    bpf_trace_printk("scaling", 7);\n')
-    lines.append("    return XDP_PASS + (__u32)(x & 1);\n")
+    lines.append("    (void)x;\n")
+    lines.append("    return XDP_PASS;\n")
     lines.append(emit_close())
     return "".join(lines)
 
