@@ -31,6 +31,7 @@ def emit_header(fn: str) -> str:
 SEC("xdp")
 int {fn}(struct xdp_md *ctx)
 {{
+    volatile __u32 *q = &ctx->ingress_ifindex;
     __u64 x = 0;
 
 """
@@ -57,10 +58,10 @@ char LICENSE[] SEC("license") = "GPL";
 
 def size_source(fn: str, padding: int, violation: bool) -> str:
     lines = [emit_header(fn)]
-    # Repeated allowed helper calls feed an accumulator so the compiler keeps
-    # the work without introducing an independent symbolic path variable.
-    for _ in range(padding):
-        lines.append("    x ^= bpf_ktime_get_ns();\n")
+    # Each iteration performs a volatile context load. The load cannot be
+    # eliminated, while no helper call or stack-backed temporary is introduced.
+    for i in range(padding):
+        lines.append(f"    x ^= (__u64)(*q) + {i};\n")
     if violation:
         lines.append('    bpf_trace_printk("scaling", 7);\n')
     lines.append("    return XDP_PASS + (__u32)(x & 1);\n")
