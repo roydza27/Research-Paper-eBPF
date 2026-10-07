@@ -11,6 +11,7 @@ import os
 import platform
 import random
 import re
+import resource
 import subprocess
 import sys
 import time
@@ -275,6 +276,7 @@ def measure_abstract(program: Dict[str, Any], policy: Path, run_id: str) -> Dict
 
     start_wall = time.perf_counter_ns()
     start_cpu = time.process_time_ns()
+    child_cpu_start = resource.getrusage(resource.RUSAGE_CHILDREN)
     try:
         result = AbstractPolicyAnalyzer(
             str(program["object_file"]), str(policy)
@@ -290,8 +292,18 @@ def measure_abstract(program: Dict[str, Any], policy: Path, run_id: str) -> Dict
         }
         status = "error"
         error = f"{type(exc).__name__}: {exc}"
+
     wall_us = (time.perf_counter_ns() - start_wall) // 1000
-    cpu_us = (time.process_time_ns() - start_cpu) // 1000
+    parent_cpu_us = (time.process_time_ns() - start_cpu) // 1000
+    child_cpu_end = resource.getrusage(resource.RUSAGE_CHILDREN)
+    child_cpu_us = int(
+        (
+            (child_cpu_end.ru_utime - child_cpu_start.ru_utime)
+            + (child_cpu_end.ru_stime - child_cpu_start.ru_stime)
+        )
+        * 1_000_000
+    )
+    cpu_us = parent_cpu_us + child_cpu_us
 
     payload = {
         "status": status,
@@ -302,6 +314,8 @@ def measure_abstract(program: Dict[str, Any], policy: Path, run_id: str) -> Dict
         "metrics": result.get("metrics", {}),
         "wall_time_us": wall_us,
         "cpu_time_us": cpu_us,
+        "parent_cpu_time_us": parent_cpu_us,
+        "child_process_cpu_time_us": child_cpu_us,
     }
     (raw / "analysis.json").write_text(
         json.dumps(payload, indent=2, sort_keys=True), encoding="utf-8"
