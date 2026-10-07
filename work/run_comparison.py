@@ -175,13 +175,17 @@ def extract_kg_result(resp: Any) -> Tuple[str, Dict[str, Any], str, Path]:
     }
     info = out_dir / "info"
     if info.exists():
+        completed_re = re.compile(r"^\\s*completed paths = (\\d+)\\s*$")
+        queries_re = re.compile(r"^\\s*total queries = (\\d+)\\s*$")
+        explored_re = re.compile(r"^\\s*explored paths = (\\d+)\\s*$")
         for line in info.read_text(encoding="utf-8", errors="replace").splitlines():
-            if "completed paths =" in line:
-                stats["completed_paths"] = int(line.split("=", 1)[1].strip())
-            elif "total queries =" in line:
-                stats["total_queries"] = int(line.split("=", 1)[1].strip())
-            elif "explored paths =" in line and stats["paths_explored"] in (None, 0):
-                stats["paths_explored"] = int(line.split("=", 1)[1].strip())
+            if match := completed_re.match(line):
+                stats["completed_paths"] = int(match.group(1))
+            elif match := queries_re.match(line):
+                stats["total_queries"] = int(match.group(1))
+            elif match := explored_re.match(line):
+                if stats["paths_explored"] in (None, 0):
+                    stats["paths_explored"] = int(match.group(1))
 
     return verdict, stats, text, out_dir
 
