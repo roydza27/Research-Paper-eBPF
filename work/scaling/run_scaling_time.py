@@ -126,15 +126,24 @@ def kg_invoke(client: KrakenGuardClient, obj: Path, timeout: int, run_dir: Path)
                     m = re.match(pat, line)
                     if m:
                         info[key] = int(m.group(1))
-        shutil.copyfile(cond, run_dir / "conditional_policy.results.txt") if cond.exists() else None
-        if infof.exists():
-            shutil.copyfile(infof, run_dir / "info")
         status = "ok"
         error = None
     except Exception as exc:
         verdict, info, status = "ERROR", {}, "error"
         error = f"{type(exc).__name__}: {exc}"
     elapsed = (time.perf_counter_ns() - start) // 1000
+
+    # Evidence archival is intentionally outside the timed section.
+    try:
+        if status == "ok":
+            if cond.exists():
+                shutil.copyfile(cond, run_dir / "conditional_policy.results.txt")
+            if infof.exists():
+                shutil.copyfile(infof, run_dir / "info")
+    except Exception as exc:
+        status = "error"
+        error = f"archive failure: {type(exc).__name__}: {exc}"
+
     return {"status": status, "verdict": verdict, "wall_time_us": elapsed, "klee": info, "error": error}
 
 
@@ -207,8 +216,8 @@ def run_one(mode: str, row: Dict[str, Any], client: KrakenGuardClient, timeout: 
         "wall_time_ms": total_us / 1000.0,
         "symbolic_wall_time_us": symbolic["wall_time_us"] if symbolic else None,
         "abstract_wall_time_us": abstract["wall_time_us"] if abstract else None,
-        "klee_paths_explored": (symbolic or {}).get("klee",{}).get("explored_paths"),
-        "klee_completed_paths": (symbolic or {}).get("klee",{}).get("paths_explored"),
+        "klee_paths_explored": (symbolic or {}).get("klee",{}).get("paths_explored"),
+        "klee_completed_paths": (symbolic or {}).get("klee",{}).get("completed_paths"),
         "klee_total_queries": (symbolic or {}).get("klee",{}).get("total_queries"),
         "verdict_correct": final == expected if final != "UNKNOWN" else None,
         "object_sha256": row["object_sha256"],
