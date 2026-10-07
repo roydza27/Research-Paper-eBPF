@@ -160,7 +160,10 @@ def build_corpus(out: Path, padding: List[int], max_bits: int, clang: str) -> Li
 
     # Path families mirror the validated E2 construction.
     for kind, violation in (("B-path", False), ("D-path", True)):
-        # A fallback path family starts at one predicate (2 feasible paths).\n    # A zero-predicate program has no unresolved branch and therefore should\n    # not be labeled UNKNOWN merely to manufacture a 1-path fallback point.\n    for k in range(1, max_bits + 1):
+        # A fallback path family starts at one predicate (2 feasible paths).
+        # A zero-predicate program has no unresolved branch and therefore should
+        # not be labeled UNKNOWN merely to manufacture a 1-path fallback point.
+        for k in range(1, max_bits + 1):
             target = 1 << k
             pid = f"{kind.lower().replace('-', '')}-p{target:03d}"
             fn = pid.replace("-", "_")
