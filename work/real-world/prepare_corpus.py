@@ -111,8 +111,20 @@ def main() -> None:
         name: run(["git", "rev-parse", "HEAD"], cwd=root)
         for name, root in roots.items()
     }
-    if "ebpf_se" in roots and args.build:
-        run(["make", "libbpf"], cwd=roots["ebpf_se"])
+
+    # eBPF-SE's documented setup runs "make libbpf" from an example
+    # directory (for example examples/katran), not from the repository root.
+    # Do this once before building the first eBPF-SE workload.
+    if args.build and "ebpf_se" in roots:
+        first_example = next(
+            (p for p in spec["programs"] if p["source_set"] == "ebpf_se"),
+            None,
+        )
+        if first_example is None:
+            raise RuntimeError("no eBPF-SE workload is defined in corpus.json")
+        libbpf_dir = roots["ebpf_se"] / first_example["source_path"]
+        run(["make", "libbpf"], cwd=libbpf_dir)
+
     prepared: list[dict[str, Any]] = []
 
     for program in spec["programs"]:
