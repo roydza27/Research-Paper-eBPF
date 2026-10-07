@@ -25,5 +25,8 @@
     "repetitions": 7,
     "timeout_seconds": 300,
     "seed": 42
+  },
+  "reference": {
+    "validation_csv": "research/experiments/results/phase5-validation/validation-results.csv"
   }
 }
