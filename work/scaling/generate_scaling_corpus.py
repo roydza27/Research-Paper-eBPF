@@ -31,8 +31,13 @@ def emit_header(fn: str) -> str:
 SEC("xdp")
 int {fn}(struct xdp_md *ctx)
 {{
-    volatile __u32 *q = &ctx->ingress_ifindex;
-    __u64 x = 0;
+    /*
+     * Keep one small volatile scalar on the BPF stack. Each generated
+     * update must survive -O2, while the stack footprint stays constant.
+     * This gives us straight-line instruction growth without introducing
+     * extra symbolic branches, packet-data loads, or helper calls.
+     */
+    volatile __u64 x = 0;
 
 """
 
@@ -58,10 +63,11 @@ char LICENSE[] SEC("license") = "GPL";
 
 def size_source(fn: str, padding: int, violation: bool) -> str:
     lines = [emit_header(fn)]
-    # Each iteration performs a volatile context load. The load cannot be
-    # eliminated, while no helper call or stack-backed temporary is introduced.
+    # Volatile stack updates are retained by the compiler and reuse the same
+    # fixed stack slot, so compiled straight-line work can grow without
+    # growing the stack frame itself.
     for i in range(padding):
-        lines.append(f"    x ^= (__u64)(*q) + {i};\n")
+        lines.append(f"    x ^= (__u64){i + 1};\n")
     if violation:
         lines.append('    bpf_trace_printk("scaling", 7);\n')
     lines.append("    return XDP_PASS + (__u32)(x & 1);\n")
