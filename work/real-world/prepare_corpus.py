@@ -107,12 +107,19 @@ def main() -> None:
 
     spec = load()
     roots = prepare_sources(spec)
+    source_revisions = {
+        name: run(["git", "rev-parse", "HEAD"], cwd=root)
+        for name, root in roots.items()
+    }
+    if "ebpf_se" in roots and args.build:
+        run(["make", "libbpf"], cwd=roots["ebpf_se"])
     prepared: list[dict[str, Any]] = []
 
     for program in spec["programs"]:
         source_root = roots[program["source_set"]]
         item = dict(program)
         item["source_root"] = str(source_root)
+        item["source_set_revision"] = source_revisions[program["source_set"]]
         item["object_file"] = None
         item["prepare_status"] = "ready"
         item["prepare_error"] = None
@@ -135,10 +142,7 @@ def main() -> None:
         json.dumps(
             {
                 "schema": "prepared-real-world-corpus/v1",
-                "source_revisions": {
-                    name: run(["git", "rev-parse", "HEAD"], cwd=root)
-                    for name, root in roots.items()
-                },
+                "source_revisions": source_revisions,
                 "programs": prepared,
             },
             indent=2,
