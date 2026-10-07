@@ -68,7 +68,7 @@ The run reports KRAKENGUARD's observed verdict against the generated expected la
 
 Time and memory are separate campaigns.
 
-The space runner uses Linux cgroup-v2 `memory.peak` for the KRAKENGUARD container where available, and the isolated abstract worker's process `ru_maxrss` for abstract analysis. The kernel documents `memory.peak` as the maximum cgroup memory usage since creation or reset and permits resetting it by writing a non-empty value. citeturn432293search0
+The space runner uses Linux cgroup-v2 `memory.peak` for the KRAKENGUARD container where available, and the isolated abstract worker's process `ru_maxrss` for abstract analysis. The kernel documents `memory.peak` as the maximum cgroup memory usage since creation or reset and permits resetting it by writing a non-empty value.
 
 Space results must never be combined with the primary timing results unless the execution scope and measurement boundary are explicitly identical.
 
