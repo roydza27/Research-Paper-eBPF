@@ -1,0 +1,28 @@
+{
+  "schema": "comparative-verification-workbench/v1",
+  "corpus": {
+    "metadata_csv": "research/experiments/corpus/phase5/metadata.csv",
+    "programs_dir": "research/experiments/corpus/phase5/programs",
+    "policy_file": "research/experiments/corpus/phase5/policies/phase5_policy.json"
+  },
+  "krakenguard": {
+    "artifact_dir": "research/baselines/krakenguard/artifact",
+    "socket": "research/baselines/krakenguard/artifact/socket/krakenguard.sock",
+    "commit": "e7bd84005b304c5a10efcdb04914d1882b3cccf7",
+    "container_image": "kg-artifact-krakenguard:latest",
+    "container_digest": "kg-artifact-krakenguard@sha256:9633a6922518589803a4c9b8123d0549e54b5f57c1d04f9e383e822fd9ae3bd4"
+  },
+  "environment": {
+    "architecture": "x86_64",
+    "kernel": "7.2.3-arch1-2",
+    "compiler": "clang",
+    "compiler_version": "22.1.8",
+    "hook": "XDP"
+  },
+  "measurement": {
+    "warmups": 2,
+    "repetitions": 7,
+    "timeout_seconds": 300,
+    "seed": 42
+  }
+}
