@@ -35,7 +35,21 @@ int {fn}(struct xdp_md *ctx)
 
 """
 
-def emit_footer() -> str:
+def emit_packet_header(fn: str) -> str:
+    return f"""#include <linux/bpf.h>
+#include <bpf/bpf_helpers.h>
+
+SEC("xdp")
+int {fn}(struct xdp_md *ctx)
+{{
+    void *data = (void *)(long)ctx->data;
+    void *data_end = (void *)(long)ctx->data_end;
+    if (data + 1 > data_end)
+        return XDP_PASS;
+
+"""
+
+def emit_close() -> str:
     return """}
 
 char LICENSE[] SEC("license") = "GPL";
@@ -44,17 +58,17 @@ char LICENSE[] SEC("license") = "GPL";
 def size_source(fn: str, padding: int, violation: bool) -> str:
     lines = [emit_header(fn)]
     # Repeated allowed helper calls feed an accumulator so the compiler keeps
-    # the work without introducing a second branch/path variable.
+    # the work without introducing an independent symbolic path variable.
     for _ in range(padding):
         lines.append("    x ^= bpf_ktime_get_ns();\n")
     if violation:
         lines.append('    bpf_trace_printk("scaling", 7);\n')
     lines.append("    return XDP_PASS + (__u32)(x & 1);\n")
-    lines.append(emit_footer())
+    lines.append(emit_close())
     return "".join(lines)
 
 def path_source(fn: str, predicates: int, violation: bool) -> str:
-    lines = [emit_header(fn)]
+    lines = [emit_packet_header(fn)]
     lines.append("    __u64 t = bpf_ktime_get_ns();\n")
     lines.append("    volatile __u8 *p = (volatile __u8 *)data;\n")
     for bit in range(predicates):
@@ -66,7 +80,8 @@ def path_source(fn: str, predicates: int, violation: bool) -> str:
         if violation and bit == 0:
             lines.append('        bpf_trace_printk("scaling", 7);\n')
         lines.append("    }\n")
-    lines.append(emit_footer())
+    lines.append("    return XDP_PASS;\n")
+    lines.append(emit_close())
     return "".join(lines)
 
 
