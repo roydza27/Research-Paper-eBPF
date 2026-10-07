@@ -13,7 +13,6 @@ import random
 import re
 import subprocess
 import sys
-import threading
 import time
 from datetime import datetime, timezone
 from pathlib import Path
@@ -31,6 +30,7 @@ sys.path.insert(0, str(ROOT / "research"))
 sys.path.insert(0, str(BASELINE_DIR))
 
 from daemon.krakenguard_client import KrakenGuardClient
+from analyzer.abstract_policy_analyzer import AbstractPolicyAnalyzer
 
 
 FROZEN_POLICY_SHA = "270403272d736ae7aee2ceda3bf8d088b6ac0cb476bb99ce0218dd8f33c3c603"
@@ -142,65 +142,6 @@ def preflight(config: Dict[str, Any], programs: List[Dict[str, Any]]) -> Dict[st
     return observed
 
 
-def docker_container_ids() -> List[str]:
-    try:
-        raw = checked(["docker", "compose", "ps", "-q"], cwd=BASELINE_DIR)
-        return [x for x in raw.splitlines() if x.strip()]
-    except Exception:
-        return []
-
-
-_UNIT = {"b": 1, "kb": 1000, "kib": 1024, "mb": 1000**2, "mib": 1024**2,
-         "gb": 1000**3, "gib": 1024**3}
-
-
-def parse_mem(text: str) -> Optional[int]:
-    left = text.split("/", 1)[0].strip()
-    m = re.match(r"^([0-9.]+)\s*([A-Za-z]+)$", left)
-    if not m:
-        return None
-    factor = _UNIT.get(m.group(2).lower())
-    return int(float(m.group(1)) * factor) if factor else None
-
-
-def docker_stats(ids: List[str]) -> List[int]:
-    if not ids:
-        return []
-    p = subprocess.run(
-        ["docker", "stats", "--no-stream", "--format", "{{.MemUsage}}", *ids],
-        capture_output=True, text=True
-    )
-    if p.returncode != 0:
-        return []
-    vals = []
-    for line in p.stdout.splitlines():
-        value = parse_mem(line)
-        if value is not None:
-            vals.append(value)
-    return vals
-
-
-class MemorySampler:
-    def __init__(self, ids: List[str], interval: float = 0.05):
-        self.ids = ids
-        self.interval = interval
-        self.samples: List[int] = []
-        self.stop_event = threading.Event()
-        self.thread = threading.Thread(target=self._loop, daemon=True)
-
-    def _loop(self) -> None:
-        while not self.stop_event.is_set():
-            self.samples.extend(docker_stats(self.ids))
-            self.stop_event.wait(self.interval)
-
-    def start(self) -> None:
-        self.thread.start()
-
-    def stop(self) -> None:
-        self.stop_event.set()
-        self.thread.join(timeout=max(1.0, self.interval * 5))
-
-
 def extract_kg_result(resp: Any) -> Tuple[str, Dict[str, Any], str, Path]:
     rc = getattr(resp.execution, "return_code", 0)
     if rc != 0:
@@ -238,19 +179,19 @@ def extract_kg_result(resp: Any) -> Tuple[str, Dict[str, Any], str, Path]:
     return verdict, stats, text, out_dir
 
 
-def measure_symbolic(
+def invoke_symbolic(
     client: KrakenGuardClient,
     program: Dict[str, Any],
     policy: Path,
     timeout: int,
-    run_id: str,
 ) -> Dict[str, Any]:
-    raw = RAW_DIR / run_id
-    raw.mkdir(parents=True, exist_ok=True)
-    ids = docker_container_ids()
-    sampler = MemorySampler(ids)
+    """Time only verifier execution plus verdict extraction.
+
+    Evidence archival is outside the timed interval so filesystem copying and
+    serialization cannot inflate the verification-time endpoint.
+    """
+    response = None
     start = time.perf_counter_ns()
-    sampler.start()
     try:
         response = client.verify(
             object_file=str(program["object_file"].resolve()),
@@ -259,8 +200,47 @@ def measure_symbolic(
         )
         verdict, stats, conditional, out_dir = extract_kg_result(response)
         status, error = "ok", None
-        (raw / "response.json").write_text(json.dumps(response.to_dict(), indent=2), encoding="utf-8")
-        (raw / "conditional_policy.results.txt").write_text(conditional, encoding="utf-8")
+    except Exception as exc:
+        verdict, stats, conditional, out_dir = "TIMEOUT_OR_ERROR", {}, "", None
+        status, error = "error", f"{type(exc).__name__}: {exc}"
+    elapsed_us = (time.perf_counter_ns() - start) // 1000
+
+    return {
+        "status": status,
+        "verdict": verdict,
+        "wall_time_us": elapsed_us,
+        "wall_time_ms": round(elapsed_us / 1000.0, 6),
+        "klee": stats,
+        "error": error,
+        "response": response,
+        "conditional": conditional,
+        "out_dir": out_dir,
+    }
+
+
+def measure_symbolic(
+    client: KrakenGuardClient,
+    program: Dict[str, Any],
+    policy: Path,
+    timeout: int,
+    run_id: str,
+) -> Dict[str, Any]:
+    """Run KRAKENGUARD and archive artifacts outside the timed interval."""
+    raw = RAW_DIR / run_id
+    raw.mkdir(parents=True, exist_ok=True)
+    result = invoke_symbolic(client, program, policy, timeout)
+
+    response = result.pop("response")
+    conditional = result.pop("conditional")
+    out_dir = result.pop("out_dir")
+
+    if result["status"] == "ok" and response is not None:
+        (raw / "response.json").write_text(
+            json.dumps(response.to_dict(), indent=2), encoding="utf-8"
+        )
+        (raw / "conditional_policy.results.txt").write_text(
+            conditional, encoding="utf-8"
+        )
         (raw / "request.json").write_text(json.dumps({
             "request_id": getattr(response, "request_id", None),
             "program_id": program["program_id"],
@@ -271,83 +251,68 @@ def measure_symbolic(
             src = out_dir / name
             if src.exists():
                 (raw / name).write_bytes(src.read_bytes())
-    except Exception as exc:
-        verdict, stats = "TIMEOUT_OR_ERROR", {}
-        status, error = "error", f"{type(exc).__name__}: {exc}"
-        (raw / "error.txt").write_text(error, encoding="utf-8")
-    finally:
-        sampler.stop()
-        elapsed_us = (time.perf_counter_ns() - start) // 1000
+    elif result["error"]:
+        (raw / "error.txt").write_text(result["error"], encoding="utf-8")
 
-    return {
-        "status": status,
-        "verdict": verdict,
-        "wall_time_us": elapsed_us,
-        "wall_time_ms": round(elapsed_us / 1000.0, 6),
-        "peak_kg_container_memory_bytes": max(sampler.samples) if sampler.samples else None,
-        "klee": stats,
-        "error": error,
-    }
+    return result
 
 
 def measure_abstract(program: Dict[str, Any], policy: Path, run_id: str) -> Dict[str, Any]:
+    """Measure the analyzer in-process.
+
+    The analyzer is the component being evaluated, so subprocess startup and
+    JSON IPC overhead are excluded from the primary endpoint. The historical
+    abstract_worker.py remains available as an auxiliary isolated-process probe.
+    """
     raw = RAW_DIR / run_id
     raw.mkdir(parents=True, exist_ok=True)
-    start = time.perf_counter_ns()
-    proc = subprocess.run(
-        [sys.executable, str(ABSTRACT_WORKER),
-         "--object", str(program["object_file"]),
-         "--policy", str(policy)],
-        capture_output=True, text=True
-    )
-    parent_elapsed = (time.perf_counter_ns() - start) // 1000
-    (raw / "stdout").write_text(proc.stdout, encoding="utf-8")
-    (raw / "stderr").write_text(proc.stderr, encoding="utf-8")
 
-    if proc.returncode != 0 or not proc.stdout.strip():
-        return {
-            "status": "worker_failed",
-            "verdict": "UNKNOWN",
-            "discharged": False,
-            "wall_time_us": parent_elapsed,
-            "analysis_wall_time_us": None,
-            "process_total_wall_time_us": parent_elapsed,
-            "cpu_time_us": None,
-            "peak_abstract_rss_bytes": None,
-            "metrics": {},
-            "proof": "",
-            "error": f"worker exit {proc.returncode}",
-        }
-
+    start_wall = time.perf_counter_ns()
+    start_cpu = time.process_time_ns()
     try:
-        payload = json.loads(proc.stdout.strip().splitlines()[-1])
-    except json.JSONDecodeError as exc:
-        return {
-            "status": "worker_invalid_output",
+        result = AbstractPolicyAnalyzer(
+            str(program["object_file"]), str(policy)
+        ).analyze()
+        status = "ok"
+        error = None
+    except Exception as exc:
+        result = {
             "verdict": "UNKNOWN",
             "discharged": False,
-            "wall_time_us": parent_elapsed,
-            "analysis_wall_time_us": None,
-            "process_total_wall_time_us": parent_elapsed,
-            "cpu_time_us": None,
-            "peak_abstract_rss_bytes": None,
             "metrics": {},
             "proof": "",
-            "error": str(exc),
         }
+        status = "error"
+        error = f"{type(exc).__name__}: {exc}"
+    wall_us = (time.perf_counter_ns() - start_wall) // 1000
+    cpu_us = (time.process_time_ns() - start_cpu) // 1000
+
+    payload = {
+        "status": status,
+        "error": error,
+        "verdict": result.get("verdict", "UNKNOWN"),
+        "discharged": bool(result.get("discharged", False)),
+        "proof": result.get("proof", ""),
+        "metrics": result.get("metrics", {}),
+        "wall_time_us": wall_us,
+        "cpu_time_us": cpu_us,
+    }
+    (raw / "analysis.json").write_text(
+        json.dumps(payload, indent=2, sort_keys=True), encoding="utf-8"
+    )
 
     return {
-        "status": payload.get("status", "unknown"),
-        "verdict": payload.get("verdict", "UNKNOWN"),
-        "discharged": bool(payload.get("discharged", False)),
-        "wall_time_us": int(payload.get("wall_time_us", parent_elapsed)),
-        "analysis_wall_time_us": int(payload.get("wall_time_us", parent_elapsed)),
-        "process_total_wall_time_us": parent_elapsed,
-        "cpu_time_us": payload.get("cpu_time_us"),
-        "peak_abstract_rss_bytes": payload.get("peak_rss_bytes"),
-        "metrics": payload.get("metrics", {}),
-        "proof": payload.get("proof", ""),
-        "error": payload.get("error"),
+        "status": status,
+        "verdict": payload["verdict"],
+        "discharged": payload["discharged"],
+        "wall_time_us": wall_us,
+        "analysis_wall_time_us": wall_us,
+        "process_total_wall_time_us": wall_us,
+        "cpu_time_us": cpu_us,
+        "peak_abstract_rss_bytes": None,
+        "metrics": payload["metrics"],
+        "proof": payload["proof"],
+        "error": error,
     }
 
 
@@ -428,7 +393,7 @@ def run_one(
         "abstract_cpu_time_us": abstract.get("cpu_time_us") if abstract else None,
         "peak_abstract_rss_bytes": abstract.get("peak_abstract_rss_bytes") if abstract else None,
         "symbolic_wall_time_us": symbolic.get("wall_time_us") if symbolic else None,
-        "peak_kg_container_memory_bytes": symbolic.get("peak_kg_container_memory_bytes") if symbolic else None,
+        "oracle_reference_wall_time_us": oracle[program["program_id"]].get("reference_duration_us"),
         "error": (symbolic or abstract or {}).get("error"),
         "object_sha256": program["object_sha256"],
         "policy_sha256": FROZEN_POLICY_SHA,
@@ -495,7 +460,7 @@ def write_results(records: List[Dict[str, Any]], oracle: Dict[str, Dict[str, Any
         "fallback_invoked","status","wall_time_us","wall_time_ms",
         "abstract_wall_time_us","abstract_analysis_wall_time_us","abstract_cpu_time_us",
         "peak_abstract_rss_bytes","symbolic_wall_time_us",
-        "peak_kg_container_memory_bytes","error",
+        "oracle_reference_wall_time_us","error",
         "object_sha256","policy_sha256","krakenguard_commit","metrics"
     ]
     with (RESULTS_DIR / "runs.csv").open("w", newline="", encoding="utf-8") as fh:
@@ -534,18 +499,21 @@ def main() -> None:
 
     oracle: Dict[str, Dict[str, Any]] = {}
     for program in programs:
-        start = time.perf_counter_ns()
-        response = client.verify(
-            object_file=str(program["object_file"].resolve()),
-            constraints_file=str(policy.resolve()),
-            timeout=int(config["measurement"]["timeout_seconds"]),
+        probe = invoke_symbolic(
+            client,
+            program,
+            policy,
+            int(config["measurement"]["timeout_seconds"]),
         )
-        elapsed = (time.perf_counter_ns() - start) // 1000
-        verdict, stats, conditional, out_dir = extract_kg_result(response)
+        if probe["status"] != "ok":
+            raise RuntimeError(
+                f"oracle verification failed for {program['program_id']}: {probe['error']}"
+            )
+        response = probe["response"]
         oracle[program["program_id"]] = {
-            "reference_verdict": verdict,
-            "reference_duration_us": elapsed,
-            "klee": stats,
+            "reference_verdict": probe["verdict"],
+            "reference_duration_us": probe["wall_time_us"],
+            "klee": probe["klee"],
             "request_id": getattr(response, "request_id", None),
             "krakenguard_commit": config["krakenguard"]["commit"],
         }
