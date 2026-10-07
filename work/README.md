@@ -29,8 +29,8 @@ It does not assume that the hybrid architecture is superior. The result generato
 - KRAKENGUARD commit: `e7bd84005b304c5a10efcdb04914d1882b3cccf7`
 - Policy SHA-256: `270403272d736ae7aee2ceda3bf8d088b6ac0cb476bb99ce0218dd8f33c3c603`
 - Container digest: `kg-artifact-krakenguard@sha256:9633a6922518589803a4c9b8123d0549e54b5f57c1d04f9e383e822fd9ae3bd4`
-- Kernel: `7.2.3-arch1-2`
-- Compiler: Clang `22.1.8`
+- Kernel: recorded at run time (must remain constant across the campaign)
+- Compiler: recorded at run time; compiled corpus objects are hashed and frozen
 - Architecture: `x86_64`
 - Hook: XDP
 - Warmups: 2
