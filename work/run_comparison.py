@@ -57,6 +57,36 @@ def checked(cmd: List[str], cwd: Optional[Path] = None) -> str:
     return p.stdout.strip()
 
 
+def load_reference_verdicts(config: Dict[str, Any], programs: List[Dict[str, Any]]) -> Dict[str, Dict[str, Any]]:
+    """Load previously audited reference verdicts without warming the daemon."""
+    manifest = ROOT / config["reference"]["validation_csv"]
+    policy = ROOT / config["corpus"]["policy_file"]
+    if sha256_file(policy) != config["corpus"]["policy_sha256"]:
+        raise RuntimeError("policy hash mismatch before loading reference manifest")
+    refs: Dict[str, Dict[str, Any]] = {}
+    with manifest.open(newline="", encoding="utf-8") as fh:
+        for row in csv.DictReader(fh):
+            pid = row["program_id"]
+            if pid in refs:
+                raise RuntimeError(f"duplicate reference program: {pid}")
+            refs[pid] = {
+                "reference_verdict": row["reference_verdict"],
+                "reference_passed": row["reference_passed"].lower() == "true",
+                "reference_source": str(manifest.relative_to(ROOT)),
+                "reference_policy_sha256": config["corpus"]["policy_sha256"],
+                "krakenguard_commit": row.get("krakenguard_commit", config["krakenguard"]["commit"]),
+            }
+    expected = {p["program_id"] for p in programs}
+    if set(refs) != expected:
+        raise RuntimeError("reference manifest IDs do not exactly match corpus IDs")
+    for pid, ref in refs.items():
+        if ref["krakenguard_commit"] != config["krakenguard"]["commit"]:
+            raise RuntimeError(f"reference KRAKENGUARD commit mismatch for {pid}")
+        if ref["reference_verdict"] not in ("COMPLIANT", "POLICY VIOLATION"):
+            raise RuntimeError(f"invalid reference verdict for {pid}")
+    return refs
+
+
 def load_programs(config: Dict[str, Any]) -> List[Dict[str, Any]]:
     metadata = ROOT / config["corpus"]["metadata_csv"]
     programs_dir = ROOT / config["corpus"]["programs_dir"]
@@ -427,7 +457,7 @@ def run_one(
         "abstract_cpu_time_us": abstract.get("cpu_time_us") if abstract else None,
         "peak_abstract_rss_bytes": abstract.get("peak_abstract_rss_bytes") if abstract else None,
         "symbolic_wall_time_us": symbolic.get("wall_time_us") if symbolic else None,
-        "oracle_reference_wall_time_us": oracle[program["program_id"]].get("reference_duration_us"),
+        "reference_manifest": oracle[program["program_id"]].get("reference_source"),
         "error": (symbolic or abstract or {}).get("error"),
         "object_sha256": program["object_sha256"],
         "policy_sha256": FROZEN_POLICY_SHA,
@@ -482,7 +512,7 @@ def write_results(records: List[Dict[str, Any]], oracle: Dict[str, Dict[str, Any
     RAW_DIR.mkdir(parents=True, exist_ok=True)
 
     (RESULTS_DIR / "provenance.json").write_text(json.dumps(provenance, indent=2), encoding="utf-8")
-    (RESULTS_DIR / "oracle.json").write_text(json.dumps(oracle, indent=2), encoding="utf-8")
+    (RESULTS_DIR / "reference-verdicts.json").write_text(json.dumps(oracle, indent=2), encoding="utf-8")
     (RESULTS_DIR / "runs.jsonl").write_text(
         "".join(json.dumps(r, sort_keys=True) + "\n" for r in records), encoding="utf-8"
     )
@@ -494,7 +524,7 @@ def write_results(records: List[Dict[str, Any]], oracle: Dict[str, Dict[str, Any
         "fallback_invoked","status","wall_time_us","wall_time_ms",
         "abstract_wall_time_us","abstract_analysis_wall_time_us","abstract_cpu_time_us",
         "peak_abstract_rss_bytes","symbolic_wall_time_us",
-        "oracle_reference_wall_time_us","error",
+        "reference_manifest","error",
         "object_sha256","policy_sha256","krakenguard_commit","metrics"
     ]
     with (RESULTS_DIR / "runs.csv").open("w", newline="", encoding="utf-8") as fh:
@@ -531,26 +561,7 @@ def main() -> None:
     if getattr(health, "status", None) != "success":
         raise RuntimeError(f"KRAKENGUARD health check failed: {health.to_dict()}")
 
-    oracle: Dict[str, Dict[str, Any]] = {}
-    for program in programs:
-        probe = invoke_symbolic(
-            client,
-            program,
-            policy,
-            int(config["measurement"]["timeout_seconds"]),
-        )
-        if probe["status"] != "ok":
-            raise RuntimeError(
-                f"oracle verification failed for {program['program_id']}: {probe['error']}"
-            )
-        response = probe["response"]
-        oracle[program["program_id"]] = {
-            "reference_verdict": probe["verdict"],
-            "reference_duration_us": probe["wall_time_us"],
-            "klee": probe["klee"],
-            "request_id": getattr(response, "request_id", None),
-            "krakenguard_commit": config["krakenguard"]["commit"],
-        }
+    oracle = load_reference_verdicts(config, programs)
 
     modes = list(MODES) if args.mode == "all" else [args.mode]
     records = run_measurements(modes, programs, policy, client, oracle, config)
