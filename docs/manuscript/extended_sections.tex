@@ -1,0 +1,40 @@
+\section{Detailed Technical Model}
+
+\subsection{Abstract State and Control Flow}
+The abstract state records reachability, integer facts, policy conditions, helper access, map access, memory facts, possible return values, and analysis status. The analyzer propagates these facts over the compiled control-flow graph. A branch is pruned only when its predicate is provably true or false. Otherwise both successors remain reachable. At joins, conflicting facts become less precise. This intentionally sacrifices precision rather than soundness.
+
+\subsection{Helper, Map, and Memory Reasoning}
+Helper calls are represented as policy-relevant events. An authorized helper is propagated as compliant when authorization is established. An unknown helper identity produces UNKNOWN rather than an automatic violation. Map reasoning follows the same principle: unresolved map identity or access mode produces UNKNOWN. Memory uncertainty is treated conservatively as well.
+
+\subsection{Return-Value Reasoning}
+Return values are tracked because conditional policy behavior can depend on them. A constant return can make a branch decidable, while a symbolic return may keep both successors reachable. This connects the implementation to the earlier Phase 3 observation that conditional policy evaluation can depend on captured return values.
+
+\section{Implementation and Engineering Decisions}
+The analyzer operates on compiled eBPF objects rather than source-level C. This is important because compiler optimization can change control flow. The E1 audit provides a concrete example: P2's source conditional was optimized into branchless arithmetic under Clang 22.1.8 and the selected BPF target configuration.
+
+The implementation was corrected so unsupported instructions, unknown helper identifiers, unresolved map identity, unsupported map update/delete behavior, insufficient memory proof, unresolved branches, and analysis failures produce UNKNOWN. This fail-closed behavior makes uncertainty explicit rather than treating incomplete analysis as permission.
+
+The fallback path uses the conditional-policy result as the authoritative policy outcome rather than a generic top-level verification flag. Requests, responses, conditional-policy results, timing metadata, and execution logs are preserved so fallback decisions can be traced to actual verifier invocations.
+
+The execution protocol also validates the frozen verifier revision, policy identity, compiler configuration, architecture, kernel, hook, container identity, and related metadata before experiments are accepted.
+
+\section{Phase 3 Evidence and Research Evolution}
+The hybrid design was motivated by earlier evidence rather than assumed from the beginning. Phase 3 established a distinction between Linux verifier acceptance and fine-grained policy behavior. A helper-policy comparison showed that a constant-return variant could expose a forbidden helper under the conditional policy, while a symbolic-return variant could prevent the conditional policy from being evaluated in the same way.
+
+This finding motivated two requirements for Phase 5: conditional-policy results must remain authoritative, and unresolved return behavior must lead to UNKNOWN rather than SAFE. Phase 3 therefore supplies the conceptual bridge between policy semantics and hybrid verification.
+
+\section{E1 in Detail: Interpreting Program Complexity}
+The phrase program complexity requires care in E1. The experiment varies compiled features, but the compiler is free to transform source-level constructs. E1 is therefore best interpreted as a compiled-feature sensitivity experiment rather than a perfectly monotonic source-complexity benchmark.
+
+P0 through P7 exercised combinations of instruction count, branches, helper calls, and map interactions. The observed medians remained in a relatively narrow range: P0 was 681.817 ms while P7 was 707.609 ms. P3, despite containing 18 instructions, had a median of 672.432 ms. Thus raw instruction count alone was not a strong predictor in this micro-corpus.
+
+The P4 spike is also informative. Its 935.658 ms measured repetition was retained. The raw evidence shows a genuine execution-time spike, but the available instrumentation cannot establish whether host scheduling, I/O, or another runtime event caused it. The correct scientific treatment is retention and disclosure rather than deletion.
+
+\section{E2 in Detail: Why Path Count Matters}
+E2 isolates feasible symbolic path growth. The controlled family produced the ladder 1, 2, 4, 8, 16, 32, 64. Median time increased from 746.14 ms at one path to 1231.16 ms at 64 paths, an increase of approximately 65.0 percent. The empirical fit
+\[
+T(P)\\approx740+7.6P
+\]
+summarizes the tested regime but is not a universal complexity theorem.
+
+The research consequence is direct: a hybrid system has a meaningful optimization target in the number of programs reaching symbolic execution. If a cheaper abstract stage can safely decide a program, the program no longer contributes its symbolic cost.
