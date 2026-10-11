@@ -52,7 +52,7 @@ The repository still contains work/abstract_worker.py as an auxiliary isolated-p
 
 KRAKENGUARD is a persistent verifier service, so a per-invocation peak container memory value cannot be recovered cleanly without intrusive sampling or restarting the service. Memory peak fields from older raw runs are therefore not used as a primary result. Memory should be treated as a separate secondary campaign once a non-perturbative measurement method is established.
 
-Reference verdicts are loaded from the frozen, previously audited validation manifest. The runner does not invoke KRAKENGUARD for a separate timed oracle pass, so reference checking does not pre-warm the daemon or add an unpaired timing observation.
+Reference verdicts are loaded from the existing frozen validation manifest. The runner does not invoke KRAKENGUARD for a separate timed oracle pass, so reference checking does not pre-warm the daemon or add an unpaired timing observation.
 
 ## Run
 
@@ -69,7 +69,7 @@ Results are written only under:
 work/results/
 ```
 
-Reference verdicts are loaded from the previously audited Phase 5 validation manifest after verifying its program IDs, policy hash and KRAKENGUARD revision. No reference-verdict daemon calls are made before timed measurements, avoiding an avoidable cache/warm-state disturbance.
+Reference labels are loaded from the existing Phase 5 validation manifest after verifying its program IDs, policy hash and KRAKENGUARD revision. This workbench does not independently re-establish the historical Phase 5 execution provenance: agreement means agreement with those frozen labels, not a new independent proof of their provenance. No reference-verdict daemon calls are made before timed measurements, avoiding an avoidable cache/warm-state disturbance.
 
 ## Evidence model
 
