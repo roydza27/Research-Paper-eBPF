@@ -3,9 +3,12 @@
 \usepackage{cite}
 \usepackage{amsmath,amssymb}
 \usepackage{booktabs}
+\usepackage{graphicx}
 \usepackage{tikz}
 \usepackage{url}
 \usepackage{balance}
+\usepackage{microtype}
+\usepackage[hidelinks]{hyperref}
 \usetikzlibrary{arrows.meta,positioning,shapes.geometric}
 
 \begin{document}
@@ -145,7 +148,7 @@ arrow/.style={-{Latex}, thick}
 \label{fig:architecture}
 \end{figure}
 
-The analyzer operates on the compiled eBPF object and its control-flow graph rather than relying only on source-level C syntax. It tracks reachability, selected integer facts, policy conditions, helper access, map access, memory ranges, return values, and analysis status.
+The analyzer operates on the compiled eBPF object and its control-flow graph rather than relying only on source-level C syntax. This distinction follows from the semantics of the BPF instruction set and the Linux toolchain, in which source constructs may be optimized or transformed before verification \\cite{linuxbpfdocs,thaler2024bpfisa}. It tracks reachability, selected integer facts, policy conditions, helper access, map access, memory ranges, return values, and analysis status.
 
 \subsection{Three-Valued Abstract Decision}
 
