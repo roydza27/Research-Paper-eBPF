@@ -95,7 +95,7 @@ The hybrid architecture draws on the general idea of abstract interpretation, wh
 
 Prior eBPF confinement work addresses related but distinct boundaries. bpfbox demonstrates precise process confinement using eBPF-based policy enforcement \cite{findlay2020bpfbox}; BPFContain studies container-security confinement using eBPF \cite{findlay2021bpfcontain}. Research on cross-container attacks documents how overly permissive eBPF capabilities can create isolation risks in shared-kernel environments \cite{he2023crosscontainer}. These works motivate policy expressiveness and threat modeling but are not direct performance baselines for the present hybrid verifier.
 
-The Linux kernel documentation specifies eBPF instruction behavior, verifier concepts, helpers, maps, and program types; the BPF ISA is also standardized in IETF RFC 9669 \cite{linuxbpfdocs,thaler2024bpfisa}. Those references are important for implementation and reproducibility because source-level C does not fully determine the compiled instruction stream. The compiler may remove branches, fold predicates, or alter control flow, so the abstract analyzer must reason about the compiled artifact and the experiment must record compiler settings.
+The Linux kernel documentation specifies eBPF instruction behavior, verifier concepts, helpers, maps, and program types; the BPF ISA is also standardized in IETF RFC 9669 \cite{linuxbpfdocs,thaler2024bpfisa}. The runtime literature provides complementary context for how the in-kernel execution environment, helper interface, and verifier interact \cite{gbadamosi2024ebpfruntime}. Those references are important for implementation and reproducibility because source-level C does not fully determine the compiled instruction stream. The compiler may remove branches, fold predicates, or alter control flow, so the abstract analyzer must reason about the compiled artifact and the experiment must record compiler settings.
 
 \section{Practical Implications and Deployment Boundaries}
 The measured result suggests a potential use case for verification gateways that repeatedly check policy-specific eBPF programs before loading or delegating them. Such a gateway could attempt a fast abstract proof and invoke symbolic analysis only when needed. This is a hypothesis for deployment design, not evidence that the current prototype is ready to operate as a production admission controller.
@@ -103,3 +103,114 @@ The measured result suggests a potential use case for verification gateways that
 A deployment would require additional engineering beyond the evaluated corpus: explicit versioning of policy semantics, compatibility testing across kernel and compiler releases, resource limits for fallback, robust timeout handling, authenticated artifact provenance, isolation of the verifier process, and safe treatment of verifier crashes. It would also need to define how policy changes interact with already loaded programs, maps, links, and delegated capabilities. These are not measured by E1--E5 and remain outside the current contribution.
 
 The distinction between kernel safety and application policy remains important. The hybrid analyzer is a policy-analysis front-end and does not replace the kernel's verifier, permissions, namespaces, cgroups, capabilities, or other isolation controls. A positive result in the evaluated program-policy model is not a proof of end-to-end tenant isolation. The appropriate conclusion is narrower: selective abstract discharge can reduce the measured verification work for a subset of the tested policy cases while preserving fallback for uncertainty.
+
+
+\section{Research Evolution and Engineering Record}
+The direction of this project changed as the literature and implementation evidence accumulated. That history is relevant to the contribution because it explains why the paper does not claim a new isolation primitive or a replacement for the kernel verifier.
+
+\begin{figure*}[t]
+\centering
+\begin{tikzpicture}[
+  phase/.style={draw, rounded corners=2pt, align=left, text width=0.205\textwidth, minimum height=24mm, inner sep=5pt, fill=gray!8},
+  arrow/.style={-{Latex[length=2mm]}, thick},
+  node distance=5mm
+]
+\node[phase] (p1) {\textbf{Phase 1}\\Literature taxonomy\\[2pt]\footnotesize Map eBPF isolation, verifier assurance, delegation, virtualization, and scheduling};
+\node[phase, right=of p1] (p2) {\textbf{Phase 2}\\Gap verification\\[2pt]\footnotesize Remove broad claims already addressed by KRAKENGUARD, BCF, BPF Token, vBPF, and related systems};
+\node[phase, right=of p2] (p3) {\textbf{Phases 3--4}\\Baseline and measurement\\[2pt]\footnotesize Establish reproducibility controls; audit E1 and characterize controlled path growth in E2};
+\node[phase, right=of p3] (p4) {\textbf{Phase 5}\\Hybrid prototype\\[2pt]\footnotesize Implement conservative abstract decisions and define E3--E5; raw execution evidence remains an audit requirement};
+\draw[arrow] (p1)--(p2);
+\draw[arrow] (p2)--(p3);
+\draw[arrow] (p3)--(p4);
+\end{tikzpicture}
+\caption{Research progression and the evidence boundary. The phases represent the project's documented evolution, not a claim that every planned experiment has completed.}
+\label{fig:research-evolution}
+\end{figure*}
+
+\begin{table*}[t]
+\centering
+\caption{Research decisions and what the available evidence supports.}
+\label{tab:phase-history}
+\begin{tabular}{P{0.13\textwidth}P{0.27\textwidth}P{0.27\textwidth}P{0.23\textwidth}}
+\toprule
+Stage & Work recorded in the project & Decision carried into this paper & Evidence boundary \\
+\midrule
+Literature review & Taxonomy of eBPF confinement, verifier analysis, delegation, virtualization, runtime enforcement, and scheduling & Avoid claiming generic multi-tenant isolation or verifier testing as a new gap & Literature review motivates scope; it does not prove implementation performance \\
+Gap verification & Comparison with KRAKENGUARD, BCF, AEE, Veritas/SpecCheck, BPF Token, vBPF, PeeR, bpfbox, and BPFContain & Focus on the cost of fine-grained policy verification and selective analysis & Novelty remains a scoped positioning claim, not a proof that no concurrent work exists \\
+Baseline infrastructure & Frozen policy, controlled program corpus, run identifiers, environment metadata, and machine-readable aggregation & Treat reproducibility as part of the research result rather than a final packaging task & Infrastructure alone is not a successful benchmark \\
+E1 and E2 & Compiled-feature and controlled-path experiments; E1 has an independent data-integrity audit with qualifications & Separate program size from path-sensitive analysis cost & E1 metrics have documented qualifications; E2 is bounded to its synthetic family \\
+Hybrid prototype & Three-valued abstract analysis, fail-closed uncertainty, a 24-program corpus, and an execution protocol & Keep symbolic fallback authoritative whenever the abstract proof is incomplete & The full Phase 5 performance matrix must be recoverable and independently recomputed \\
+Supporting tooling & ProcessScope evaluation and a real-world Katran attempt & Keep telemetry and workload integration as supporting engineering, not the central contribution & ProcessScope is not the thesis contribution; the Katran attempt did not yield a valid verification result \\
+\bottomrule
+\end{tabular}
+\end{table*}
+
+\subsection{Why the Research Question Was Narrowed}
+The initial motivation was broad: improve isolation for eBPF workloads in multi-tenant Linux systems. The literature review showed that a number of adjacent mechanisms already address important parts of this space. KRAKENGUARD directly targets fine-grained policy isolation; BCF focuses on verifier precision; BPF Token changes delegated access; vBPF explores tenant-oriented virtualization; PeeR addresses execution scheduling; and bpfbox/BPFContain provide confinement-oriented approaches. These systems differ in goals and threat models, so they are not interchangeable baselines. Their existence nevertheless rules out presenting generic eBPF isolation as the novelty.
+
+The surviving problem is narrower and measurable: symbolic policy verification can be expensive, while some policy decisions may be decidable by a cheaper abstract pass. The design question is whether a conservative front-end can reduce the number of symbolic invocations without changing the final decision. This framing makes the intended contribution falsifiable. If the abstract pass rarely discharges programs, or if its cost plus fallback exceeds direct symbolic execution, the optimization hypothesis is not supported.
+
+\section{Threat Model, Assumptions, and Non-Goals}
+The target environment is a shared Linux host on which multiple workloads may submit or operate eBPF programs. The immediate concern is policy compliance at load or admission time: whether the compiled program's modeled behavior respects a tenant-specific policy governing selected helper calls, map operations, memory behavior, and return-dependent policy conditions. The verifier's policy decision is made before relying on the program for the intended workload.
+
+The design assumes that the compiled object, policy definition, and symbolic-verifier configuration are bound to stable identifiers or hashes for the duration of an experiment. It also assumes that the kernel verifier remains enabled and retains responsibility for its existing safety checks. The hybrid layer answers an additional policy question; it does not grant kernel execution permission by itself.
+
+The following are non-goals of the current prototype:
+\begin{itemize}
+  \item replacing or weakening the Linux verifier;
+  \item proving complete isolation across arbitrary programs, maps, links, credentials, and tenant lifecycle events;
+  \item solving all possible eBPF instruction, helper, map, loop, tail-call, or memory semantics;
+  \item providing a production-ready admission controller or a complete multi-tenant runtime;
+  \item claiming universal runtime, memory, or solver complexity from a small synthetic corpus.
+\end{itemize}
+
+This boundary prevents a common category error: a sound policy decision for a modeled program is not equivalent to a proof of end-to-end tenant isolation. Cross-program interference, object lifecycle, delegated capabilities, policy revocation, and runtime scheduling remain relevant system-level concerns, but they are not established by the current experiments.
+
+\subsection{Failure Semantics}
+A verification service must distinguish a negative policy decision from an inability to reach a decision. The prototype therefore treats a proven policy violation, an unresolved abstract result, a timeout, a malformed response, and an internal analysis error as different outcomes. A violation can be rejected; an unknown case can be forwarded to the symbolic engine; a timeout or error cannot be accepted as proof of compliance. This is stricter than simply interpreting a process exit code as a security verdict.
+
+The fallback decision must be extracted from the authoritative conditional-policy result produced by the symbolic verifier. Generic transport-level success, a top-level response flag, or a process that exits without a valid policy artifact is insufficient. This distinction was an explicit engineering correction in the project and should remain part of the implementation contract.
+
+\section{Implementation Details and Analyzer Boundaries}
+The analyzer's abstract state contains reachability, selected integer facts, policy predicates, helper identities, map identities and access modes, memory facts, return-value information, and an analysis status. It propagates these facts over the compiled control-flow graph. A branch is pruned only when its predicate is established as true or false; otherwise both successors remain reachable. At control-flow joins, conflicting facts are weakened to a less precise representation.
+
+The implementation is deliberately incomplete in the formal sense: it supports a subset of eBPF instruction and policy semantics rather than proving correctness for all of eBPF. Its safe operating contract is therefore conditional on that supported subset. Unknown helper identifiers, unresolved map identity, unsupported map update/delete behavior, insufficient memory proof, unsupported instructions, and unresolved branches must not be silently treated as compliant. They produce \unknown or a hard analysis failure, which prevents the front-end from converting a lack of understanding into an authorization.
+
+Return-value tracking matters because policy conditions may depend on helper results or branch-dependent values. A constant return can make a later condition decidable; a symbolic return may leave both branches reachable. This was one of the lessons carried forward from the earlier policy experiments: policy evaluation cannot be reduced to scanning the object for a forbidden helper name. Reachability and conditional semantics matter.
+
+\subsection{Compiler Effects and the Unit of Analysis}
+The unit of analysis is the compiled eBPF object, not the source-level C file. A compiler can fold conditions, remove branches, simplify arithmetic, and alter the control-flow graph. The E1 audit found a concrete example: a source conditional in P2 was optimized into branchless code under the selected Clang configuration. The observed binary, rather than the source intention, determines the paths available to the verifier.
+
+For reproducibility, source and object hashes, compiler version, target CPU, optimization flags, architecture definitions, include paths, and policy identity should be recorded together. If only source files are preserved, later toolchain changes can silently alter the tested program. Conversely, a disassembly is useful evidence but is not a substitute for preserving the exact binary when byte-level reproduction is required.
+
+\section{Measurement Lessons and Reproducibility}
+The project's baseline work exposed several measurement details that materially affect interpretation.
+
+First, wall-clock time, client-process CPU time, solver time, and peak memory are different quantities. A client-side \texttt{process\_time()} measurement does not account for all CPU consumed by a persistent verifier service, its symbolic executor, or its solver. Likewise, a memory sample taken from a long-running container cannot automatically be attributed to a single verification request. The manuscript therefore treats end-to-end wall time as the primary endpoint for the current performance question and does not infer memory or solver-time results where the instrumentation did not expose them reliably.
+
+Second, internal counters need precise names. The E1 audit found that a field called \texttt{verifier\_states} was populated from KLEE's \texttt{explored paths} statistic. In this paper, such a metric should be called explored/completed symbolic paths, not generic verifier states. Similarly, a basic-block count generated by the heuristic $1+\text{branch count}$ is not a control-flow-graph measurement. Metrics that are derived heuristically can still be useful for debugging, but should not be presented as directly observed structural properties.
+
+Third, performance outliers should be retained unless a predeclared rule establishes that a run is invalid. E1's timing spike was preserved, and the available evidence did not establish a single cause. Removing it after seeing the result would bias the estimate. The same principle applies to failed runs, timeouts, and disagreements: each must be recorded and categorized rather than silently rerun or excluded.
+
+Fourth, every aggregate should be reproducible from raw telemetry. A complete run record should include a unique run identifier, program and object hashes, policy hash, baseline revision, environment metadata, condition, repetition index, execution order, verdict, status, wall time, and available symbolic telemetry. The aggregation script should emit the published tables from these records. A README table or manually transcribed summary is useful for orientation but does not independently establish that an experiment ran.
+
+\subsection{Evidence Recovery as a Publication Gate}
+The Phase 5 protocol defines 216 E3 executions and 432 E4 executions, but a protocol count is not the same as an observed run count. To publish E3--E5 as completed experiments, the project needs an immutable execution commit, a verifiable relationship to the authorized execution-gate parent, all raw rows, unique run IDs, consistent artifact hashes, and scripts that regenerate the published summaries. E4 in particular needs both conditions for every program, all seven measured repetitions after warmup, and a recomputable paired analysis. E5 must be regenerated from actual telemetry and must not invent a result for an unreachable path stratum.
+
+This requirement is not merely administrative. It protects the paper from a mismatch between an attractive aggregate and the data that supposedly supports it. If the original execution artifacts cannot be recovered, the appropriate path is to rerun the approved matrix under the frozen protocol and publish the new evidence with full provenance, not to reconstruct missing raw values from summary statistics.
+
+\section{Supporting Infrastructure and Real-World Validation}
+ProcessScope was assessed as supporting experimental infrastructure: an eBPF tracepoint collector and user-space processing path can help observe process execution, but this capability does not itself implement the policy-verification contribution. It should therefore be described as instrumentation or an auxiliary prototype rather than as a central result of the thesis.
+
+The project also attempted to exercise the workflow on Katran, a production-oriented XDP load balancer. The selected source revision was compiled with Clang 13 into an eBPF object, but the direct KRAKENGUARD run terminated with a failure status before a valid policy result was obtained. The attempt is useful because it exposes compatibility and integration issues between a real-world object and the frozen verifier environment. It is not a successful production-workload evaluation and must not be counted as one.
+
+A stronger real-world evaluation will require a compatible toolchain and verifier configuration, a documented mapping from the workload to the supported policy, and a successful reference-verifier result before timing comparisons are meaningful. If the baseline rejects or crashes before producing an authoritative policy decision, its elapsed time cannot be interpreted as a valid hybrid-versus-symbolic performance measurement.
+
+\section{Additional Validity Considerations}
+The corpus is synthetic and policy-directed. This is a strength for controlled tests because the expected decision categories are explicit, but it limits external validity. The 24 programs were constructed to contain both abstractly decidable cases and cases requiring symbolic reasoning; a production corpus may have a different distribution. The measured discharge fraction, if later validated, should therefore be reported as corpus-specific.
+
+The reference oracle is a frozen KRAKENGUARD configuration. Differential agreement can establish consistency with that reference under the selected policy and environment, but it does not prove that the reference itself is free of defects. A stronger study could add manually reviewed counterexamples, independent policy fixtures, or a second reference implementation. Such an extension should preserve the distinction between reference agreement and absolute correctness.
+
+The environment also constrains generalization. The baseline uses one kernel, compiler, architecture, hook type, policy, and verifier revision. Different compiler optimizations can change branch structure; different kernels can expose different helper semantics; and different workloads can change the relative cost of startup, lifting, symbolic execution, and fallback. Replication across more than one environment is necessary before describing the approach as generally scalable.
+
+Finally, the project measures analysis cost, not the operational cost of deploying a complete multi-tenant security service. Policy updates, concurrent submissions, cancellation, resource quotas, cache invalidation, revocation, object lifecycle, and interaction with already-loaded programs require separate design and evaluation. These questions are important future work, but they should not be conflated with the narrow cost reduction question evaluated here.
