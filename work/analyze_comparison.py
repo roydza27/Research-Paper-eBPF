@@ -173,6 +173,15 @@ def summarize(rows: List[Dict[str, Any]]) -> Dict[str, Any]:
             **fit,
         }
 
+    measured_rows = [r for r in rows if r["repetition_type"] == "measured"]
+    failed_rows = [r for r in measured_rows if r["status"] != "ok"]
+    failures_by_mode = {
+        mode: sum(r["mode"] == mode for r in failed_rows)
+        for mode in ("symbolic_only", "abstract_only", "hybrid")
+    }
+    expected_program_ids = sorted({r["program_id"] for r in measured_rows})
+    missing_paired_programs = sorted(set(expected_program_ids) - set(common))
+
     return {
         "schema": "comparative-verification-analysis/v1",
         "raw_run_count": len(rows),
@@ -180,7 +189,20 @@ def summarize(rows: List[Dict[str, Any]]) -> Dict[str, Any]:
             r["repetition_type"] == "measured" and r["status"] == "ok"
             for r in rows
         ),
+        "failed_measured_run_count": len(failed_rows),
+        "failed_measured_runs_by_mode": failures_by_mode,
+        "failed_measured_runs": [
+            {
+                "run_id": r["run_id"],
+                "mode": r["mode"],
+                "program_id": r["program_id"],
+                "error": r.get("error"),
+            }
+            for r in failed_rows
+        ],
+        "expected_program_count": len(expected_program_ids),
         "program_count": len(common),
+        "missing_paired_programs": missing_paired_programs,
         "paired_symbolic_vs_hybrid": paired,
         "primary_endpoint": {
             "metric": "paired program-level median verification-section wall time",
@@ -234,6 +256,9 @@ def write_outputs(summary: Dict[str, Any]) -> None:
         f"- Median paired percentage saving: {p['median_saving_pct']}%",
         f"- Bootstrap 95% CI for median absolute saving: {p['bootstrap_95ci_median_absolute_saving_ms']}",
         f"- Exact two-sided paired sign test: {p['exact_two_sided_sign_test']}",
+        f"- Successfully paired programs: {summary['program_count']} / {summary['expected_program_count']}",
+        f"- Failed measured runs: {summary['failed_measured_run_count']} ({summary['failed_measured_runs_by_mode']})",
+        f"- Programs missing a symbolic/hybrid pair: {summary['missing_paired_programs']}",
         "",
         "## Correctness",
         f"- Checked measured rows: {c['checked_measured_rows']}",
