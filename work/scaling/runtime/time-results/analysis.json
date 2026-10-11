@@ -1,0 +1,700 @@
+{
+  "schema": "scaling-analysis/v1",
+  "raw_runs": 594,
+  "successful_measured_runs": 462,
+  "correctness": {
+    "checked": 378,
+    "all_agree": true,
+    "false_concrete": 0
+  },
+  "coverage": {
+    "hybrid_measured": 154,
+    "fallback_fraction": 1.0,
+    "fast_path_fraction": 0.45454545454545453
+  },
+  "family_summary": [
+    {
+      "family": "A-size",
+      "program_count": 5,
+      "paired_median_saving_ms": 564.509,
+      "paired_median_saving_pct": 94.23993880696972,
+      "rows": [
+        {
+          "program_id": "asize-0016",
+          "family": "A-size",
+          "scale": 16,
+          "target_paths": 1,
+          "instructions": 54,
+          "median_ms": 33.568,
+          "mean_ms": 34.06514285714285,
+          "min_ms": 31.643,
+          "max_ms": 37.071,
+          "fallback_fraction": 0.0,
+          "correct": true,
+          "symbolic_median_ms": 602.005,
+          "absolute_saving_ms": 568.437,
+          "saving_pct": 94.42396657835069
+        },
+        {
+          "program_id": "asize-0000",
+          "family": "A-size",
+          "scale": 0,
+          "target_paths": 1,
+          "instructions": 6,
+          "median_ms": 32.508,
+          "mean_ms": 32.55014285714286,
+          "min_ms": 31.745,
+          "max_ms": 34.026,
+          "fallback_fraction": 0.0,
+          "correct": true,
+          "symbolic_median_ms": 594.642,
+          "absolute_saving_ms": 562.134,
+          "saving_pct": 94.53318130909017
+        },
+        {
+          "program_id": "asize-0064",
+          "family": "A-size",
+          "scale": 64,
+          "target_paths": 1,
+          "instructions": 198,
+          "median_ms": 34.489,
+          "mean_ms": 34.14957142857143,
+          "min_ms": 32.505,
+          "max_ms": 34.734,
+          "fallback_fraction": 0.0,
+          "correct": true,
+          "symbolic_median_ms": 598.761,
+          "absolute_saving_ms": 564.2719999999999,
+          "saving_pct": 94.23993880696972
+        },
+        {
+          "program_id": "asize-0128",
+          "family": "A-size",
+          "scale": 128,
+          "target_paths": 1,
+          "instructions": 390,
+          "median_ms": 37.344,
+          "mean_ms": 37.27485714285714,
+          "min_ms": 36.447,
+          "max_ms": 37.897,
+          "fallback_fraction": 0.0,
+          "correct": true,
+          "symbolic_median_ms": 609.48,
+          "absolute_saving_ms": 572.136,
+          "saving_pct": 93.87280960819058
+        },
+        {
+          "program_id": "asize-0032",
+          "family": "A-size",
+          "scale": 32,
+          "target_paths": 1,
+          "instructions": 102,
+          "median_ms": 34.569,
+          "mean_ms": 35.168,
+          "min_ms": 33.8,
+          "max_ms": 37.428,
+          "fallback_fraction": 0.0,
+          "correct": true,
+          "symbolic_median_ms": 599.078,
+          "absolute_saving_ms": 564.509,
+          "saving_pct": 94.22963286917565
+        }
+      ]
+    },
+    {
+      "family": "B-path",
+      "program_count": 6,
+      "paired_median_saving_ms": -36.727499999999964,
+      "paired_median_saving_pct": -5.569713078255369,
+      "rows": [
+        {
+          "program_id": "bpath-p032",
+          "family": "B-path",
+          "scale": 5,
+          "target_paths": 32,
+          "instructions": 38,
+          "median_ms": 822.824,
+          "mean_ms": 822.3782857142858,
+          "min_ms": 808.476,
+          "max_ms": 840.182,
+          "fallback_fraction": 1.0,
+          "correct": true,
+          "symbolic_median_ms": 794.836,
+          "absolute_saving_ms": -27.987999999999943,
+          "saving_pct": -3.5212295366591277
+        },
+        {
+          "program_id": "bpath-p008",
+          "family": "B-path",
+          "scale": 3,
+          "target_paths": 8,
+          "instructions": 26,
+          "median_ms": 686.915,
+          "mean_ms": 685.9937142857143,
+          "min_ms": 673.024,
+          "max_ms": 697.847,
+          "fallback_fraction": 1.0,
+          "correct": true,
+          "symbolic_median_ms": 645.879,
+          "absolute_saving_ms": -41.035999999999945,
+          "saving_pct": -6.353512035536059
+        },
+        {
+          "program_id": "bpath-p016",
+          "family": "B-path",
+          "scale": 4,
+          "target_paths": 16,
+          "instructions": 32,
+          "median_ms": 737.996,
+          "mean_ms": 737.0581428571429,
+          "min_ms": 721.455,
+          "max_ms": 747.359,
+          "fallback_fraction": 1.0,
+          "correct": true,
+          "symbolic_median_ms": 696.944,
+          "absolute_saving_ms": -41.05200000000002,
+          "saving_pct": -5.890286737528413
+        },
+        {
+          "program_id": "bpath-p064",
+          "family": "B-path",
+          "scale": 6,
+          "target_paths": 64,
+          "instructions": 44,
+          "median_ms": 1006.987,
+          "mean_ms": 1007.2934285714285,
+          "min_ms": 971.51,
+          "max_ms": 1052.127,
+          "fallback_fraction": 1.0,
+          "correct": true,
+          "symbolic_median_ms": 977.227,
+          "absolute_saving_ms": -29.75999999999999,
+          "saving_pct": -3.045351796460801
+        },
+        {
+          "program_id": "bpath-p004",
+          "family": "B-path",
+          "scale": 2,
+          "target_paths": 4,
+          "instructions": 20,
+          "median_ms": 665.034,
+          "mean_ms": 668.3714285714286,
+          "min_ms": 648.539,
+          "max_ms": 712.291,
+          "fallback_fraction": 1.0,
+          "correct": true,
+          "symbolic_median_ms": 617.394,
+          "absolute_saving_ms": -47.639999999999986,
+          "saving_pct": -7.71630433726275
+        },
+        {
+          "program_id": "bpath-p002",
+          "family": "B-path",
+          "scale": 1,
+          "target_paths": 2,
+          "instructions": 14,
+          "median_ms": 650.025,
+          "mean_ms": 666.1777142857143,
+          "min_ms": 630.591,
+          "max_ms": 782.315,
+          "fallback_fraction": 1.0,
+          "correct": true,
+          "symbolic_median_ms": 617.606,
+          "absolute_saving_ms": -32.41899999999998,
+          "saving_pct": -5.249139418982326
+        }
+      ]
+    },
+    {
+      "family": "C-size",
+      "program_count": 5,
+      "paired_median_saving_ms": 560.1690000000001,
+      "paired_median_saving_pct": 94.17170463358946,
+      "rows": [
+        {
+          "program_id": "csize-0000",
+          "family": "C-size",
+          "scale": 0,
+          "target_paths": 1,
+          "instructions": 9,
+          "median_ms": 33.016,
+          "mean_ms": 33.02128571428572,
+          "min_ms": 31.793,
+          "max_ms": 35.399,
+          "fallback_fraction": 0.0,
+          "correct": true,
+          "symbolic_median_ms": 600.064,
+          "absolute_saving_ms": 567.048,
+          "saving_pct": 94.49792022184302
+        },
+        {
+          "program_id": "csize-0016",
+          "family": "C-size",
+          "scale": 16,
+          "target_paths": 1,
+          "instructions": 57,
+          "median_ms": 31.91,
+          "mean_ms": 32.200714285714284,
+          "min_ms": 31.237,
+          "max_ms": 33.656,
+          "fallback_fraction": 0.0,
+          "correct": true,
+          "symbolic_median_ms": 590.713,
+          "absolute_saving_ms": 558.803,
+          "saving_pct": 94.59805353868968
+        },
+        {
+          "program_id": "csize-0064",
+          "family": "C-size",
+          "scale": 64,
+          "target_paths": 1,
+          "instructions": 201,
+          "median_ms": 34.793,
+          "mean_ms": 35.43528571428571,
+          "min_ms": 34.301,
+          "max_ms": 38.702,
+          "fallback_fraction": 0.0,
+          "correct": true,
+          "symbolic_median_ms": 596.967,
+          "absolute_saving_ms": 562.174,
+          "saving_pct": 94.17170463358946
+        },
+        {
+          "program_id": "csize-0032",
+          "family": "C-size",
+          "scale": 32,
+          "target_paths": 1,
+          "instructions": 105,
+          "median_ms": 35.156,
+          "mean_ms": 35.05014285714286,
+          "min_ms": 32.788,
+          "max_ms": 36.471,
+          "fallback_fraction": 0.0,
+          "correct": true,
+          "symbolic_median_ms": 595.325,
+          "absolute_saving_ms": 560.1690000000001,
+          "saving_pct": 94.09465418048966
+        },
+        {
+          "program_id": "csize-0128",
+          "family": "C-size",
+          "scale": 128,
+          "target_paths": 1,
+          "instructions": 393,
+          "median_ms": 37.881,
+          "mean_ms": 37.942,
+          "min_ms": 36.374,
+          "max_ms": 39.389,
+          "fallback_fraction": 0.0,
+          "correct": true,
+          "symbolic_median_ms": 591.661,
+          "absolute_saving_ms": 553.78,
+          "saving_pct": 93.59751614522506
+        }
+      ]
+    },
+    {
+      "family": "D-path",
+      "program_count": 6,
+      "paired_median_saving_ms": -33.50150000000002,
+      "paired_median_saving_pct": -4.693714657859482,
+      "rows": [
+        {
+          "program_id": "dpath-p016",
+          "family": "D-path",
+          "scale": 4,
+          "target_paths": 16,
+          "instructions": 36,
+          "median_ms": 730.607,
+          "mean_ms": 730.1658571428571,
+          "min_ms": 720.698,
+          "max_ms": 741.751,
+          "fallback_fraction": 1.0,
+          "correct": true,
+          "symbolic_median_ms": 694.278,
+          "absolute_saving_ms": -36.32899999999995,
+          "saving_pct": -5.232630156795973
+        },
+        {
+          "program_id": "dpath-p064",
+          "family": "D-path",
+          "scale": 6,
+          "target_paths": 64,
+          "instructions": 48,
+          "median_ms": 994.123,
+          "mean_ms": 1000.1082857142857,
+          "min_ms": 982.311,
+          "max_ms": 1032.7,
+          "fallback_fraction": 1.0,
+          "correct": true,
+          "symbolic_median_ms": 980.16,
+          "absolute_saving_ms": -13.96300000000008,
+          "saving_pct": -1.4245633365981145
+        },
+        {
+          "program_id": "dpath-p002",
+          "family": "D-path",
+          "scale": 1,
+          "target_paths": 2,
+          "instructions": 17,
+          "median_ms": 644.571,
+          "mean_ms": 642.8594285714286,
+          "min_ms": 629.147,
+          "max_ms": 655.19,
+          "fallback_fraction": 1.0,
+          "correct": true,
+          "symbolic_median_ms": 623.408,
+          "absolute_saving_ms": -21.16300000000001,
+          "saving_pct": -3.394727048738549
+        },
+        {
+          "program_id": "dpath-p004",
+          "family": "D-path",
+          "scale": 2,
+          "target_paths": 4,
+          "instructions": 24,
+          "median_ms": 657.628,
+          "mean_ms": 655.4631428571429,
+          "min_ms": 631.004,
+          "max_ms": 671.13,
+          "fallback_fraction": 1.0,
+          "correct": true,
+          "symbolic_median_ms": 615.981,
+          "absolute_saving_ms": -41.64700000000005,
+          "saving_pct": -6.761085163341085
+        },
+        {
+          "program_id": "dpath-p032",
+          "family": "D-path",
+          "scale": 5,
+          "target_paths": 32,
+          "instructions": 42,
+          "median_ms": 819.758,
+          "mean_ms": 816.5842857142858,
+          "min_ms": 797.659,
+          "max_ms": 829.418,
+          "fallback_fraction": 1.0,
+          "correct": true,
+          "symbolic_median_ms": 786.151,
+          "absolute_saving_ms": -33.607000000000085,
+          "saving_pct": -4.274878490264604
+        },
+        {
+          "program_id": "dpath-p008",
+          "family": "D-path",
+          "scale": 3,
+          "target_paths": 8,
+          "instructions": 30,
+          "median_ms": 686.612,
+          "mean_ms": 684.6885714285714,
+          "min_ms": 674.066,
+          "max_ms": 699.087,
+          "fallback_fraction": 1.0,
+          "correct": true,
+          "symbolic_median_ms": 653.216,
+          "absolute_saving_ms": -33.39599999999996,
+          "saving_pct": -5.112550825454361
+        }
+      ]
+    }
+  ],
+  "scaling": {
+    "A-size": {
+      "x_axis": "compiled_instructions",
+      "symbolic_fit": {
+        "n": 5,
+        "slope": 0.030805729166666632,
+        "intercept": 596.172340625,
+        "r2": 0.7178320140543255
+      },
+      "hybrid_fit": {
+        "n": 5,
+        "slope": 0.011447916666666667,
+        "intercept": 32.7784125,
+        "r2": 0.9341212861826289
+      },
+      "points": [
+        [
+          102.0,
+          599.078,
+          34.569
+        ],
+        [
+          54.0,
+          602.005,
+          33.568
+        ],
+        [
+          198.0,
+          598.761,
+          34.489
+        ],
+        [
+          390.0,
+          609.48,
+          37.344
+        ],
+        [
+          6.0,
+          594.642,
+          32.508
+        ]
+      ],
+      "note": "Descriptive scaling fit; not an asymptotic complexity proof."
+    },
+    "B-path": {
+      "x_axis": "target_paths",
+      "symbolic_fit": {
+        "n": 6,
+        "slope": 5.917767590618336,
+        "intercept": 600.707880597015,
+        "r2": 0.9988939900488445
+      },
+      "hybrid_fit": {
+        "n": 6,
+        "slope": 5.712713930348259,
+        "intercept": 641.6631741293533,
+        "r2": 0.9995978013880944
+      },
+      "points": [
+        [
+          32.0,
+          794.836,
+          822.824
+        ],
+        [
+          16.0,
+          696.944,
+          737.996
+        ],
+        [
+          64.0,
+          977.227,
+          1006.987
+        ],
+        [
+          8.0,
+          645.879,
+          686.915
+        ],
+        [
+          4.0,
+          617.394,
+          665.034
+        ],
+        [
+          2.0,
+          617.606,
+          650.025
+        ]
+      ],
+      "note": "Descriptive scaling fit; not an asymptotic complexity proof."
+    },
+    "C-size": {
+      "x_axis": "compiled_instructions",
+      "symbolic_fit": {
+        "n": 5,
+        "slope": -0.01128697916666675,
+        "intercept": 596.6729078125001,
+        "r2": 0.19855410490038472
+      },
+      "hybrid_fit": {
+        "n": 5,
+        "slope": 0.01363229166666667,
+        "intercept": 32.465459375,
+        "r2": 0.8216497880783945
+      },
+      "points": [
+        [
+          393.0,
+          591.661,
+          37.881
+        ],
+        [
+          9.0,
+          600.064,
+          33.016
+        ],
+        [
+          57.0,
+          590.713,
+          31.91
+        ],
+        [
+          105.0,
+          595.325,
+          35.156
+        ],
+        [
+          201.0,
+          596.967,
+          34.793
+        ]
+      ],
+      "note": "Descriptive scaling fit; not an asymptotic complexity proof."
+    },
+    "D-path": {
+      "x_axis": "target_paths",
+      "symbolic_fit": {
+        "n": 6,
+        "slope": 5.868839374555791,
+        "intercept": 602.2867064676616,
+        "r2": 0.9976957311014205
+      },
+      "hybrid_fit": {
+        "n": 6,
+        "slope": 5.600252665245203,
+        "intercept": 637.9445273631841,
+        "r2": 0.9992708529461765
+      },
+      "points": [
+        [
+          16.0,
+          694.278,
+          730.607
+        ],
+        [
+          8.0,
+          653.216,
+          686.612
+        ],
+        [
+          64.0,
+          980.16,
+          994.123
+        ],
+        [
+          4.0,
+          615.981,
+          657.628
+        ],
+        [
+          2.0,
+          623.408,
+          644.571
+        ],
+        [
+          32.0,
+          786.151,
+          819.758
+        ]
+      ],
+      "note": "Descriptive scaling fit; not an asymptotic complexity proof."
+    }
+  },
+  "break_even": {
+    "interpretation": "For a fast-path program, a first-order break-even condition is T_abstract < T_symbolic. Using measured medians, abstract/symbolic is the approximate discharge-cost threshold.",
+    "per_program": {
+      "asize-0000": {
+        "abstract_only_median_ms": 33.749,
+        "symbolic_only_median_ms": 594.642,
+        "approx_break_even_discharge_fraction": 0.05675515688431022
+      },
+      "asize-0016": {
+        "abstract_only_median_ms": 32.667,
+        "symbolic_only_median_ms": 602.005,
+        "approx_break_even_discharge_fraction": 0.05426366890640443
+      },
+      "asize-0032": {
+        "abstract_only_median_ms": 33.925,
+        "symbolic_only_median_ms": 599.078,
+        "approx_break_even_discharge_fraction": 0.05662868608094438
+      },
+      "asize-0064": {
+        "abstract_only_median_ms": 35.435,
+        "symbolic_only_median_ms": 598.761,
+        "approx_break_even_discharge_fraction": 0.059180541150809764
+      },
+      "asize-0128": {
+        "abstract_only_median_ms": 36.748,
+        "symbolic_only_median_ms": 609.48,
+        "approx_break_even_discharge_fraction": 0.06029402113276891
+      },
+      "bpath-p002": {
+        "abstract_only_median_ms": 33.219,
+        "symbolic_only_median_ms": 617.606,
+        "approx_break_even_discharge_fraction": 0.05378671839327986
+      },
+      "bpath-p004": {
+        "abstract_only_median_ms": 32.138,
+        "symbolic_only_median_ms": 617.394,
+        "approx_break_even_discharge_fraction": 0.05205427976300385
+      },
+      "bpath-p008": {
+        "abstract_only_median_ms": 32.475,
+        "symbolic_only_median_ms": 645.879,
+        "approx_break_even_discharge_fraction": 0.05028031566284087
+      },
+      "bpath-p016": {
+        "abstract_only_median_ms": 33.31,
+        "symbolic_only_median_ms": 696.944,
+        "approx_break_even_discharge_fraction": 0.04779437085332538
+      },
+      "bpath-p032": {
+        "abstract_only_median_ms": 34.877,
+        "symbolic_only_median_ms": 794.836,
+        "approx_break_even_discharge_fraction": 0.04387949212164522
+      },
+      "bpath-p064": {
+        "abstract_only_median_ms": 33.27,
+        "symbolic_only_median_ms": 977.227,
+        "approx_break_even_discharge_fraction": 0.03404531393422409
+      },
+      "csize-0000": {
+        "abstract_only_median_ms": 32.873,
+        "symbolic_only_median_ms": 600.064,
+        "approx_break_even_discharge_fraction": 0.05478248986774744
+      },
+      "csize-0016": {
+        "abstract_only_median_ms": 34.468,
+        "symbolic_only_median_ms": 590.713,
+        "approx_break_even_discharge_fraction": 0.058349824703366956
+      },
+      "csize-0032": {
+        "abstract_only_median_ms": 34.092,
+        "symbolic_only_median_ms": 595.325,
+        "approx_break_even_discharge_fraction": 0.057266199134926296
+      },
+      "csize-0064": {
+        "abstract_only_median_ms": 35.27,
+        "symbolic_only_median_ms": 596.967,
+        "approx_break_even_discharge_fraction": 0.059081992806972586
+      },
+      "csize-0128": {
+        "abstract_only_median_ms": 37.554,
+        "symbolic_only_median_ms": 591.661,
+        "approx_break_even_discharge_fraction": 0.06347215719812528
+      },
+      "dpath-p002": {
+        "abstract_only_median_ms": 33.093,
+        "symbolic_only_median_ms": 623.408,
+        "approx_break_even_discharge_fraction": 0.05308401560454791
+      },
+      "dpath-p004": {
+        "abstract_only_median_ms": 33.41,
+        "symbolic_only_median_ms": 615.981,
+        "approx_break_even_discharge_fraction": 0.0542386859334947
+      },
+      "dpath-p008": {
+        "abstract_only_median_ms": 32.584,
+        "symbolic_only_median_ms": 653.216,
+        "approx_break_even_discharge_fraction": 0.049882427864596096
+      },
+      "dpath-p016": {
+        "abstract_only_median_ms": 34.086,
+        "symbolic_only_median_ms": 694.278,
+        "approx_break_even_discharge_fraction": 0.049095607235142114
+      },
+      "dpath-p032": {
+        "abstract_only_median_ms": 32.274,
+        "symbolic_only_median_ms": 786.151,
+        "approx_break_even_discharge_fraction": 0.041053181895081226
+      },
+      "dpath-p064": {
+        "abstract_only_median_ms": 34.457,
+        "symbolic_only_median_ms": 980.16,
+        "approx_break_even_discharge_fraction": 0.035154464577211886
+      }
+    }
+  }
+}

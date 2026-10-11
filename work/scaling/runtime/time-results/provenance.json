@@ -1,0 +1,19 @@
+{
+  "timestamp_utc": "2026-10-07T06:24:52.364079+00:00",
+  "repo_branch": "work-scaling-experiments",
+  "repo_head": "040f92b5f2ad97c3e1ded00341eee9afd5f74099",
+  "repo_tree": "0867cc96c8a8fb08e8055358340a59d97cc7012d",
+  "krakenguard_commit": "e7bd84005b304c5a10efcdb04914d1882b3cccf7",
+  "container_digest": "kg-artifact-krakenguard@sha256:9633a6922518589803a4c9b8123d0549e54b5f57c1d04f9e383e822fd9ae3bd4",
+  "policy_sha256": "270403272d736ae7aee2ceda3bf8d088b6ac0cb476bb99ce0218dd8f33c3c603",
+  "kernel": "7.2.8-arch1-2",
+  "compiler": "clang version 23.1.1",
+  "architecture": "x86_64",
+  "cpu_model": "AMD Ryzen 5 5600H with Radeon Graphics",
+  "seed": 42,
+  "warmups": 2,
+  "repetitions": 7,
+  "timeout": 300,
+  "program_count": 22,
+  "measured_runs": 462
+}
