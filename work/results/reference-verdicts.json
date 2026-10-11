@@ -1,0 +1,170 @@
+{
+  "a1": {
+    "reference_verdict": "COMPLIANT",
+    "reference_passed": true,
+    "reference_source": "research/experiments/results/phase5-validation/validation-results.csv",
+    "reference_policy_sha256": "270403272d736ae7aee2ceda3bf8d088b6ac0cb476bb99ce0218dd8f33c3c603",
+    "krakenguard_commit": "e7bd84005b304c5a10efcdb04914d1882b3cccf7"
+  },
+  "a2": {
+    "reference_verdict": "COMPLIANT",
+    "reference_passed": true,
+    "reference_source": "research/experiments/results/phase5-validation/validation-results.csv",
+    "reference_policy_sha256": "270403272d736ae7aee2ceda3bf8d088b6ac0cb476bb99ce0218dd8f33c3c603",
+    "krakenguard_commit": "e7bd84005b304c5a10efcdb04914d1882b3cccf7"
+  },
+  "a3": {
+    "reference_verdict": "COMPLIANT",
+    "reference_passed": true,
+    "reference_source": "research/experiments/results/phase5-validation/validation-results.csv",
+    "reference_policy_sha256": "270403272d736ae7aee2ceda3bf8d088b6ac0cb476bb99ce0218dd8f33c3c603",
+    "krakenguard_commit": "e7bd84005b304c5a10efcdb04914d1882b3cccf7"
+  },
+  "a4": {
+    "reference_verdict": "COMPLIANT",
+    "reference_passed": true,
+    "reference_source": "research/experiments/results/phase5-validation/validation-results.csv",
+    "reference_policy_sha256": "270403272d736ae7aee2ceda3bf8d088b6ac0cb476bb99ce0218dd8f33c3c603",
+    "krakenguard_commit": "e7bd84005b304c5a10efcdb04914d1882b3cccf7"
+  },
+  "a5": {
+    "reference_verdict": "COMPLIANT",
+    "reference_passed": true,
+    "reference_source": "research/experiments/results/phase5-validation/validation-results.csv",
+    "reference_policy_sha256": "270403272d736ae7aee2ceda3bf8d088b6ac0cb476bb99ce0218dd8f33c3c603",
+    "krakenguard_commit": "e7bd84005b304c5a10efcdb04914d1882b3cccf7"
+  },
+  "a6": {
+    "reference_verdict": "COMPLIANT",
+    "reference_passed": true,
+    "reference_source": "research/experiments/results/phase5-validation/validation-results.csv",
+    "reference_policy_sha256": "270403272d736ae7aee2ceda3bf8d088b6ac0cb476bb99ce0218dd8f33c3c603",
+    "krakenguard_commit": "e7bd84005b304c5a10efcdb04914d1882b3cccf7"
+  },
+  "b1": {
+    "reference_verdict": "COMPLIANT",
+    "reference_passed": true,
+    "reference_source": "research/experiments/results/phase5-validation/validation-results.csv",
+    "reference_policy_sha256": "270403272d736ae7aee2ceda3bf8d088b6ac0cb476bb99ce0218dd8f33c3c603",
+    "krakenguard_commit": "e7bd84005b304c5a10efcdb04914d1882b3cccf7"
+  },
+  "b2": {
+    "reference_verdict": "COMPLIANT",
+    "reference_passed": true,
+    "reference_source": "research/experiments/results/phase5-validation/validation-results.csv",
+    "reference_policy_sha256": "270403272d736ae7aee2ceda3bf8d088b6ac0cb476bb99ce0218dd8f33c3c603",
+    "krakenguard_commit": "e7bd84005b304c5a10efcdb04914d1882b3cccf7"
+  },
+  "b3": {
+    "reference_verdict": "COMPLIANT",
+    "reference_passed": true,
+    "reference_source": "research/experiments/results/phase5-validation/validation-results.csv",
+    "reference_policy_sha256": "270403272d736ae7aee2ceda3bf8d088b6ac0cb476bb99ce0218dd8f33c3c603",
+    "krakenguard_commit": "e7bd84005b304c5a10efcdb04914d1882b3cccf7"
+  },
+  "b4": {
+    "reference_verdict": "COMPLIANT",
+    "reference_passed": true,
+    "reference_source": "research/experiments/results/phase5-validation/validation-results.csv",
+    "reference_policy_sha256": "270403272d736ae7aee2ceda3bf8d088b6ac0cb476bb99ce0218dd8f33c3c603",
+    "krakenguard_commit": "e7bd84005b304c5a10efcdb04914d1882b3cccf7"
+  },
+  "b5": {
+    "reference_verdict": "COMPLIANT",
+    "reference_passed": true,
+    "reference_source": "research/experiments/results/phase5-validation/validation-results.csv",
+    "reference_policy_sha256": "270403272d736ae7aee2ceda3bf8d088b6ac0cb476bb99ce0218dd8f33c3c603",
+    "krakenguard_commit": "e7bd84005b304c5a10efcdb04914d1882b3cccf7"
+  },
+  "b6": {
+    "reference_verdict": "COMPLIANT",
+    "reference_passed": true,
+    "reference_source": "research/experiments/results/phase5-validation/validation-results.csv",
+    "reference_policy_sha256": "270403272d736ae7aee2ceda3bf8d088b6ac0cb476bb99ce0218dd8f33c3c603",
+    "krakenguard_commit": "e7bd84005b304c5a10efcdb04914d1882b3cccf7"
+  },
+  "c1": {
+    "reference_verdict": "POLICY VIOLATION",
+    "reference_passed": false,
+    "reference_source": "research/experiments/results/phase5-validation/validation-results.csv",
+    "reference_policy_sha256": "270403272d736ae7aee2ceda3bf8d088b6ac0cb476bb99ce0218dd8f33c3c603",
+    "krakenguard_commit": "e7bd84005b304c5a10efcdb04914d1882b3cccf7"
+  },
+  "c2": {
+    "reference_verdict": "POLICY VIOLATION",
+    "reference_passed": false,
+    "reference_source": "research/experiments/results/phase5-validation/validation-results.csv",
+    "reference_policy_sha256": "270403272d736ae7aee2ceda3bf8d088b6ac0cb476bb99ce0218dd8f33c3c603",
+    "krakenguard_commit": "e7bd84005b304c5a10efcdb04914d1882b3cccf7"
+  },
+  "c3": {
+    "reference_verdict": "POLICY VIOLATION",
+    "reference_passed": false,
+    "reference_source": "research/experiments/results/phase5-validation/validation-results.csv",
+    "reference_policy_sha256": "270403272d736ae7aee2ceda3bf8d088b6ac0cb476bb99ce0218dd8f33c3c603",
+    "krakenguard_commit": "e7bd84005b304c5a10efcdb04914d1882b3cccf7"
+  },
+  "c4": {
+    "reference_verdict": "POLICY VIOLATION",
+    "reference_passed": false,
+    "reference_source": "research/experiments/results/phase5-validation/validation-results.csv",
+    "reference_policy_sha256": "270403272d736ae7aee2ceda3bf8d088b6ac0cb476bb99ce0218dd8f33c3c603",
+    "krakenguard_commit": "e7bd84005b304c5a10efcdb04914d1882b3cccf7"
+  },
+  "c5": {
+    "reference_verdict": "POLICY VIOLATION",
+    "reference_passed": false,
+    "reference_source": "research/experiments/results/phase5-validation/validation-results.csv",
+    "reference_policy_sha256": "270403272d736ae7aee2ceda3bf8d088b6ac0cb476bb99ce0218dd8f33c3c603",
+    "krakenguard_commit": "e7bd84005b304c5a10efcdb04914d1882b3cccf7"
+  },
+  "c6": {
+    "reference_verdict": "POLICY VIOLATION",
+    "reference_passed": false,
+    "reference_source": "research/experiments/results/phase5-validation/validation-results.csv",
+    "reference_policy_sha256": "270403272d736ae7aee2ceda3bf8d088b6ac0cb476bb99ce0218dd8f33c3c603",
+    "krakenguard_commit": "e7bd84005b304c5a10efcdb04914d1882b3cccf7"
+  },
+  "d1": {
+    "reference_verdict": "POLICY VIOLATION",
+    "reference_passed": false,
+    "reference_source": "research/experiments/results/phase5-validation/validation-results.csv",
+    "reference_policy_sha256": "270403272d736ae7aee2ceda3bf8d088b6ac0cb476bb99ce0218dd8f33c3c603",
+    "krakenguard_commit": "e7bd84005b304c5a10efcdb04914d1882b3cccf7"
+  },
+  "d2": {
+    "reference_verdict": "POLICY VIOLATION",
+    "reference_passed": false,
+    "reference_source": "research/experiments/results/phase5-validation/validation-results.csv",
+    "reference_policy_sha256": "270403272d736ae7aee2ceda3bf8d088b6ac0cb476bb99ce0218dd8f33c3c603",
+    "krakenguard_commit": "e7bd84005b304c5a10efcdb04914d1882b3cccf7"
+  },
+  "d3": {
+    "reference_verdict": "POLICY VIOLATION",
+    "reference_passed": false,
+    "reference_source": "research/experiments/results/phase5-validation/validation-results.csv",
+    "reference_policy_sha256": "270403272d736ae7aee2ceda3bf8d088b6ac0cb476bb99ce0218dd8f33c3c603",
+    "krakenguard_commit": "e7bd84005b304c5a10efcdb04914d1882b3cccf7"
+  },
+  "d4": {
+    "reference_verdict": "POLICY VIOLATION",
+    "reference_passed": false,
+    "reference_source": "research/experiments/results/phase5-validation/validation-results.csv",
+    "reference_policy_sha256": "270403272d736ae7aee2ceda3bf8d088b6ac0cb476bb99ce0218dd8f33c3c603",
+    "krakenguard_commit": "e7bd84005b304c5a10efcdb04914d1882b3cccf7"
+  },
+  "d5": {
+    "reference_verdict": "POLICY VIOLATION",
+    "reference_passed": false,
+    "reference_source": "research/experiments/results/phase5-validation/validation-results.csv",
+    "reference_policy_sha256": "270403272d736ae7aee2ceda3bf8d088b6ac0cb476bb99ce0218dd8f33c3c603",
+    "krakenguard_commit": "e7bd84005b304c5a10efcdb04914d1882b3cccf7"
+  },
+  "d6": {
+    "reference_verdict": "POLICY VIOLATION",
+    "reference_passed": false,
+    "reference_source": "research/experiments/results/phase5-validation/validation-results.csv",
+    "reference_policy_sha256": "270403272d736ae7aee2ceda3bf8d088b6ac0cb476bb99ce0218dd8f33c3c603",
+    "krakenguard_commit": "e7bd84005b304c5a10efcdb04914d1882b3cccf7"
+  }
+}

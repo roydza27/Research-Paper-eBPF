@@ -1,0 +1,181 @@
+{
+  "schema": "real-world-ebpf-corpus/v1",
+  "purpose": "Public real-world eBPF/XDP workload corpus for hybrid policy verification evaluation.",
+  "policy": {
+    "path": "research/experiments/corpus/phase5/policies/phase5_policy.json",
+    "sha256": "270403272d736ae7aee2ceda3bf8d088b6ac0cb476bb99ce0218dd8f33c3c603",
+    "selection_rule": "reuse_frozen_phase5_policy"
+  },
+  "baseline": {
+    "krakenguard_commit": "e7bd84005b304c5a10efcdb04914d1882b3cccf7",
+    "container_digest": "kg-artifact-krakenguard@sha256:9633a6922518589803a4c9b8123d0549e54b5f57c1d04f9e383e822fd9ae3bd4",
+    "architecture": "x86_64",
+    "hook": "XDP"
+  },
+  "source_sets": {
+    "ebpf_se": {
+      "repository": "https://github.com/dslab-epfl/ebpf-se.git",
+      "revision": "47a051852e67b6c6c2ba8128808a9d9c1b58d138",
+      "role": "symbolic-execution benchmark representations of real XDP applications"
+    },
+    "bpf_examples": {
+      "repository": "https://github.com/xdp-project/bpf-examples.git",
+      "revision": "1769d51faeb96a1d94d68affcc06f5c71de03de5",
+      "role": "practical XDP examples"
+    },
+    "xdp_tools": {
+      "repository": "https://github.com/xdp-project/xdp-tools.git",
+      "revision": "f27ea2a83fd4fcce8968f627b25493950aaf5c44",
+      "role": "XDP utilities and forwarding/filtering programs"
+    }
+  },
+  "programs": [
+    {
+      "id": "katran",
+      "family": "real-world-xdp",
+      "application": "Katran",
+      "role": "L4 load balancer",
+      "program_type": "XDP",
+      "source_set": "ebpf_se",
+      "source_path": "examples/katran",
+      "entry_function": "balancer_ingress",
+      "source_status": "benchmark-adapted-real-workload",
+      "upstream": {
+        "repository": "https://github.com/facebookincubator/katran.git",
+        "revision": "7bc7516fd5baf7d810cc000360a2072f194a0031",
+        "path": "katran/lib/bpf/balancer.bpf.c"
+      },
+      "build": {
+        "strategy": "ebpf_se_xdp_target",
+        "command": "make xdp-target"
+      },
+      "notes": "Use the real Katran control/data-plane logic as represented by the public eBPF-SE benchmark harness; do not simplify the workload."
+    },
+    {
+      "id": "hxdpfw",
+      "family": "real-world-xdp",
+      "application": "hXDP firewall",
+      "role": "firewall / packet filtering",
+      "program_type": "XDP",
+      "source_set": "ebpf_se",
+      "source_path": "examples/fw",
+      "entry_function": "xdp_fw_prog",
+      "source_status": "benchmark-adapted-real-workload",
+      "upstream": {
+        "repository": "https://github.com/axbryd/hXDP-Artifacts.git",
+        "revision": "e829ca75c95984cc782d91060e7e03b55b6de139",
+        "path": "xdp_progs"
+      },
+      "build": {
+        "strategy": "ebpf_se_xdp_target",
+        "command": "make xdp-target"
+      },
+      "notes": "The upstream hXDP artifact is pinned to its historical public revision; the evaluation representation comes from eBPF-SE."
+    },
+    {
+      "id": "fluvia",
+      "family": "real-world-xdp",
+      "application": "Fluvia",
+      "role": "IPFIX exporter / telemetry",
+      "program_type": "XDP",
+      "source_set": "ebpf_se",
+      "source_path": "examples/fluvia",
+      "entry_function": "xdp_prog_simple",
+      "source_status": "benchmark-adapted-real-workload",
+      "upstream": {
+        "repository": "https://github.com/nttcom/fluvia.git",
+        "revision": "13f00cb0a48f20cb506bf551771480225acfdde3",
+        "path": "src"
+      },
+      "build": {
+        "strategy": "ebpf_se_xdp_target",
+        "command": "make xdp-target"
+      },
+      "notes": "The benchmark representation preserves the real Fluvia XDP workload while supplying the symbolic harness required by eBPF-SE."
+    },
+    {
+      "id": "crab",
+      "family": "real-world-xdp",
+      "application": "CRAB load balancer",
+      "role": "XDP load balancing",
+      "program_type": "XDP",
+      "source_set": "ebpf_se",
+      "source_path": "examples/crab",
+      "entry_function": "xdp_prog_simple",
+      "source_status": "benchmark-adapted-real-workload",
+      "upstream": {
+        "repository": "https://github.com/epfl-dcsl/crab.git",
+        "revision": "215c7d53821a82b9d6e289ad8267ca9f808911f9",
+        "path": "endpoints"
+      },
+      "build": {
+        "strategy": "ebpf_se_xdp_target",
+        "command": "make xdp-target"
+      },
+      "notes": "CRAB is included for workload diversity even though it is smaller than Katran."
+    },
+    {
+      "id": "synproxy",
+      "family": "real-world-xdp",
+      "application": "XDP SYNPROXY",
+      "role": "SYN-flood / DDoS protection",
+      "program_type": "XDP",
+      "source_set": "bpf_examples",
+      "source_path": "xdp-synproxy/xdp_synproxy_kern.c",
+      "entry_function": null,
+      "source_status": "upstream_public",
+      "upstream": {
+        "repository": "https://github.com/xdp-project/bpf-examples.git",
+        "revision": "1769d51faeb96a1d94d68affcc06f5c71de03de5",
+        "path": "xdp-synproxy/xdp_synproxy_kern.c"
+      },
+      "build": {
+        "strategy": "project_makefile",
+        "command": "make"
+      },
+      "notes": "This is a practical XDP SYNPROXY application described by the XDP project, not a synthetic microbenchmark."
+    },
+    {
+      "id": "xdp-filter",
+      "family": "real-world-xdp",
+      "application": "xdp-filter",
+      "role": "packet filtering utility",
+      "program_type": "XDP",
+      "source_set": "xdp_tools",
+      "source_path": "xdp-filter/xdp-filter.c",
+      "entry_function": null,
+      "source_status": "upstream_public",
+      "upstream": {
+        "repository": "https://github.com/xdp-project/xdp-tools.git",
+        "revision": "f27ea2a83fd4fcce8968f627b25493950aaf5c44",
+        "path": "xdp-filter/xdp-filter.c"
+      },
+      "build": {
+        "strategy": "project_makefile",
+        "command": "make"
+      },
+      "notes": "Included as a practical filtering workload from the xdp-tools project."
+    },
+    {
+      "id": "xdp-forward",
+      "family": "real-world-xdp",
+      "application": "xdp-forward",
+      "role": "forwarding plane",
+      "program_type": "XDP",
+      "source_set": "xdp_tools",
+      "source_path": "xdp-forward",
+      "entry_function": null,
+      "source_status": "upstream_public",
+      "upstream": {
+        "repository": "https://github.com/xdp-project/xdp-tools.git",
+        "revision": "f27ea2a83fd4fcce8968f627b25493950aaf5c44",
+        "path": "xdp-forward"
+      },
+      "build": {
+        "strategy": "project_makefile",
+        "command": "make"
+      },
+      "notes": "Included to broaden the corpus beyond load-balancer and firewall workloads."
+    }
+  ]
+}

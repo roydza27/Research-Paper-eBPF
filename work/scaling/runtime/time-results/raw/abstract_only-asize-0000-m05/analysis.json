@@ -1,0 +1,11 @@
+{
+  "verdict": "SAFE",
+  "proof": "All 1 reachable exits return policy-allowed values and all modeled reachable operations are supported.",
+  "discharged": true,
+  "metrics": {
+    "instructions": 5,
+    "basic_blocks": 1,
+    "paths_analyzed": 1,
+    "abstract_states": 1
+  }
+}

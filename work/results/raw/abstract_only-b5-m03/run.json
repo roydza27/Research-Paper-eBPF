@@ -1,0 +1,33 @@
+{
+  "run_id": "abstract_only-b5-m03",
+  "mode": "abstract_only",
+  "program_id": "b5",
+  "category": "B",
+  "role": "Uncertain Compliant",
+  "target_paths": 16,
+  "route": "ABSTRACT_ONLY",
+  "discharged": false,
+  "abstract_verdict": "UNKNOWN",
+  "final_verdict": "UNKNOWN",
+  "reference_verdict": "COMPLIANT",
+  "verdict_correct": null,
+  "fallback_invoked": false,
+  "status": "ok",
+  "wall_time_us": 31994,
+  "wall_time_ms": 31.994,
+  "abstract_wall_time_us": 31994,
+  "abstract_analysis_wall_time_us": 31994,
+  "abstract_cpu_time_us": 32213,
+  "peak_abstract_rss_bytes": null,
+  "symbolic_wall_time_us": null,
+  "reference_manifest": "research/experiments/results/phase5-validation/validation-results.csv",
+  "error": null,
+  "object_sha256": "eac933d8779c23116afa822902e219156037f28f0ccdd6daaba70e6fff0c82f2",
+  "policy_sha256": "270403272d736ae7aee2ceda3bf8d088b6ac0cb476bb99ce0218dd8f33c3c603",
+  "krakenguard_commit": "e7bd84005b304c5a10efcdb04914d1882b3cccf7",
+  "metrics": {
+    "abstract_abstract_states": 1,
+    "abstract_analysis_wall_time_us": 31994,
+    "abstract_process_total_wall_time_us": 31994
+  }
+}

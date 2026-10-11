@@ -1,0 +1,33 @@
+{
+  "run_id": "abstract_only-d1-m06",
+  "mode": "abstract_only",
+  "program_id": "d1",
+  "category": "D",
+  "role": "Symbolic Violation",
+  "target_paths": 2,
+  "route": "ABSTRACT_ONLY",
+  "discharged": false,
+  "abstract_verdict": "UNKNOWN",
+  "final_verdict": "UNKNOWN",
+  "reference_verdict": "POLICY VIOLATION",
+  "verdict_correct": null,
+  "fallback_invoked": false,
+  "status": "ok",
+  "wall_time_us": 31037,
+  "wall_time_ms": 31.037,
+  "abstract_wall_time_us": 31037,
+  "abstract_analysis_wall_time_us": 31037,
+  "abstract_cpu_time_us": 31272,
+  "peak_abstract_rss_bytes": null,
+  "symbolic_wall_time_us": null,
+  "reference_manifest": "research/experiments/results/phase5-validation/validation-results.csv",
+  "error": null,
+  "object_sha256": "de480574ea955b9d273ecfbd0e39d5c5a7c6421d1070d1a4bcd6a50a861f244c",
+  "policy_sha256": "270403272d736ae7aee2ceda3bf8d088b6ac0cb476bb99ce0218dd8f33c3c603",
+  "krakenguard_commit": "e7bd84005b304c5a10efcdb04914d1882b3cccf7",
+  "metrics": {
+    "abstract_abstract_states": 3,
+    "abstract_analysis_wall_time_us": 31037,
+    "abstract_process_total_wall_time_us": 31037
+  }
+}

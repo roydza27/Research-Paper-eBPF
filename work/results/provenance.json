@@ -1,0 +1,32 @@
+{
+  "timestamp_utc": "2026-10-07T05:28:56.062035+00:00",
+  "repo_branch": "work-comparative-verification",
+  "repo_head": "883e95c2da778e9c2e9b1ece3b88dbd3668c730b",
+  "repo_tree": "1c2884c0b7c7470cd29e7e73580924edb8900bfa",
+  "krakenguard_commit": "e7bd84005b304c5a10efcdb04914d1882b3cccf7",
+  "policy_sha256": "270403272d736ae7aee2ceda3bf8d088b6ac0cb476bb99ce0218dd8f33c3c603",
+  "kernel": "7.2.8-arch1-2",
+  "architecture": "x86_64",
+  "compiler_version": "clang version 23.1.1",
+  "cpu_model": "AMD Ryzen 5 5600H with Radeon Graphics",
+  "program_count": 24,
+  "measurement_policy": {
+    "kernel": "recorded_at_run",
+    "compiler": "recorded_at_run",
+    "immutable_baseline": true,
+    "timing": {
+      "symbolic": "client.verify + verdict extraction; archive excluded",
+      "abstract": "in-process AbstractPolicyAnalyzer.analyze()",
+      "hybrid": "abstract section + symbolic section on UNKNOWN",
+      "memory_sampling": "disabled_in_primary_timing"
+    }
+  },
+  "controls": {
+    "container_digest": "kg-artifact-krakenguard@sha256:9633a6922518589803a4c9b8123d0549e54b5f57c1d04f9e383e822fd9ae3bd4",
+    "hook": "XDP",
+    "warmups": 2,
+    "repetitions": 7,
+    "timeout_seconds": 300,
+    "seed": 42
+  }
+}

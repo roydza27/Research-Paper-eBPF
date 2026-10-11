@@ -1,0 +1,5 @@
+Command: clang -target bpf -mcpu=v1 -D__TARGET_ARCH_x86 -O2 -g -I/usr/include -c /home/cy3pher/Documents/WorkSpace-Research/eBPF/work/scaling/runtime/corpus/csize-0000.c -o /home/cy3pher/Documents/WorkSpace-Research/eBPF/work/scaling/runtime/corpus/csize-0000.o
+Exit code: 0
+--- stdout ---
+
+--- stderr ---

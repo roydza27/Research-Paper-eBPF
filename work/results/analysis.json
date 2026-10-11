@@ -1,0 +1,338 @@
+{
+  "schema": "comparative-verification-analysis/v1",
+  "raw_run_count": 648,
+  "successful_measured_run_count": 504,
+  "failed_measured_run_count": 0,
+  "failed_measured_runs_by_mode": {
+    "symbolic_only": 0,
+    "abstract_only": 0,
+    "hybrid": 0
+  },
+  "failed_measured_runs": [],
+  "expected_program_count": 24,
+  "program_count": 24,
+  "missing_paired_programs": [],
+  "paired_symbolic_vs_hybrid": [
+    {
+      "program_id": "a1",
+      "category": "A",
+      "target_paths": 1,
+      "symbolic_median_ms": 576.681,
+      "hybrid_median_ms": 31.661,
+      "absolute_saving_ms": 545.02,
+      "saving_pct": 94.5097896410667,
+      "hybrid_fallback_fraction": 0.0
+    },
+    {
+      "program_id": "a2",
+      "category": "A",
+      "target_paths": 1,
+      "symbolic_median_ms": 581.14,
+      "hybrid_median_ms": 31.999,
+      "absolute_saving_ms": 549.141,
+      "saving_pct": 94.49375365660597,
+      "hybrid_fallback_fraction": 0.0
+    },
+    {
+      "program_id": "a3",
+      "category": "A",
+      "target_paths": 1,
+      "symbolic_median_ms": 583.204,
+      "hybrid_median_ms": 32.831,
+      "absolute_saving_ms": 550.3729999999999,
+      "saving_pct": 94.37058044869376,
+      "hybrid_fallback_fraction": 0.0
+    },
+    {
+      "program_id": "a4",
+      "category": "A",
+      "target_paths": 1,
+      "symbolic_median_ms": 583.238,
+      "hybrid_median_ms": 31.319,
+      "absolute_saving_ms": 551.9190000000001,
+      "saving_pct": 94.63015098467523,
+      "hybrid_fallback_fraction": 0.0
+    },
+    {
+      "program_id": "a5",
+      "category": "A",
+      "target_paths": 1,
+      "symbolic_median_ms": 588.699,
+      "hybrid_median_ms": 32.087,
+      "absolute_saving_ms": 556.612,
+      "saving_pct": 94.54950662392835,
+      "hybrid_fallback_fraction": 0.0
+    },
+    {
+      "program_id": "a6",
+      "category": "A",
+      "target_paths": 1,
+      "symbolic_median_ms": 582.756,
+      "hybrid_median_ms": 32.893,
+      "absolute_saving_ms": 549.8629999999999,
+      "saving_pct": 94.35561367021532,
+      "hybrid_fallback_fraction": 0.0
+    },
+    {
+      "program_id": "b1",
+      "category": "B",
+      "target_paths": 2,
+      "symbolic_median_ms": 590.142,
+      "hybrid_median_ms": 622.582,
+      "absolute_saving_ms": -32.43999999999994,
+      "saving_pct": -5.496982082278492,
+      "hybrid_fallback_fraction": 1.0
+    },
+    {
+      "program_id": "b2",
+      "category": "B",
+      "target_paths": 2,
+      "symbolic_median_ms": 587.179,
+      "hybrid_median_ms": 625.441,
+      "absolute_saving_ms": -38.26200000000006,
+      "saving_pct": -6.516241214348615,
+      "hybrid_fallback_fraction": 1.0
+    },
+    {
+      "program_id": "b3",
+      "category": "B",
+      "target_paths": 4,
+      "symbolic_median_ms": 614.606,
+      "hybrid_median_ms": 637.816,
+      "absolute_saving_ms": -23.210000000000036,
+      "saving_pct": -3.776403094014708,
+      "hybrid_fallback_fraction": 1.0
+    },
+    {
+      "program_id": "b4",
+      "category": "B",
+      "target_paths": 8,
+      "symbolic_median_ms": 622.795,
+      "hybrid_median_ms": 654.409,
+      "absolute_saving_ms": -31.614000000000033,
+      "saving_pct": -5.076148652445835,
+      "hybrid_fallback_fraction": 1.0
+    },
+    {
+      "program_id": "b5",
+      "category": "B",
+      "target_paths": 16,
+      "symbolic_median_ms": 673.205,
+      "hybrid_median_ms": 708.921,
+      "absolute_saving_ms": -35.71600000000001,
+      "saving_pct": -5.30536760719246,
+      "hybrid_fallback_fraction": 1.0
+    },
+    {
+      "program_id": "b6",
+      "category": "B",
+      "target_paths": 32,
+      "symbolic_median_ms": 771.24,
+      "hybrid_median_ms": 800.746,
+      "absolute_saving_ms": -29.505999999999972,
+      "saving_pct": -3.8257870442404402,
+      "hybrid_fallback_fraction": 1.0
+    },
+    {
+      "program_id": "c1",
+      "category": "C",
+      "target_paths": 1,
+      "symbolic_median_ms": 570.913,
+      "hybrid_median_ms": 31.915,
+      "absolute_saving_ms": 538.998,
+      "saving_pct": 94.4098312702636,
+      "hybrid_fallback_fraction": 0.0
+    },
+    {
+      "program_id": "c2",
+      "category": "C",
+      "target_paths": 1,
+      "symbolic_median_ms": 582.935,
+      "hybrid_median_ms": 30.875,
+      "absolute_saving_ms": 552.06,
+      "saving_pct": 94.70352612212339,
+      "hybrid_fallback_fraction": 0.0
+    },
+    {
+      "program_id": "c3",
+      "category": "C",
+      "target_paths": 1,
+      "symbolic_median_ms": 582.607,
+      "hybrid_median_ms": 32.752,
+      "absolute_saving_ms": 549.855,
+      "saving_pct": 94.378371698246,
+      "hybrid_fallback_fraction": 0.0
+    },
+    {
+      "program_id": "c4",
+      "category": "C",
+      "target_paths": 1,
+      "symbolic_median_ms": 585.776,
+      "hybrid_median_ms": 32.757,
+      "absolute_saving_ms": 553.019,
+      "saving_pct": 94.40793067657263,
+      "hybrid_fallback_fraction": 0.0
+    },
+    {
+      "program_id": "c5",
+      "category": "C",
+      "target_paths": 1,
+      "symbolic_median_ms": 585.587,
+      "hybrid_median_ms": 32.297,
+      "absolute_saving_ms": 553.29,
+      "saving_pct": 94.48467947546649,
+      "hybrid_fallback_fraction": 0.0
+    },
+    {
+      "program_id": "c6",
+      "category": "C",
+      "target_paths": 1,
+      "symbolic_median_ms": 581.375,
+      "hybrid_median_ms": 31.674,
+      "absolute_saving_ms": 549.701,
+      "saving_pct": 94.55188131584606,
+      "hybrid_fallback_fraction": 0.0
+    },
+    {
+      "program_id": "d1",
+      "category": "D",
+      "target_paths": 2,
+      "symbolic_median_ms": 598.943,
+      "hybrid_median_ms": 621.318,
+      "absolute_saving_ms": -22.375,
+      "saving_pct": -3.735747809056955,
+      "hybrid_fallback_fraction": 1.0
+    },
+    {
+      "program_id": "d2",
+      "category": "D",
+      "target_paths": 2,
+      "symbolic_median_ms": 589.643,
+      "hybrid_median_ms": 622.823,
+      "absolute_saving_ms": -33.17999999999995,
+      "saving_pct": -5.627133706327379,
+      "hybrid_fallback_fraction": 1.0
+    },
+    {
+      "program_id": "d3",
+      "category": "D",
+      "target_paths": 4,
+      "symbolic_median_ms": 595.31,
+      "hybrid_median_ms": 629.795,
+      "absolute_saving_ms": -34.485000000000014,
+      "saving_pct": -5.792780232147959,
+      "hybrid_fallback_fraction": 1.0
+    },
+    {
+      "program_id": "d4",
+      "category": "D",
+      "target_paths": 8,
+      "symbolic_median_ms": 591.085,
+      "hybrid_median_ms": 622.68,
+      "absolute_saving_ms": -31.594999999999914,
+      "saving_pct": -5.345254912576011,
+      "hybrid_fallback_fraction": 1.0
+    },
+    {
+      "program_id": "d5",
+      "category": "D",
+      "target_paths": 16,
+      "symbolic_median_ms": 589.889,
+      "hybrid_median_ms": 620.203,
+      "absolute_saving_ms": -30.313999999999965,
+      "saving_pct": -5.138932917887935,
+      "hybrid_fallback_fraction": 1.0
+    },
+    {
+      "program_id": "d6",
+      "category": "D",
+      "target_paths": 32,
+      "symbolic_median_ms": 595.396,
+      "hybrid_median_ms": 629.486,
+      "absolute_saving_ms": -34.09000000000003,
+      "saving_pct": -5.7256011125368715,
+      "hybrid_fallback_fraction": 1.0
+    }
+  ],
+  "primary_endpoint": {
+    "metric": "paired program-level median verification-section wall time",
+    "median_absolute_saving_ms": 258.3115,
+    "median_saving_pct": 45.30993293057918,
+    "bootstrap_95ci_median_absolute_saving_ms": [
+      -31.594999999999914,
+      549.855
+    ],
+    "exact_two_sided_sign_test": {
+      "n": 24,
+      "positive": 12,
+      "negative": 12,
+      "p_two_sided": 1.0
+    }
+  },
+  "correctness": {
+    "checked_measured_rows": 420,
+    "all_checked_agree": true,
+    "false_safe": 0,
+    "false_violation": 0
+  },
+  "fallback": {
+    "measured_hybrid_rows": 168,
+    "fraction": 0.5
+  },
+  "category_summary": {
+    "A": {
+      "program_count": 6,
+      "symbolic_median_ms": 582.98,
+      "hybrid_median_ms": 32.043,
+      "median_saving_pct": 94.50177164883634,
+      "median_fallback_fraction": 0.0
+    },
+    "B": {
+      "program_count": 6,
+      "symbolic_median_ms": 618.7004999999999,
+      "hybrid_median_ms": 646.1125,
+      "median_saving_pct": -5.190758129819148,
+      "median_fallback_fraction": 1.0
+    },
+    "C": {
+      "program_count": 6,
+      "symbolic_median_ms": 582.771,
+      "hybrid_median_ms": 32.105999999999995,
+      "median_saving_pct": 94.44725537286504,
+      "median_fallback_fraction": 0.0
+    },
+    "D": {
+      "program_count": 6,
+      "symbolic_median_ms": 593.1975,
+      "hybrid_median_ms": 622.7515,
+      "median_saving_pct": -5.486194309451696,
+      "median_fallback_fraction": 1.0
+    }
+  },
+  "empirical_complexity": {
+    "symbolic_only": {
+      "tested_relationship": "median_time_ms = intercept + slope * target_paths",
+      "note": "Descriptive corpus fit only; not an asymptotic complexity proof.",
+      "n": 24,
+      "slope": 3.2019045564376944,
+      "intercept": 581.50322342078,
+      "r2": 0.49385613019189323
+    },
+    "abstract_only": {
+      "tested_relationship": "median_time_ms = intercept + slope * target_paths",
+      "note": "Descriptive corpus fit only; not an asymptotic complexity proof.",
+      "n": 24,
+      "slope": 0.024239212978943773,
+      "intercept": 31.80110459095616,
+      "r2": 0.08429614498913973
+    },
+    "hybrid": {
+      "tested_relationship": "median_time_ms = intercept + slope * target_paths",
+      "note": "Descriptive corpus fit only; not an asymptotic complexity proof.",
+      "n": 24,
+      "slope": 20.6933821194339,
+      "intercept": 220.17527096996892,
+      "r2": 0.3564313808970503
+    }
+  }
+}
