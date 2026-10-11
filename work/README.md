@@ -96,8 +96,9 @@ The analysis script reports:
 - fallback fraction
 - correctness agreement
 - false SAFE / false VIOLATION counts
-- resource measurements when available
-- path/query relationships
+- failed-run counts and missing paired-program coverage
 - conservative complexity-fit summaries
+
+Raw run records retain KLEE path/query fields when the verifier exposes them; the summary script does not currently fit a separate path/query model.
 
 A performance claim is only reported over successfully measured observations under the verified controls.
