@@ -2,7 +2,16 @@
   "schema": "comparative-verification-analysis/v1",
   "raw_run_count": 648,
   "successful_measured_run_count": 504,
+  "failed_measured_run_count": 0,
+  "failed_measured_runs_by_mode": {
+    "symbolic_only": 0,
+    "abstract_only": 0,
+    "hybrid": 0
+  },
+  "failed_measured_runs": [],
+  "expected_program_count": 24,
   "program_count": 24,
+  "missing_paired_programs": [],
   "paired_symbolic_vs_hybrid": [
     {
       "program_id": "a1",
@@ -12,10 +21,7 @@
       "hybrid_median_ms": 31.661,
       "absolute_saving_ms": 545.02,
       "saving_pct": 94.5097896410667,
-      "hybrid_fallback_fraction": 0.0,
-      "symbolic_median_kg_memory_bytes": null,
-      "hybrid_median_abstract_rss_bytes": null,
-      "hybrid_median_kg_memory_bytes": null
+      "hybrid_fallback_fraction": 0.0
     },
     {
       "program_id": "a2",
@@ -25,10 +31,7 @@
       "hybrid_median_ms": 31.999,
       "absolute_saving_ms": 549.141,
       "saving_pct": 94.49375365660597,
-      "hybrid_fallback_fraction": 0.0,
-      "symbolic_median_kg_memory_bytes": null,
-      "hybrid_median_abstract_rss_bytes": null,
-      "hybrid_median_kg_memory_bytes": null
+      "hybrid_fallback_fraction": 0.0
     },
     {
       "program_id": "a3",
@@ -38,10 +41,7 @@
       "hybrid_median_ms": 32.831,
       "absolute_saving_ms": 550.3729999999999,
       "saving_pct": 94.37058044869376,
-      "hybrid_fallback_fraction": 0.0,
-      "symbolic_median_kg_memory_bytes": null,
-      "hybrid_median_abstract_rss_bytes": null,
-      "hybrid_median_kg_memory_bytes": null
+      "hybrid_fallback_fraction": 0.0
     },
     {
       "program_id": "a4",
@@ -51,10 +51,7 @@
       "hybrid_median_ms": 31.319,
       "absolute_saving_ms": 551.9190000000001,
       "saving_pct": 94.63015098467523,
-      "hybrid_fallback_fraction": 0.0,
-      "symbolic_median_kg_memory_bytes": null,
-      "hybrid_median_abstract_rss_bytes": null,
-      "hybrid_median_kg_memory_bytes": null
+      "hybrid_fallback_fraction": 0.0
     },
     {
       "program_id": "a5",
@@ -64,10 +61,7 @@
       "hybrid_median_ms": 32.087,
       "absolute_saving_ms": 556.612,
       "saving_pct": 94.54950662392835,
-      "hybrid_fallback_fraction": 0.0,
-      "symbolic_median_kg_memory_bytes": null,
-      "hybrid_median_abstract_rss_bytes": null,
-      "hybrid_median_kg_memory_bytes": null
+      "hybrid_fallback_fraction": 0.0
     },
     {
       "program_id": "a6",
@@ -77,10 +71,7 @@
       "hybrid_median_ms": 32.893,
       "absolute_saving_ms": 549.8629999999999,
       "saving_pct": 94.35561367021532,
-      "hybrid_fallback_fraction": 0.0,
-      "symbolic_median_kg_memory_bytes": null,
-      "hybrid_median_abstract_rss_bytes": null,
-      "hybrid_median_kg_memory_bytes": null
+      "hybrid_fallback_fraction": 0.0
     },
     {
       "program_id": "b1",
@@ -90,10 +81,7 @@
       "hybrid_median_ms": 622.582,
       "absolute_saving_ms": -32.43999999999994,
       "saving_pct": -5.496982082278492,
-      "hybrid_fallback_fraction": 1.0,
-      "symbolic_median_kg_memory_bytes": null,
-      "hybrid_median_abstract_rss_bytes": null,
-      "hybrid_median_kg_memory_bytes": null
+      "hybrid_fallback_fraction": 1.0
     },
     {
       "program_id": "b2",
@@ -103,10 +91,7 @@
       "hybrid_median_ms": 625.441,
       "absolute_saving_ms": -38.26200000000006,
       "saving_pct": -6.516241214348615,
-      "hybrid_fallback_fraction": 1.0,
-      "symbolic_median_kg_memory_bytes": null,
-      "hybrid_median_abstract_rss_bytes": null,
-      "hybrid_median_kg_memory_bytes": null
+      "hybrid_fallback_fraction": 1.0
     },
     {
       "program_id": "b3",
@@ -116,10 +101,7 @@
       "hybrid_median_ms": 637.816,
       "absolute_saving_ms": -23.210000000000036,
       "saving_pct": -3.776403094014708,
-      "hybrid_fallback_fraction": 1.0,
-      "symbolic_median_kg_memory_bytes": null,
-      "hybrid_median_abstract_rss_bytes": null,
-      "hybrid_median_kg_memory_bytes": null
+      "hybrid_fallback_fraction": 1.0
     },
     {
       "program_id": "b4",
@@ -129,10 +111,7 @@
       "hybrid_median_ms": 654.409,
       "absolute_saving_ms": -31.614000000000033,
       "saving_pct": -5.076148652445835,
-      "hybrid_fallback_fraction": 1.0,
-      "symbolic_median_kg_memory_bytes": null,
-      "hybrid_median_abstract_rss_bytes": null,
-      "hybrid_median_kg_memory_bytes": null
+      "hybrid_fallback_fraction": 1.0
     },
     {
       "program_id": "b5",
@@ -142,10 +121,7 @@
       "hybrid_median_ms": 708.921,
       "absolute_saving_ms": -35.71600000000001,
       "saving_pct": -5.30536760719246,
-      "hybrid_fallback_fraction": 1.0,
-      "symbolic_median_kg_memory_bytes": null,
-      "hybrid_median_abstract_rss_bytes": null,
-      "hybrid_median_kg_memory_bytes": null
+      "hybrid_fallback_fraction": 1.0
     },
     {
       "program_id": "b6",
@@ -155,10 +131,7 @@
       "hybrid_median_ms": 800.746,
       "absolute_saving_ms": -29.505999999999972,
       "saving_pct": -3.8257870442404402,
-      "hybrid_fallback_fraction": 1.0,
-      "symbolic_median_kg_memory_bytes": null,
-      "hybrid_median_abstract_rss_bytes": null,
-      "hybrid_median_kg_memory_bytes": null
+      "hybrid_fallback_fraction": 1.0
     },
     {
       "program_id": "c1",
@@ -168,10 +141,7 @@
       "hybrid_median_ms": 31.915,
       "absolute_saving_ms": 538.998,
       "saving_pct": 94.4098312702636,
-      "hybrid_fallback_fraction": 0.0,
-      "symbolic_median_kg_memory_bytes": null,
-      "hybrid_median_abstract_rss_bytes": null,
-      "hybrid_median_kg_memory_bytes": null
+      "hybrid_fallback_fraction": 0.0
     },
     {
       "program_id": "c2",
@@ -181,10 +151,7 @@
       "hybrid_median_ms": 30.875,
       "absolute_saving_ms": 552.06,
       "saving_pct": 94.70352612212339,
-      "hybrid_fallback_fraction": 0.0,
-      "symbolic_median_kg_memory_bytes": null,
-      "hybrid_median_abstract_rss_bytes": null,
-      "hybrid_median_kg_memory_bytes": null
+      "hybrid_fallback_fraction": 0.0
     },
     {
       "program_id": "c3",
@@ -194,10 +161,7 @@
       "hybrid_median_ms": 32.752,
       "absolute_saving_ms": 549.855,
       "saving_pct": 94.378371698246,
-      "hybrid_fallback_fraction": 0.0,
-      "symbolic_median_kg_memory_bytes": null,
-      "hybrid_median_abstract_rss_bytes": null,
-      "hybrid_median_kg_memory_bytes": null
+      "hybrid_fallback_fraction": 0.0
     },
     {
       "program_id": "c4",
@@ -207,10 +171,7 @@
       "hybrid_median_ms": 32.757,
       "absolute_saving_ms": 553.019,
       "saving_pct": 94.40793067657263,
-      "hybrid_fallback_fraction": 0.0,
-      "symbolic_median_kg_memory_bytes": null,
-      "hybrid_median_abstract_rss_bytes": null,
-      "hybrid_median_kg_memory_bytes": null
+      "hybrid_fallback_fraction": 0.0
     },
     {
       "program_id": "c5",
@@ -220,10 +181,7 @@
       "hybrid_median_ms": 32.297,
       "absolute_saving_ms": 553.29,
       "saving_pct": 94.48467947546649,
-      "hybrid_fallback_fraction": 0.0,
-      "symbolic_median_kg_memory_bytes": null,
-      "hybrid_median_abstract_rss_bytes": null,
-      "hybrid_median_kg_memory_bytes": null
+      "hybrid_fallback_fraction": 0.0
     },
     {
       "program_id": "c6",
@@ -233,10 +191,7 @@
       "hybrid_median_ms": 31.674,
       "absolute_saving_ms": 549.701,
       "saving_pct": 94.55188131584606,
-      "hybrid_fallback_fraction": 0.0,
-      "symbolic_median_kg_memory_bytes": null,
-      "hybrid_median_abstract_rss_bytes": null,
-      "hybrid_median_kg_memory_bytes": null
+      "hybrid_fallback_fraction": 0.0
     },
     {
       "program_id": "d1",
@@ -246,10 +201,7 @@
       "hybrid_median_ms": 621.318,
       "absolute_saving_ms": -22.375,
       "saving_pct": -3.735747809056955,
-      "hybrid_fallback_fraction": 1.0,
-      "symbolic_median_kg_memory_bytes": null,
-      "hybrid_median_abstract_rss_bytes": null,
-      "hybrid_median_kg_memory_bytes": null
+      "hybrid_fallback_fraction": 1.0
     },
     {
       "program_id": "d2",
@@ -259,10 +211,7 @@
       "hybrid_median_ms": 622.823,
       "absolute_saving_ms": -33.17999999999995,
       "saving_pct": -5.627133706327379,
-      "hybrid_fallback_fraction": 1.0,
-      "symbolic_median_kg_memory_bytes": null,
-      "hybrid_median_abstract_rss_bytes": null,
-      "hybrid_median_kg_memory_bytes": null
+      "hybrid_fallback_fraction": 1.0
     },
     {
       "program_id": "d3",
@@ -272,10 +221,7 @@
       "hybrid_median_ms": 629.795,
       "absolute_saving_ms": -34.485000000000014,
       "saving_pct": -5.792780232147959,
-      "hybrid_fallback_fraction": 1.0,
-      "symbolic_median_kg_memory_bytes": null,
-      "hybrid_median_abstract_rss_bytes": null,
-      "hybrid_median_kg_memory_bytes": null
+      "hybrid_fallback_fraction": 1.0
     },
     {
       "program_id": "d4",
@@ -285,10 +231,7 @@
       "hybrid_median_ms": 622.68,
       "absolute_saving_ms": -31.594999999999914,
       "saving_pct": -5.345254912576011,
-      "hybrid_fallback_fraction": 1.0,
-      "symbolic_median_kg_memory_bytes": null,
-      "hybrid_median_abstract_rss_bytes": null,
-      "hybrid_median_kg_memory_bytes": null
+      "hybrid_fallback_fraction": 1.0
     },
     {
       "program_id": "d5",
@@ -298,10 +241,7 @@
       "hybrid_median_ms": 620.203,
       "absolute_saving_ms": -30.313999999999965,
       "saving_pct": -5.138932917887935,
-      "hybrid_fallback_fraction": 1.0,
-      "symbolic_median_kg_memory_bytes": null,
-      "hybrid_median_abstract_rss_bytes": null,
-      "hybrid_median_kg_memory_bytes": null
+      "hybrid_fallback_fraction": 1.0
     },
     {
       "program_id": "d6",
@@ -311,14 +251,11 @@
       "hybrid_median_ms": 629.486,
       "absolute_saving_ms": -34.09000000000003,
       "saving_pct": -5.7256011125368715,
-      "hybrid_fallback_fraction": 1.0,
-      "symbolic_median_kg_memory_bytes": null,
-      "hybrid_median_abstract_rss_bytes": null,
-      "hybrid_median_kg_memory_bytes": null
+      "hybrid_fallback_fraction": 1.0
     }
   ],
   "primary_endpoint": {
-    "metric": "paired program-level median end-to-end wall time",
+    "metric": "paired program-level median verification-section wall time",
     "median_absolute_saving_ms": 258.3115,
     "median_saving_pct": 45.30993293057918,
     "bootstrap_95ci_median_absolute_saving_ms": [
@@ -341,11 +278,6 @@
   "fallback": {
     "measured_hybrid_rows": 168,
     "fraction": 0.5
-  },
-  "oracle_timing_sanity": {
-    "programs": [],
-    "median_delta_ms": null,
-    "median_ratio": null
   },
   "category_summary": {
     "A": {

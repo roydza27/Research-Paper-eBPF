@@ -37,8 +37,6 @@ def median_by_program(rows: List[Dict[str, Any]], mode: str) -> Dict[str, Dict[s
     result = {}
     for pid, observations in grouped.items():
         times = [r["wall_time_ms"] for r in observations]
-        mem_a = [int(r["peak_abstract_rss_bytes"]) for r in observations if r.get("peak_abstract_rss_bytes")]
-        mem_k = [int(r["peak_kg_container_memory_bytes"]) for r in observations if r.get("peak_kg_container_memory_bytes")]
         result[pid] = {
             "program_id": pid,
             "category": observations[0]["category"],
@@ -48,8 +46,6 @@ def median_by_program(rows: List[Dict[str, Any]], mode: str) -> Dict[str, Dict[s
             "min_ms": min(times),
             "max_ms": max(times),
             "fallback_fraction": sum(r["fallback_invoked"] for r in observations) / len(observations),
-            "median_abstract_rss_bytes": statistics.median(mem_a) if mem_a else None,
-            "median_kg_memory_bytes": statistics.median(mem_k) if mem_k else None,
         }
     return result
 
@@ -112,33 +108,10 @@ def summarize(rows: List[Dict[str, Any]]) -> Dict[str, Any]:
             "absolute_saving_ms": diff,
             "saving_pct": (diff / s * 100.0) if s else 0.0,
             "hybrid_fallback_fraction": hybrid[pid]["fallback_fraction"],
-            "symbolic_median_kg_memory_bytes": sym[pid]["median_kg_memory_bytes"],
-            "hybrid_median_abstract_rss_bytes": hybrid[pid]["median_abstract_rss_bytes"],
-            "hybrid_median_kg_memory_bytes": hybrid[pid]["median_kg_memory_bytes"],
         })
     diffs = [x["absolute_saving_ms"] for x in paired]
     ci = bootstrap_median_ci(diffs)
     sign = exact_two_sided_sign_test(diffs)
-
-    oracle_sanity = []
-    for pid, item in sym.items():
-        rows_for_pid = [
-            r for r in rows
-            if r["mode"] == "symbolic_only"
-            and r["repetition_type"] == "measured"
-            and r["status"] == "ok"
-            and r["program_id"] == pid
-        ]
-        oracle_rows = [r for r in rows_for_pid if r.get("oracle_reference_wall_time_us")]
-        if oracle_rows:
-            oracle_ms = float(oracle_rows[0]["oracle_reference_wall_time_us"]) / 1000.0
-            oracle_sanity.append({
-                "program_id": pid,
-                "oracle_ms": oracle_ms,
-                "symbolic_median_ms": item["median_ms"],
-                "median_delta_ms": item["median_ms"] - oracle_ms,
-                "median_ratio": item["median_ms"] / oracle_ms if oracle_ms else None,
-            })
 
     categories = defaultdict(list)
     for row in paired:
@@ -193,6 +166,15 @@ def summarize(rows: List[Dict[str, Any]]) -> Dict[str, Any]:
             **fit,
         }
 
+    measured_rows = [r for r in rows if r["repetition_type"] == "measured"]
+    failed_rows = [r for r in measured_rows if r["status"] != "ok"]
+    failures_by_mode = {
+        mode: sum(r["mode"] == mode for r in failed_rows)
+        for mode in ("symbolic_only", "abstract_only", "hybrid")
+    }
+    expected_program_ids = sorted({r["program_id"] for r in measured_rows})
+    missing_paired_programs = sorted(set(expected_program_ids) - set(common))
+
     return {
         "schema": "comparative-verification-analysis/v1",
         "raw_run_count": len(rows),
@@ -200,10 +182,23 @@ def summarize(rows: List[Dict[str, Any]]) -> Dict[str, Any]:
             r["repetition_type"] == "measured" and r["status"] == "ok"
             for r in rows
         ),
+        "failed_measured_run_count": len(failed_rows),
+        "failed_measured_runs_by_mode": failures_by_mode,
+        "failed_measured_runs": [
+            {
+                "run_id": r["run_id"],
+                "mode": r["mode"],
+                "program_id": r["program_id"],
+                "error": r.get("error"),
+            }
+            for r in failed_rows
+        ],
+        "expected_program_count": len(expected_program_ids),
         "program_count": len(common),
+        "missing_paired_programs": missing_paired_programs,
         "paired_symbolic_vs_hybrid": paired,
         "primary_endpoint": {
-            "metric": "paired program-level median end-to-end wall time",
+            "metric": "paired program-level median verification-section wall time",
             "median_absolute_saving_ms": statistics.median(diffs) if diffs else None,
             "median_saving_pct": statistics.median([x["saving_pct"] for x in paired]) if paired else None,
             "bootstrap_95ci_median_absolute_saving_ms": ci,
@@ -222,17 +217,6 @@ def summarize(rows: List[Dict[str, Any]]) -> Dict[str, Any]:
                 if hybrid_rows else None
             ),
         },
-        "oracle_timing_sanity": {
-            "programs": oracle_sanity,
-            "median_delta_ms": (
-                statistics.median([x["median_delta_ms"] for x in oracle_sanity])
-                if oracle_sanity else None
-            ),
-            "median_ratio": (
-                statistics.median([x["median_ratio"] for x in oracle_sanity if x["median_ratio"] is not None])
-                if oracle_sanity else None
-            ),
-        },
         "category_summary": category_summary,
         "empirical_complexity": complexity,
     }
@@ -246,8 +230,7 @@ def write_outputs(summary: Dict[str, Any]) -> None:
     fields = [
         "program_id", "category", "target_paths", "symbolic_median_ms",
         "hybrid_median_ms", "absolute_saving_ms", "saving_pct",
-        "hybrid_fallback_fraction", "symbolic_median_kg_memory_bytes",
-        "hybrid_median_abstract_rss_bytes", "hybrid_median_kg_memory_bytes"
+        "hybrid_fallback_fraction"
     ]
     with (RESULTS / "paired-comparison.csv").open("w", newline="", encoding="utf-8") as fh:
         writer = csv.DictWriter(fh, fieldnames=fields)
@@ -265,6 +248,9 @@ def write_outputs(summary: Dict[str, Any]) -> None:
         f"- Median paired percentage saving: {p['median_saving_pct']}%",
         f"- Bootstrap 95% CI for median absolute saving: {p['bootstrap_95ci_median_absolute_saving_ms']}",
         f"- Exact two-sided paired sign test: {p['exact_two_sided_sign_test']}",
+        f"- Successfully paired programs: {summary['program_count']} / {summary['expected_program_count']}",
+        f"- Failed measured runs: {summary['failed_measured_run_count']} ({summary['failed_measured_runs_by_mode']})",
+        f"- Programs missing a symbolic/hybrid pair: {summary['missing_paired_programs']}",
         "",
         "## Correctness",
         f"- Checked measured rows: {c['checked_measured_rows']}",
@@ -278,8 +264,8 @@ def write_outputs(summary: Dict[str, Any]) -> None:
         "",
         "## Interpretation",
         "Positive saving means hybrid required less wall time than symbolic-only.",
-        "Oracle timing is a same-client sanity check for the symbolic critical section; it is not an independent verifier.",
-        "Memory peak fields are retained only for compatibility with older runs and are not treated as a primary endpoint.",
+        "Reference verdicts are loaded from the frozen validation manifest; they are not timed benchmark runs.",
+        "Peak memory is not measured in this campaign; it requires a separate non-perturbative measurement design.",
         "The empirical path/time fits are descriptive for this corpus and are not asymptotic complexity proofs.",
     ]
     (RESULTS / "analysis.md").write_text("\n".join(lines) + "\n", encoding="utf-8")

@@ -58,7 +58,11 @@ def checked(cmd: List[str], cwd: Optional[Path] = None) -> str:
 
 
 def load_reference_verdicts(config: Dict[str, Any], programs: List[Dict[str, Any]]) -> Dict[str, Dict[str, Any]]:
-    """Load previously audited reference verdicts without warming the daemon."""
+    """Load frozen reference labels without warming the daemon.
+
+This validates IDs, policy hash, and verifier revision; it does not independently
+re-establish the historical Phase 5 execution provenance.
+"""
     manifest = ROOT / config["reference"]["validation_csv"]
     policy = ROOT / config["corpus"]["policy_file"]
     if sha256_file(policy) != config["corpus"]["policy_sha256"]:
@@ -205,9 +209,9 @@ def extract_kg_result(resp: Any) -> Tuple[str, Dict[str, Any], str, Path]:
     }
     info = out_dir / "info"
     if info.exists():
-        completed_re = re.compile(r"^\\s*completed paths = (\\d+)\\s*$")
-        queries_re = re.compile(r"^\\s*total queries = (\\d+)\\s*$")
-        explored_re = re.compile(r"^\\s*explored paths = (\\d+)\\s*$")
+        completed_re = re.compile(r"^\s*completed paths = (\d+)\s*$")
+        queries_re = re.compile(r"^\s*total queries = (\d+)\s*$")
+        explored_re = re.compile(r"^\s*explored paths = (\d+)\s*$")
         for line in info.read_text(encoding="utf-8", errors="replace").splitlines():
             if match := completed_re.match(line):
                 stats["completed_paths"] = int(match.group(1))
@@ -431,6 +435,12 @@ def run_one(
     if symbolic:
         metrics.update({f"klee_{k}": v for k, v in symbolic.get("klee", {}).items()})
 
+    component_errors = []
+    if abstract and abstract.get("status") != "ok":
+        component_errors.append(f"abstract: {abstract.get('error') or abstract.get('status')}")
+    if symbolic and symbolic.get("status") != "ok":
+        component_errors.append(f"symbolic: {symbolic.get('error') or symbolic.get('status')}")
+
     record = {
         "run_id": run_id,
         "mode": mode,
@@ -440,14 +450,18 @@ def run_one(
         "target_paths": program["target_paths"],
         "route": route,
         "discharged": discharged,
+        "abstract_status": abstract.get("status") if abstract else None,
+        "symbolic_status": symbolic.get("status") if symbolic else None,
         "abstract_verdict": abstract["verdict"] if abstract else None,
         "final_verdict": final,
         "reference_verdict": ref,
         "verdict_correct": correctness,
         "fallback_invoked": route == "FALLBACK_SYMBOLIC",
+        # UNKNOWN is a valid analyzer outcome, but an exception/timeout is not.
+        # Preserve component failures separately and do not count them as successful runs.
         "status": (
             "ok"
-            if final in ("COMPLIANT", "POLICY VIOLATION", "UNKNOWN")
+            if not component_errors and final in ("COMPLIANT", "POLICY VIOLATION", "UNKNOWN")
             else "error"
         ),
         "wall_time_us": total_elapsed,
@@ -458,7 +472,7 @@ def run_one(
         "peak_abstract_rss_bytes": abstract.get("peak_abstract_rss_bytes") if abstract else None,
         "symbolic_wall_time_us": symbolic.get("wall_time_us") if symbolic else None,
         "reference_manifest": oracle[program["program_id"]].get("reference_source"),
-        "error": (symbolic or abstract or {}).get("error"),
+        "error": "; ".join(component_errors) if component_errors else None,
         "object_sha256": program["object_sha256"],
         "policy_sha256": FROZEN_POLICY_SHA,
         "krakenguard_commit": oracle[program["program_id"]]["krakenguard_commit"],
@@ -520,7 +534,7 @@ def write_results(records: List[Dict[str, Any]], oracle: Dict[str, Dict[str, Any
     fields = [
         "run_id","mode","program_id","category","role","target_paths",
         "repetition_type","repetition","route","discharged",
-        "abstract_verdict","final_verdict","reference_verdict","verdict_correct",
+        "abstract_status","symbolic_status","abstract_verdict","final_verdict","reference_verdict","verdict_correct",
         "fallback_invoked","status","wall_time_us","wall_time_ms",
         "abstract_wall_time_us","abstract_analysis_wall_time_us","abstract_cpu_time_us",
         "peak_abstract_rss_bytes","symbolic_wall_time_us",
