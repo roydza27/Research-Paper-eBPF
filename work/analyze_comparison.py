@@ -37,8 +37,6 @@ def median_by_program(rows: List[Dict[str, Any]], mode: str) -> Dict[str, Dict[s
     result = {}
     for pid, observations in grouped.items():
         times = [r["wall_time_ms"] for r in observations]
-        mem_a = [int(r["peak_abstract_rss_bytes"]) for r in observations if r.get("peak_abstract_rss_bytes")]
-        mem_k = [int(r["peak_kg_container_memory_bytes"]) for r in observations if r.get("peak_kg_container_memory_bytes")]
         result[pid] = {
             "program_id": pid,
             "category": observations[0]["category"],
@@ -48,8 +46,6 @@ def median_by_program(rows: List[Dict[str, Any]], mode: str) -> Dict[str, Dict[s
             "min_ms": min(times),
             "max_ms": max(times),
             "fallback_fraction": sum(r["fallback_invoked"] for r in observations) / len(observations),
-            "median_abstract_rss_bytes": statistics.median(mem_a) if mem_a else None,
-            "median_kg_memory_bytes": statistics.median(mem_k) if mem_k else None,
         }
     return result
 
@@ -112,9 +108,6 @@ def summarize(rows: List[Dict[str, Any]]) -> Dict[str, Any]:
             "absolute_saving_ms": diff,
             "saving_pct": (diff / s * 100.0) if s else 0.0,
             "hybrid_fallback_fraction": hybrid[pid]["fallback_fraction"],
-            "symbolic_median_kg_memory_bytes": sym[pid]["median_kg_memory_bytes"],
-            "hybrid_median_abstract_rss_bytes": hybrid[pid]["median_abstract_rss_bytes"],
-            "hybrid_median_kg_memory_bytes": hybrid[pid]["median_kg_memory_bytes"],
         })
     diffs = [x["absolute_saving_ms"] for x in paired]
     ci = bootstrap_median_ci(diffs)
@@ -237,8 +230,7 @@ def write_outputs(summary: Dict[str, Any]) -> None:
     fields = [
         "program_id", "category", "target_paths", "symbolic_median_ms",
         "hybrid_median_ms", "absolute_saving_ms", "saving_pct",
-        "hybrid_fallback_fraction", "symbolic_median_kg_memory_bytes",
-        "hybrid_median_abstract_rss_bytes", "hybrid_median_kg_memory_bytes"
+        "hybrid_fallback_fraction"
     ]
     with (RESULTS / "paired-comparison.csv").open("w", newline="", encoding="utf-8") as fh:
         writer = csv.DictWriter(fh, fieldnames=fields)
@@ -273,7 +265,7 @@ def write_outputs(summary: Dict[str, Any]) -> None:
         "## Interpretation",
         "Positive saving means hybrid required less wall time than symbolic-only.",
         "Reference verdicts are loaded from the frozen validation manifest; they are not timed benchmark runs.",
-        "Memory peak fields are retained only for compatibility with older runs and are not treated as a primary endpoint.",
+        "Peak memory is not measured in this campaign; it requires a separate non-perturbative measurement design.",
         "The empirical path/time fits are descriptive for this corpus and are not asymptotic complexity proofs.",
     ]
     (RESULTS / "analysis.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
