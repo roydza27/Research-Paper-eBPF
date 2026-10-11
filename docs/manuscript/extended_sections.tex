@@ -1,40 +1,105 @@
-\section{Detailed Technical Model}
-
-\subsection{Abstract State and Control Flow}
-The abstract state records reachability, integer facts, policy conditions, helper access, map access, memory facts, possible return values, and analysis status. The analyzer propagates these facts over the compiled control-flow graph. A branch is pruned only when its predicate is provably true or false. Otherwise both successors remain reachable. At joins, conflicting facts become less precise. This intentionally sacrifices precision rather than soundness.
-
-\subsection{Helper, Map, and Memory Reasoning}
-Helper calls are represented as policy-relevant events. An authorized helper is propagated as compliant when authorization is established. An unknown helper identity produces UNKNOWN rather than an automatic violation. Map reasoning follows the same principle: unresolved map identity or access mode produces UNKNOWN. Memory uncertainty is treated conservatively as well.
-
-\subsection{Return-Value Reasoning}
-Return values are tracked because conditional policy behavior can depend on them. A constant return can make a branch decidable, while a symbolic return may keep both successors reachable. This connects the implementation to the earlier Phase 3 observation that conditional policy evaluation can depend on captured return values.
-
-\section{Implementation and Engineering Decisions}
-The analyzer operates on compiled eBPF objects rather than source-level C. This is important because compiler optimization can change control flow. The E1 audit provides a concrete example: P2's source conditional was optimized into branchless arithmetic under Clang 22.1.8 and the selected BPF target configuration.
-
-The implementation was corrected so unsupported instructions, unknown helper identifiers, unresolved map identity, unsupported map update/delete behavior, insufficient memory proof, unresolved branches, and analysis failures produce UNKNOWN. This fail-closed behavior makes uncertainty explicit rather than treating incomplete analysis as permission.
-
-The fallback path uses the conditional-policy result as the authoritative policy outcome rather than a generic top-level verification flag. Requests, responses, conditional-policy results, timing metadata, and execution logs are preserved so fallback decisions can be traced to actual verifier invocations.
-
-The execution protocol also validates the frozen verifier revision, policy identity, compiler configuration, architecture, kernel, hook, container identity, and related metadata before experiments are accepted.
-
-\section{Phase 3 Evidence and Research Evolution}
-The hybrid design was motivated by earlier evidence rather than assumed from the beginning. Phase 3 established a distinction between Linux verifier acceptance and fine-grained policy behavior. A helper-policy comparison showed that a constant-return variant could expose a forbidden helper under the conditional policy, while a symbolic-return variant could prevent the conditional policy from being evaluated in the same way.
-
-This finding motivated two requirements for Phase 5: conditional-policy results must remain authoritative, and unresolved return behavior must lead to UNKNOWN rather than SAFE. Phase 3 therefore supplies the conceptual bridge between policy semantics and hybrid verification.
-
-\section{E1 in Detail: Interpreting Program Complexity}
-The phrase program complexity requires care in E1. The experiment varies compiled features, but the compiler is free to transform source-level constructs. E1 is therefore best interpreted as a compiled-feature sensitivity experiment rather than a perfectly monotonic source-complexity benchmark.
-
-P0 through P7 exercised combinations of instruction count, branches, helper calls, and map interactions. The observed medians remained in a relatively narrow range: P0 was 681.817 ms while P7 was 707.609 ms. P3, despite containing 18 instructions, had a median of 672.432 ms. Thus raw instruction count alone was not a strong predictor in this micro-corpus.
-
-The P4 spike is also informative. Its 935.658 ms measured repetition was retained. The raw evidence shows a genuine execution-time spike, but the available instrumentation cannot establish whether host scheduling, I/O, or another runtime event caused it. The correct scientific treatment is retention and disclosure rather than deletion.
-
-\section{E2 in Detail: Why Path Count Matters}
-E2 isolates feasible symbolic path growth. The controlled family produced the ladder 1, 2, 4, 8, 16, 32, 64. Median time increased from 746.14 ms at one path to 1231.16 ms at 64 paths, an increase of approximately 65.0 percent. The empirical fit
+\section{Formal Decision Model and Safety Invariant}
+Let $P$ denote a compiled eBPF program, $\Pi$ a fixed policy, and $\mathcal{R}(P)$ the set of reachable program states under the supported execution model. Let $\operatorname{Bad}_{\Pi}(s)$ identify a state whose policy-relevant behavior violates $\Pi$. The target property is:
 \[
-T(P)\\approx740+7.6P
+  \forall s\in\mathcal{R}(P),\quad \neg\operatorname{Bad}_{\Pi}(s).
 \]
-summarizes the tested regime but is not a universal complexity theorem.
+This formulation is intentionally limited to the modeled program, policy semantics, and reachable states considered by the verifier. It does not imply isolation across arbitrary programs, maps, links, credentials, or tenants unless those interactions are explicitly included in the model.
 
-The research consequence is direct: a hybrid system has a meaningful optimization target in the number of programs reaching symbolic execution. If a cheaper abstract stage can safely decide a program, the program no longer contributes its symbolic cost.
+The abstract analyzer computes an over-approximation $\widehat{\mathcal{R}}(P)$ of reachable states. A \textsc{Safe} result is justified only when the over-approximation excludes all states violating the policy. A \textsc{Violation} result requires a reachable abstract witness that is sufficiently precise to establish the violation under the analyzer's supported semantics. If either proof obligation cannot be established, the result is \textsc{Unknown}. This is the standard conservative role of abstraction: the abstract domain may lose precision, but that loss must not be interpreted as evidence of compliance \cite{cousot1977abstract}.
+
+\subsection{Decision Table}
+Table~\ref{tab:decision-semantics} summarizes the intended operational semantics. The table describes the design contract, not a claim that every possible eBPF instruction or helper is modeled.
+
+\begin{table}[t]
+\centering
+\caption{Hybrid decision semantics and required action.}
+\label{tab:decision-semantics}
+\begin{tabular}{lll}
+\toprule
+Abstract result & Evidence available & Required action \\
+\midrule
+\textsc{Safe} & Policy compliance proved & Accept \\
+\textsc{Violation} & Policy violation proved & Reject \\
+\textsc{Unknown} & Neither proof established & Symbolic fallback \\
+Analysis error & No trusted result & Fail closed \\
+Timeout & No completed proof & Do not accept \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+This distinction matters because the costs of the three abstract outcomes are asymmetric. A conservative \textsc{Unknown} may add runtime to an otherwise compliant program, but an incorrect \textsc{Safe} result can admit a policy violation. Accordingly, the design optimizes only where the analyzer has sufficient evidence. It does not optimize by reinterpreting missing information as permission.
+
+\section{Cost Model and Break-Even Conditions}
+The hybrid workflow is useful only when the cost of abstract analysis plus the cost of any required fallback is lower than direct symbolic verification. For a program $P_i$, let $A_i$ be abstract-analysis time, $S_i$ be symbolic-only time, and $F_i$ be the incremental symbolic fallback time when the abstract result is \textsc{Unknown}. The hybrid cost is
+\[
+ H_i = A_i + I_i F_i,
+\]
+where $I_i=1$ for \textsc{Unknown} and $I_i=0$ for a conclusively discharged program. The per-program time difference is
+\[
+ \Delta_i = H_i-S_i.
+\]
+A negative value favors the hybrid workflow; a positive value indicates overhead. For a discharged program, $H_i=A_i$, so the potential saving is approximately $S_i-A_i$. For an unresolved program, $H_i=A_i+F_i$, which may exceed $S_i$ if fallback repeats most of the original work.
+
+For a corpus with discharge fraction $d$, mean abstract cost $\bar{A}$, mean symbolic cost $\bar{S}$, and mean fallback cost $\bar{F}$ among unresolved programs, a simplified expected-cost expression is
+\[
+ \mathbb{E}[H]=\bar{A}+(1-d)\bar{F}.
+\]
+This expression is descriptive rather than a universal performance model: the means may differ by category, path count, and program structure, and the measured E4 endpoint uses paired per-program medians. Nevertheless, it makes the break-even requirement explicit:
+\[
+ \bar{A}+(1-d)\bar{F}<\bar{S}.
+\]
+A high discharge rate is not sufficient by itself if abstract analysis is expensive; similarly, a cheap abstract stage may not help when nearly every case falls back. The experimental evaluation must therefore report discharge coverage and end-to-end cost together.
+
+\section{Algorithmic Workflow}
+Algorithm~\ref{alg:hybrid} expresses the routing policy independently of implementation details. The key property is that only conclusive abstract outcomes terminate the workflow.
+
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}[
+node distance=6mm,
+proc/.style={draw, rounded corners, align=center, text width=0.78\columnwidth, minimum height=7mm},
+arr/.style={-{Latex}, thick}
+]
+\node[proc] (start) {Input compiled program $P$ and policy $\Pi$};
+\node[proc, below=of start] (analyze) {Run conservative abstract analysis $A(P,\Pi)$};
+\node[proc, below=of analyze] (route) {Classify result: SAFE, VIOLATION, or UNKNOWN};
+\node[proc, below=of route] (fallback) {For UNKNOWN, invoke symbolic verifier and extract policy verdict};
+\node[proc, below=of fallback] (end) {Return final policy decision with provenance};
+\draw[arr] (start)--(analyze);
+\draw[arr] (analyze)--(route);
+\draw[arr] (route)--(fallback);
+\draw[arr] (fallback)--(end);
+\end{tikzpicture}
+\caption{Operational workflow. Conclusive abstract outcomes terminate at the routing stage; only unresolved cases require symbolic fallback.}
+\label{fig:workflow}
+\end{figure}
+
+The implementation should record the abstract decision, the reason for uncertainty, whether fallback was invoked, the fallback's authoritative policy result, elapsed time for each stage, and identifiers for the program and policy artifacts. Such records make it possible to distinguish an optimization win from a failed or incomplete verification attempt. A timeout, malformed response, missing policy verdict, or analysis error must remain a distinct status; it must not be collapsed into a successful verification result.
+
+\section{Measurement Protocol and Statistical Interpretation}
+The experiments use repeated measurements because wall-clock runtime can vary with host scheduling, I/O, process startup, and other system activity. Warmup executions are separated from measured repetitions. The E4 design interleaves the symbolic-only and hybrid conditions with deterministic randomization so that one condition is not always measured first. The unit of comparison is the program, not an individual repeated run treated as an independent program.
+
+For program $i$, let $\widetilde{S}_i$ and $\widetilde{H}_i$ be the medians across the seven measured repetitions. The paired difference and ratio are
+\[
+ d_i=\widetilde{H}_i-\widetilde{S}_i,\qquad
+ r_i=\frac{\widetilde{H}_i}{\widetilde{S}_i}.
+\]
+The reported aggregate savings should be computed from the predeclared aggregate endpoint, with the denominator and aggregation order stated explicitly. A ratio of aggregate medians is not generally equal to the median of per-program ratios. For this reason, the manuscript distinguishes the overall 45.53\% reported result from the category-specific savings and recommends retaining the raw telemetry alongside summary tables.
+
+The 24-program corpus is small and intentionally structured around four semantic categories. The Wilson interval reported for a 12/24 discharge proportion describes uncertainty in a binomial proportion under its statistical assumptions; it does not make the constructed corpus a random sample of production eBPF programs. The interval is therefore useful as a descriptive uncertainty measure, not as a basis for estimating arbitrary production coverage.
+
+A complete reproduction package should preserve raw outputs, run identifiers, source and object hashes, policy hash, baseline revision, container digest, compiler flags, kernel and architecture metadata, status codes, and aggregation scripts. These controls help independent reviewers determine whether summary numbers can be regenerated from the recorded measurements rather than relying on manually transcribed tables.
+
+\section{Relationship to Prior Systems}
+The hybrid architecture draws on the general idea of abstract interpretation, where a tractable abstract domain summarizes concrete program behavior while conservatively losing precision when necessary \cite{cousot1977abstract}. Symbolic execution complements this approach by exploring path conditions and solving constraints; KLEE is a well-known symbolic execution engine for LLVM programs \cite{cadar2008klee}. In this paper, the two techniques serve different operational roles: abstraction handles cases with simple proofs, while symbolic execution remains the fallback for cases that depend on path-sensitive values.
+
+Prior eBPF confinement work addresses related but distinct boundaries. bpfbox demonstrates precise process confinement using eBPF-based policy enforcement \cite{findlay2020bpfbox}; BPFContain studies container-security confinement using eBPF \cite{findlay2021bpfcontain}. Research on cross-container attacks documents how overly permissive eBPF capabilities can create isolation risks in shared-kernel environments \cite{he2023crosscontainer}. These works motivate policy expressiveness and threat modeling but are not direct performance baselines for the present hybrid verifier.
+
+The Linux kernel documentation specifies eBPF instruction behavior, verifier concepts, helpers, maps, and program types; the BPF ISA is also standardized in IETF RFC 9669 \cite{linuxbpfdocs,thaler2024bpfisa}. Those references are important for implementation and reproducibility because source-level C does not fully determine the compiled instruction stream. The compiler may remove branches, fold predicates, or alter control flow, so the abstract analyzer must reason about the compiled artifact and the experiment must record compiler settings.
+
+\section{Practical Implications and Deployment Boundaries}
+The measured result suggests a potential use case for verification gateways that repeatedly check policy-specific eBPF programs before loading or delegating them. Such a gateway could attempt a fast abstract proof and invoke symbolic analysis only when needed. This is a hypothesis for deployment design, not evidence that the current prototype is ready to operate as a production admission controller.
+
+A deployment would require additional engineering beyond the evaluated corpus: explicit versioning of policy semantics, compatibility testing across kernel and compiler releases, resource limits for fallback, robust timeout handling, authenticated artifact provenance, isolation of the verifier process, and safe treatment of verifier crashes. It would also need to define how policy changes interact with already loaded programs, maps, links, and delegated capabilities. These are not measured by E1--E5 and remain outside the current contribution.
+
+The distinction between kernel safety and application policy remains important. The hybrid analyzer is a policy-analysis front-end and does not replace the kernel's verifier, permissions, namespaces, cgroups, capabilities, or other isolation controls. A positive result in the evaluated program-policy model is not a proof of end-to-end tenant isolation. The appropriate conclusion is narrower: selective abstract discharge can reduce the measured verification work for a subset of the tested policy cases while preserving fallback for uncertainty.
