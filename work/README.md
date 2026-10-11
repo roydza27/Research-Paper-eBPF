@@ -12,7 +12,7 @@ Evaluate three execution modes on the same compiled eBPF corpus and frozen polic
 2. **abstract_only** — every program is handled only by the repository's conservative abstract policy analyzer.
 3. **hybrid** — abstract analysis runs first; SAFE/VIOLATION terminate locally, while UNKNOWN invokes KRAKENGUARD.
 
-The primary comparison is **verification-section wall time per program**: abstract analyzer execution, plus KRAKENGUARD execution and verdict extraction when the route requires it. Dispatch and evidence serialization are excluded. Peak memory, symbolic paths, symbolic queries, fallback rate, failures, and verdict agreement are secondary measurements.
+The primary comparison is **verification-section wall time per program**: abstract analyzer execution, plus KRAKENGUARD execution and verdict extraction when the route requires it. Dispatch and evidence serialization are excluded. Symbolic paths, symbolic queries, fallback rate, failures, and verdict agreement are recorded as secondary evidence. Peak memory is deferred to a separate measurement campaign because the current non-intrusive timing protocol does not measure it.
 
 ## Important scope
 
