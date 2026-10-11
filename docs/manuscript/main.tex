@@ -3,6 +3,7 @@
 \usepackage{cite}
 \usepackage{amsmath,amssymb}
 \usepackage{booktabs}
+\usepackage{array}
 \usepackage{graphicx}
 \usepackage{tikz}
 \usepackage{url}
@@ -14,11 +15,12 @@
 % paragraph robustness without overriding the conference layout.
 \emergencystretch=1.5em
 \interdisplaylinepenalty=2500
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.08}
 \newcommand{\ebpf}{eBPF}
 \newcommand{\safe}{\textsc{Safe}}
 \newcommand{\violation}{\textsc{Violation}}
 \newcommand{\unknown}{\textsc{Unknown}}
-\newcommand{\reported}{\textit{reported, not independently audited}}
 \usetikzlibrary{arrows.meta,positioning,shapes.geometric}
 
 \begin{document}
