@@ -9,6 +9,16 @@
 \usepackage{balance}
 \usepackage{microtype}
 \usepackage[hidelinks]{hyperref}
+
+% IEEEtran owns page geometry and heading typography. These settings improve
+% paragraph robustness without overriding the conference layout.
+\emergencystretch=1.5em
+\interdisplaylinepenalty=2500
+\newcommand{\ebpf}{eBPF}
+\newcommand{\safe}{\textsc{Safe}}
+\newcommand{\violation}{\textsc{Violation}}
+\newcommand{\unknown}{\textsc{Unknown}}
+\newcommand{\reported}{\textit{reported, not independently audited}}
 \usetikzlibrary{arrows.meta,positioning,shapes.geometric}
 
 \begin{document}
@@ -26,7 +36,7 @@ St. Aloysius University, Miri, India
 \maketitle
 
 \begin{abstract}
-Multi-tenant cloud systems increasingly use extended Berkeley Packet Filter (eBPF) programs for networking, observability, and security while sharing a common Linux kernel. Fine-grained isolation policies can constrain helper usage, memory access, map operations, and other security-sensitive behavior, but policy verification based on symbolic execution can incur substantial end-to-end cost as feasible symbolic paths increase. This work investigates whether a lightweight abstract policy-analysis stage can safely discharge policy-compliant or policy-violating eBPF programs before invoking an expensive symbolic verifier, while retaining symbolic execution as a fallback for unresolved cases. We first reproduce and characterize a frozen KRAKENGUARD configuration through two baseline experiments. E1 evaluates a controlled micro-corpus with increasing compiled features, while E2 directly controls feasible symbolic path counts from 1 to 64. We then implement and evaluate a hybrid analyzer over a 24-program validation corpus containing provably compliant, uncertain compliant, provably violating, and symbolically discovered violation cases. In the tested corpus, the abstract stage discharged 12 of 24 programs (50.0\%) with zero false SAFE and zero false VIOLATION decisions. Across 432 E4 executions, hybrid verification reduced the overall median end-to-end time from 694.28 ms to 382.32 ms, corresponding to 45.53\% median per-program savings. These findings provide experimental evidence that selective abstract discharge can reduce the amount of symbolic verification required for the evaluated eBPF isolation workloads. The conclusions are bounded to the tested corpus, path range, frozen verifier, policy, and execution environment.
+Multi-tenant cloud systems use extended Berkeley Packet Filter (eBPF) programs for networking, observability, and security while sharing a Linux kernel. Kernel-verifier acceptance and tenant-specific policy compliance are related but distinct properties. This paper studies a selective-analysis design in which a conservative abstract policy analyzer decides straightforward cases and sends unresolved cases to a symbolic verifier. The project first established a reproducible baseline and measured two controlled workloads: a compiled-feature micro-corpus (E1) and a synthetic family with 1--64 feasible symbolic paths (E2). The E1 evidence audit passed with qualifications; the measurements suggest that instruction count alone is a weak predictor of end-to-end cost in the tested micro-corpus, while E2 shows increasing cost across its controlled path family. The project also implemented a three-valued abstract analyzer, a 24-program validation corpus, and a Phase 5 execution protocol. However, the repository's final results audit did not accept E3--E5 as completed experiments because the required execution artifacts were not present in the audited repository state. We therefore treat the often-cited 50\% discharge and 45.53\% savings figures as unverified report values, not established findings. The paper contributes a conservative design, a reproducible evaluation methodology, baseline observations, and an explicit account of the evidence still needed to support an end-to-end performance claim.
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -53,8 +63,8 @@ The paper makes four contributions:
 \begin{enumerate}
     \item We characterize the cost behavior of a frozen KRAKENGUARD configuration using controlled program-feature and symbolic-path experiments.
     \item We design a conservative abstract policy-analysis stage with explicit \textsc{Safe}, \textsc{Violation}, and \textsc{Unknown} outcomes.
-    \item We evaluate selective discharge and hybrid end-to-end performance on a 24-program eBPF corpus.
-    \item We report the observed performance and correctness results together with explicit experimental boundaries and provenance controls.
+    \item We implement a conservative three-valued abstract analyzer and specify how it integrates with symbolic fallback.
+    \item We audit the strength and limits of the available evidence, separating measured baseline observations from Phase 5 results that are not independently reproducible from the audited repository state.
 \end{enumerate}
 
 \section{Background and Motivation}
@@ -148,7 +158,7 @@ arrow/.style={-{Latex}, thick}
 \label{fig:architecture}
 \end{figure}
 
-The analyzer operates on the compiled eBPF object and its control-flow graph rather than relying only on source-level C syntax. This distinction follows from the semantics of the BPF instruction set and the Linux toolchain, in which source constructs may be optimized or transformed before verification \\cite{linuxbpfdocs,thaler2024bpfisa}. It tracks reachability, selected integer facts, policy conditions, helper access, map access, memory ranges, return values, and analysis status.
+The analyzer operates on the compiled eBPF object and its control-flow graph rather than relying only on source-level C syntax. This distinction follows from the semantics of the BPF instruction set and the Linux toolchain, in which source constructs may be optimized or transformed before verification \cite{linuxbpfdocs,thaler2024bpfisa}. It tracks reachability, selected integer facts, policy conditions, helper access, map access, memory ranges, return values, and analysis status.
 
 \subsection{Three-Valued Abstract Decision}
 
@@ -422,23 +432,21 @@ The 50.0\% discharge rate is a property of the evaluated 24-program corpus. It m
 
 The experiments preserve the major controls needed to reproduce the evaluated configuration. The KRAKENGUARD source revision, policy hash, compiler, kernel, architecture, hook type, compiler flags, container image digest, corpus metadata, and raw execution artifacts are recorded in the repository.
 
-The Phase 5 execution evidence is associated with the recovered execution state rooted at commit \texttt{0e1d96cf13574222e58de349ce885b28b6e0ac9d}; the recovered evidence tree was committed at \texttt{33c1fc6f3fd40555cc4c3483803d6d01c84e50b4}. E3 contains 216 records, E4 contains 432 records, and E5 is derived from preserved E4 telemetry for the reachable path strata.
+The repository records Phase 5 design, correction-validation, fallback-validation, and execution-gate artifacts. The gate review authorized execution; it did not establish that the performance experiments had run. The independent results audit explicitly found that the claimed execution commit and E3/E4/E5 raw result sets were absent from the audited repository state. Consequently, the E3 discharge counts, E4 timing summaries, and E5 scaling table elsewhere in older result summaries are not treated here as completed, independently reproducible experiments. A provenance record or README summary is not a substitute for raw execution rows and a reproducible aggregation path.
 
-The repository also records correction and validation artifacts documenting the fail-closed analyzer semantics, frozen policy resolution, environment preflight, and fallback verification. These artifacts are part of the reproducibility record and should be consulted together with the raw experiment data.
+This evidence boundary is consequential: the manuscript reports E1 as an audited baseline with qualifications, treats E2 as a controlled baseline result from the project records, and describes E3--E5 as an implemented design and planned evaluation whose claimed outcome numbers require artifact recovery and independent recomputation before publication.
 
 \input{extended_sections}
 
 \section{Conclusion and Future Work}
 
-This paper investigated whether fine-grained eBPF isolation policy verification can reduce unnecessary symbolic execution by placing a conservative abstract analyzer before a symbolic verifier.
+This project began with a broad interest in multi-tenant eBPF confinement and narrowed the thesis question after reviewing newer work on fine-grained isolation, verifier precision, delegation, virtualization, and scheduling. That review matters: a new namespace, a generic LSM policy, or another verifier-testing tool would overlap with existing systems and would not by itself establish a defensible contribution. The surviving question is more specific: can a conservative abstract front-end avoid some symbolic policy-verification work without changing the final security decision?
 
-The baseline experiments established two useful observations. First, small increases in compiled program features produced relatively stable end-to-end cost in the tested micro-corpus. Second, directly controlled feasible symbolic path growth from 1 to 64 paths produced a substantial increase in verification time. Together, these observations motivate reducing the number of workloads that reach symbolic verification rather than relying only on program-size metrics.
+The strongest completed empirical evidence currently available is the baseline characterization. E1 passed an independent data-integrity audit with qualifications, including compiler transformations that changed the intended branch structure and instrumentation fields that must not be over-interpreted. E2's controlled family showed increasing end-to-end cost from one to 64 feasible paths. Those observations motivate selective analysis, but they do not alone demonstrate that the hybrid system improves end-to-end performance.
 
-The Phase 5 evaluation then demonstrated selective discharge on a 24-program corpus. The abstract stage discharged 12 programs, corresponding to 50.0\%, while producing zero false SAFE and zero false VIOLATION decisions against the frozen KRAKENGUARD reference. Across 432 E4 executions, the hybrid workflow reduced the overall median end-to-end time from 694.28 ms to 382.32 ms, yielding 45.53\% median per-program savings. The improvement comes from eliminating symbolic verification for discharged programs; unresolved programs still require the fallback and incur its cost.
+The project also produced an abstract analyzer, a structured 24-program corpus, fail-closed handling for unsupported or unresolved semantics, a frozen policy and environment specification, and an execution protocol for E3--E5. The currently audited repository does not, however, contain the raw Phase 5 execution artifacts needed to independently substantiate the frequently reported 50\% discharge rate and 45.53\% timing savings. Those numbers are therefore excluded from the paper's established findings. Recovering the immutable execution tree, checking every run, and regenerating the aggregates is the immediate prerequisite to making a performance claim.
 
-The resulting evidence supports the narrower claim that selective abstract policy analysis can reduce symbolic-verification work for the evaluated eBPF isolation corpus under the frozen experimental configuration. It does not establish universal performance, universal discharge coverage, or production-scale behavior.
-
-Future work should evaluate larger and less synthetic eBPF workloads, richer policy predicates, additional hook types, larger symbolic path regimes, and independent symbolic-verification references. A particularly important direction is adaptive abstract-domain refinement: rather than expanding the abstract domain indiscriminately, future systems could identify the policy predicates responsible for \textsc{Unknown} results and selectively refine only those cases.
+This distinction does not make the project less useful; it makes the paper more defensible. The contribution at this stage is a carefully bounded hybrid design, a baseline analysis, and a reproducible evaluation plan with explicit failure semantics. Future work should complete the Phase 5 evidence audit, expand the corpus beyond synthetic XDP programs, measure additional hooks and policy forms, and investigate targeted refinement for cases that return \unknown. A separate real-world Katran attempt also exposed a compatibility boundary: the attempted run terminated before producing a valid verification result, so it is an engineering lesson rather than evidence of successful production-workload evaluation.
 
 \section*{Acknowledgment}
 The author thanks the maintainers and authors of the open-source eBPF analysis infrastructure used as experimental baselines. The experiments and analysis reported here are intended as a research evaluation and not as a production security guarantee.
