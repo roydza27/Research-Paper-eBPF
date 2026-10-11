@@ -57,7 +57,7 @@ Can fine-grained eBPF isolation policies be checked with predictable cost by com
 
 The proposed approach places a lightweight abstract policy analyzer before symbolic verification. The analyzer uses a conservative three-valued decision model: \textsc{Safe}, \textsc{Violation}, or \textsc{Unknown}. A proven safe program is accepted, a proven violation is rejected, and an unresolved program is forwarded to the frozen symbolic verifier. The design is intentionally fail-closed: lack of proof is not treated as safety.
 
-The contribution of this paper is therefore not a replacement for the Linux verifier or KRAKENGUARD. Instead, the contribution is an experimentally evaluated verification workflow that attempts to avoid unnecessary symbolic verification while preserving symbolic fallback for unresolved programs.
+The work does not replace the Linux verifier or KRAKENGUARD. It investigates a selective policy-analysis workflow and documents both its prototype design and the evidence required to evaluate its performance credibly.
 
 The paper makes four contributions:
 \begin{enumerate}
@@ -119,7 +119,7 @@ Can inexpensive abstract policy analysis discharge policy-safe eBPF programs bef
 
 The evaluation is divided into two logical questions. First, can the abstract stage safely classify a useful subset of programs? Second, does avoiding symbolic verification reduce complete end-to-end verification cost?
 
-The Phase 5 hypotheses are:
+The Phase 5 hypotheses are evaluation targets, not findings until the full execution matrix is available and independently checked:
 \begin{itemize}
     \item \textbf{H5-C: Correctness.} Abstractly discharged final decisions agree with the frozen symbolic reference on the validation corpus.
     \item \textbf{H5-COV: Selective discharge.} A measurable subset of the corpus can be classified without symbolic fallback.
@@ -277,7 +277,7 @@ This structure separates easy cases from cases that intentionally require the sy
 
 \subsection{E3: Selective Discharge and Correctness}
 
-E3 evaluates whether the abstract stage can classify a useful subset and whether its discharged decisions agree with the frozen symbolic reference. Each of the 24 programs was evaluated with two warmups and seven measured repetitions, producing 216 executions.
+E3 is specified to evaluate whether the abstract stage can classify a useful subset and whether discharged decisions agree with the frozen symbolic reference. The protocol calls for two warmups and seven measured repetitions for each of 24 programs, producing 216 planned executions.
 
 The primary endpoint is:
 \[
@@ -298,99 +298,56 @@ T_{\mathrm{abstract}}+T_{\mathrm{fallback}}, & \text{otherwise}.
 \end{cases}
 \end{align}
 
-Each of the 24 programs was evaluated under both conditions, with two warmups and seven measured repetitions per condition. The total was therefore $24\times2\times9=432$ executions. Conditions were interleaved using deterministic randomization with seed 42. The primary endpoint is paired per-program median end-to-end wall time.
+The E4 protocol specifies both conditions for each of 24 programs, with two warmups and seven measured repetitions per condition, for $24\times2\times9=432$ planned executions. This protocol total must not be confused with verified evidence that all runs completed. Conditions were interleaved using deterministic randomization with seed 42. The primary endpoint is paired per-program median end-to-end wall time.
 
 \subsection{E5: Fallback Scaling}
 
-E5 examines how the hybrid workflow behaves across observed symbolic path strata. Reachable strata were 1, 2, 4, 8, 16, and 32. The 64-path stratum was unreachable for eligible Phase 5 programs and is therefore not reported as an observed result.
+E5 is designed to examine hybrid behavior across symbolic path strata. The corpus design identifies 1, 2, 4, 8, 16, and 32 as reachable strata; 64 was marked unreachable for eligible Phase 5 programs. These are design/summary claims and require the underlying execution artifacts before being treated as independently verified observations.
 
 The experiment reports abstract time, fallback time, total hybrid time, and fallback fraction. It does not assume that the abstract analyzer accelerates symbolic execution itself. Its intended benefit is elimination of unnecessary symbolic invocations.
 
-\section{Results}
+\section{Results and Evidence Status}
 
-\subsection{E3: Abstract Discharge}
+\subsection{E1: Program Features Do Not Explain Cost on Their Own}
 
-The abstract analyzer discharged 12 of 24 programs:
+The E1 dataset contains eight programs, each with two warmup and seven measured executions. The independent evidence audit found 72 rows, unique run identifiers, consistent policy and baseline identifiers, and exact agreement between the recorded CSV measurements and JSON aggregates. It therefore passed the dataset-integrity check, with qualifications about the meaning of several instrumentation fields.
+
+The median wall times in Table~\ref{tab:e1} lie in a narrow range despite the increase in compiled instruction count. This is evidence only about the tested micro-corpus and pipeline. It does not establish that program size is irrelevant in general. The audit also found that one source-level branch had been optimized away by Clang, that the reported basic-block count was heuristic, and that the field named \texttt{verifier\_states} represented KLEE's explored-path statistic. Those qualifications limit how strongly the table can be interpreted.
+
+\subsection{E2: Controlled Path Growth}
+
+The E2 project record reports a controlled family with 1, 2, 4, 8, 16, 32, and 64 feasible symbolic paths. The median increased from 746.14~ms at one path to 1231.16~ms at 64 paths, an increase of approximately 65\%. A linear fit of roughly
 \[
-D=\frac{12}{24}=50.0\%.
+T(P)\approx 740+7.6P\ \mathrm{ms}
 \]
-The Wilson score 95\% interval for this proportion is 31.4--68.6\%.
+summarizes the tested range. It is a descriptive fit, not a complexity theorem. The observation motivates testing whether a selective front-end can reduce the number of programs that require symbolic execution.
 
-The category results were:
+\subsection{Phase 5: Prototype and Evaluation Status}
+
+The repository contains the three-valued abstract analyzer, a 24-program policy-directed corpus, correction and fallback validation records, a frozen execution specification, and the E3--E5 experimental protocol. The protocol defines three questions: how many cases can be discharged without symbolic execution (E3), whether hybrid execution reduces complete end-to-end cost (E4), and how fallback behaves across reachable path strata (E5).
+
+However, the final independent results audit did not accept E3--E5 as completed experiments in the audited repository state. It found that the claimed execution commit and the required raw result sets were unavailable for independent recomputation. The summaries below are therefore evidence about the project's intended evaluation design, not accepted experimental outcomes.
 
 \begin{table}[t]
 \centering
-\caption{E3 discharge and correctness results.}
-\label{tab:e3}
-\begin{tabular}{lrrrr}
+\caption{Evidence status at the time of manuscript revision.}
+\label{tab:evidence-status}
+\begin{tabular}{p{0.10\columnwidth}p{0.28\columnwidth}p{0.48\columnwidth}}
 \toprule
-Category & Count & Discharged & Rate & Result\\
+Item & Status & Interpretation \\
 \midrule
-A & 6 & 6 & 100\% & SAFE\\
-B & 6 & 0 & 0\% & UNKNOWN\\
-C & 6 & 6 & 100\% & VIOLATION\\
-D & 6 & 0 & 0\% & UNKNOWN\\
-\midrule
-Total & 24 & 12 & 50\% & ---\\
+E1 & Audited, qualified & Dataset integrity passed; several metrics and compiler effects need qualification. \\
+E2 & Recorded baseline & Controlled path family and timing summaries are present in project records. \\
+Analyzer & Implemented & Three-valued outcomes and fail-closed fallback are specified. \\
+E3 & Not independently verified & Claimed discharge counts require raw execution evidence. \\
+E4 & Not independently verified & Claimed timing savings require all paired runs and recomputed aggregates. \\
+E5 & Not independently verified & Claimed strata summaries require reproducible source telemetry. \\
+Katran & Unsuccessful attempt & The run terminated before producing a valid verification result. \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-All 24 final outcomes agreed with the KRAKENGUARD reference. There were zero false SAFE decisions and zero false VIOLATION decisions. Categories B and D were deliberately retained as \textsc{Unknown} by the abstract stage and therefore exercised the fallback path.
-
-\subsection{E4: Hybrid Versus Symbolic-Only}
-
-E4 produced 432 executions with zero timeouts, zero failures, and zero correctness mismatches in the recorded matrix. The overall median end-to-end time was 694.28 ms for symbolic-only verification and 382.32 ms for hybrid verification.
-
-The median per-program savings were:
-\[
-S=1-\frac{T_{\mathrm{hybrid}}}{T_{\mathrm{symbolic}}}=45.53\%.
-\]
-
-\begin{table}[t]
-\centering
-\caption{E4 category-level performance.}
-\label{tab:e4}
-\begin{tabular}{lrrrr}
-\toprule
-Category & Fallback & Sym. (ms) & Hybrid (ms) & Savings\\
-\midrule
-A & 0.0 & 684.36 & 37.54 & 94.5\%\\
-B & 1.0 & 727.34 & 765.75 & -4.8\%\\
-C & 0.0 & 683.52 & 39.55 & 94.2\%\\
-D & 1.0 & 700.96 & 735.89 & -5.1\%\\
-\bottomrule
-\end{tabular}
-\end{table}
-
-The result is driven by the discharged programs. Categories A and C together represent 50\% of the corpus and avoid symbolic verification entirely. Their hybrid medians are approximately 38--40 ms, compared with approximately 684 ms for symbolic-only verification. In contrast, B and D require fallback and therefore incur a small additional abstract-analysis cost, producing a modest regression relative to symbolic-only.
-
-The 45.53\% figure is consequently an end-to-end workflow result, not a claim that KRAKENGUARD itself became 45.53\% faster.
-
-\subsection{E5: Fallback Scaling}
-
-\begin{table}[t]
-\centering
-\caption{E5 observed path strata.}
-\label{tab:e5}
-\begin{tabular}{rrrrr}
-\toprule
-Paths & Programs & Discharged & Fallback & Hybrid (ms)\\
-\midrule
-1  & 12 & 12 & 0\%   & 39.12\\
-2  & 4  & 0  & 100\% & 731.33\\
-4  & 2  & 0  & 100\% & 749.73\\
-8  & 2  & 0  & 100\% & 768.28\\
-16 & 2  & 0  & 100\% & 781.84\\
-32 & 2  & 0  & 100\% & 852.68\\
-64 & 0  & 0  & N/A   & N/A\\
-\bottomrule
-\end{tabular}
-\end{table}
-
-At one feasible path, all eligible programs in categories A and C were discharged without symbolic fallback. At higher observed strata, the Phase 5 corpus contained unresolved programs whose dynamic return conditions or branch-dependent policy behavior required KRAKENGUARD. Fallback time increased from approximately 696 ms at two paths to approximately 810 ms at 32 paths for the representative strata.
-
-These observations are consistent with the E2 finding that symbolic work becomes increasingly costly as feasible path count increases. However, E5 does not establish a universal scaling law for the hybrid system.
+Older project summaries report a 12/24 abstract-discharge rate and 45.53\% E4 savings. Because the required execution artifacts were not available to the final audit, neither figure is presented as an established result here. The same applies to claims of zero correctness mismatches across the full Phase 5 matrix. These figures can be reinstated as results only after the immutable execution artifacts are recovered, run accounting is checked, and all summaries are regenerated from raw telemetry.
 
 \section{Discussion}
 
