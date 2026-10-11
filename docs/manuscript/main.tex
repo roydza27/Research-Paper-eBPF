@@ -21,6 +21,7 @@
 \newcommand{\safe}{\textsc{Safe}}
 \newcommand{\violation}{\textsc{Violation}}
 \newcommand{\unknown}{\textsc{Unknown}}
+\newcolumntype{P}[1]{>{\raggedright\arraybackslash}p{#1}}
 \usetikzlibrary{arrows.meta,positioning,shapes.geometric}
 
 \begin{document}
@@ -49,7 +50,7 @@ eBPF, multi-tenant cloud security, eBPF isolation, symbolic execution, abstract 
 
 Cloud infrastructure increasingly consolidates multiple workloads on shared Linux hosts. This multi-tenant model improves utilization, but it also means that security mechanisms operating inside the kernel must distinguish what one tenant is authorized to do from what another tenant is allowed to do. Extended Berkeley Packet Filter (eBPF) provides a programmable interface for networking, tracing, observability, and security, making it attractive for cloud-native infrastructure. At the same time, its kernel-level execution model makes isolation and policy enforcement important security concerns.
 
-The Linux eBPF verifier provides a fundamental safety gate, but verifier safety and fine-grained tenant policy compliance are different questions. A program may satisfy verifier safety requirements while still violating a tenant-specific policy governing helper calls, maps, memory, return values, or interactions with other programs. Recent systems have therefore explored fine-grained policy analysis and related verifier-assurance mechanisms. KRAKENGUARD, for example, uses symbolic analysis to reason about fine-grained eBPF isolation policies and identifies symbolic path and expression growth as an important scalability concern \cite{patel2026krakenguard}. Other recent work addresses verifier precision through proof-guided refinement, verifier-resilient execution, verifier testing, tenant virtualization, and resource isolation \cite{sun2025bcf,sun2025aee,lyu2025veritas,zhang2026vbpf,carin2026peer}.
+The Linux eBPF verifier provides a fundamental safety gate, but verifier safety and fine-grained tenant policy compliance are different questions. A program may satisfy verifier safety requirements while still violating a tenant-specific policy governing helper calls, maps, memory, return values, or interactions with other programs. Recent systems have therefore explored fine-grained policy analysis and related verifier-assurance mechanisms, while broader studies characterize the Linux eBPF runtime and its operational context \cite{gbadamosi2024ebpfruntime}. KRAKENGUARD, for example, uses symbolic analysis to reason about fine-grained eBPF isolation policies and identifies symbolic path and expression growth as an important scalability concern \cite{patel2026krakenguard}. Other recent work addresses verifier precision through proof-guided refinement, verifier-resilient execution, verifier testing, tenant virtualization, and resource isolation \cite{sun2025bcf,sun2025aee,lyu2025veritas,zhang2026vbpf,carin2026peer}.
 
 This work focuses on a narrower question within that broader multi-tenant security problem: whether expensive symbolic policy verification can be invoked selectively rather than universally. The central research question is:
 
