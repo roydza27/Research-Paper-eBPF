@@ -120,26 +120,6 @@ def summarize(rows: List[Dict[str, Any]]) -> Dict[str, Any]:
     ci = bootstrap_median_ci(diffs)
     sign = exact_two_sided_sign_test(diffs)
 
-    oracle_sanity = []
-    for pid, item in sym.items():
-        rows_for_pid = [
-            r for r in rows
-            if r["mode"] == "symbolic_only"
-            and r["repetition_type"] == "measured"
-            and r["status"] == "ok"
-            and r["program_id"] == pid
-        ]
-        oracle_rows = [r for r in rows_for_pid if r.get("oracle_reference_wall_time_us")]
-        if oracle_rows:
-            oracle_ms = float(oracle_rows[0]["oracle_reference_wall_time_us"]) / 1000.0
-            oracle_sanity.append({
-                "program_id": pid,
-                "oracle_ms": oracle_ms,
-                "symbolic_median_ms": item["median_ms"],
-                "median_delta_ms": item["median_ms"] - oracle_ms,
-                "median_ratio": item["median_ms"] / oracle_ms if oracle_ms else None,
-            })
-
     categories = defaultdict(list)
     for row in paired:
         categories[row["category"]].append(row)
@@ -203,7 +183,7 @@ def summarize(rows: List[Dict[str, Any]]) -> Dict[str, Any]:
         "program_count": len(common),
         "paired_symbolic_vs_hybrid": paired,
         "primary_endpoint": {
-            "metric": "paired program-level median end-to-end wall time",
+            "metric": "paired program-level median verification-section wall time",
             "median_absolute_saving_ms": statistics.median(diffs) if diffs else None,
             "median_saving_pct": statistics.median([x["saving_pct"] for x in paired]) if paired else None,
             "bootstrap_95ci_median_absolute_saving_ms": ci,
@@ -220,17 +200,6 @@ def summarize(rows: List[Dict[str, Any]]) -> Dict[str, Any]:
             "fraction": (
                 sum(r["fallback_invoked"] for r in hybrid_rows) / len(hybrid_rows)
                 if hybrid_rows else None
-            ),
-        },
-        "oracle_timing_sanity": {
-            "programs": oracle_sanity,
-            "median_delta_ms": (
-                statistics.median([x["median_delta_ms"] for x in oracle_sanity])
-                if oracle_sanity else None
-            ),
-            "median_ratio": (
-                statistics.median([x["median_ratio"] for x in oracle_sanity if x["median_ratio"] is not None])
-                if oracle_sanity else None
             ),
         },
         "category_summary": category_summary,
@@ -278,7 +247,7 @@ def write_outputs(summary: Dict[str, Any]) -> None:
         "",
         "## Interpretation",
         "Positive saving means hybrid required less wall time than symbolic-only.",
-        "Oracle timing is a same-client sanity check for the symbolic critical section; it is not an independent verifier.",
+        "Reference verdicts are loaded from the frozen validation manifest; they are not timed benchmark runs.",
         "Memory peak fields are retained only for compatibility with older runs and are not treated as a primary endpoint.",
         "The empirical path/time fits are descriptive for this corpus and are not asymptotic complexity proofs.",
     ]
