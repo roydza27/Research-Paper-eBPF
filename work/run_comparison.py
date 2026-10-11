@@ -58,7 +58,11 @@ def checked(cmd: List[str], cwd: Optional[Path] = None) -> str:
 
 
 def load_reference_verdicts(config: Dict[str, Any], programs: List[Dict[str, Any]]) -> Dict[str, Dict[str, Any]]:
-    """Load previously audited reference verdicts without warming the daemon."""
+    """Load frozen reference labels without warming the daemon.
+
+This validates IDs, policy hash, and verifier revision; it does not independently
+re-establish the historical Phase 5 execution provenance.
+"""
     manifest = ROOT / config["reference"]["validation_csv"]
     policy = ROOT / config["corpus"]["policy_file"]
     if sha256_file(policy) != config["corpus"]["policy_sha256"]:
