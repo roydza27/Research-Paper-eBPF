@@ -12,7 +12,7 @@ Evaluate three execution modes on the same compiled eBPF corpus and frozen polic
 2. **abstract_only** — every program is handled only by the repository's conservative abstract policy analyzer.
 3. **hybrid** — abstract analysis runs first; SAFE/VIOLATION terminate locally, while UNKNOWN invokes KRAKENGUARD.
 
-The primary comparison is **complete end-to-end wall time per program**. Peak memory, symbolic paths, symbolic queries, fallback rate, failures, and verdict agreement are secondary measurements.
+The primary comparison is **verification-section wall time per program**: abstract analyzer execution, plus KRAKENGUARD execution and verdict extraction when the route requires it. Dispatch and evidence serialization are excluded. Peak memory, symbolic paths, symbolic queries, fallback rate, failures, and verdict agreement are secondary measurements.
 
 ## Important scope
 
@@ -52,7 +52,7 @@ The repository still contains work/abstract_worker.py as an auxiliary isolated-p
 
 KRAKENGUARD is a persistent verifier service, so a per-invocation peak container memory value cannot be recovered cleanly without intrusive sampling or restarting the service. Memory peak fields from older raw runs are therefore not used as a primary result. Memory should be treated as a separate secondary campaign once a non-perturbative measurement method is established.
 
-The 24-program oracle is run with the exact same symbolic timing helper used by symbolic_only. Its duration is recorded as a sanity check for timing symmetry, while its verdict is the reference verdict for correctness.
+Reference verdicts are loaded from the frozen, previously audited validation manifest. The runner does not invoke KRAKENGUARD for a separate timed oracle pass, so reference checking does not pre-warm the daemon or add an unpaired timing observation.
 
 ## Run
 
@@ -92,7 +92,7 @@ The analysis script reports:
 - paired per-program symbolic-only vs hybrid medians
 - median savings
 - confidence interval for the paired median difference using a bootstrap over program-level paired observations
-- exact sign/permutation test over paired program differences
+- exact two-sided sign test over paired program differences
 - fallback fraction
 - correctness agreement
 - false SAFE / false VIOLATION counts
