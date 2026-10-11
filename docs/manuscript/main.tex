@@ -354,17 +354,15 @@ Older project summaries report a 12/24 abstract-discharge rate and 45.53\% E4 sa
 
 \section{Discussion}
 
-The experiments form a progression from baseline characterization to selective verification.
+The project provides a useful example of why systems-security papers need to separate a plausible optimization from a demonstrated one. E1's audited measurements show that, for this small compiled micro-corpus, instruction count alone does not account for the end-to-end verification time. The audit's compiler and instrumentation qualifications are equally important: the branch structure in the object differed from source-level intent, and some counters were proxies rather than direct measurements.
 
-E1 shows that small increases in compiled instruction count do not necessarily translate into proportional increases in end-to-end policy-verification time. The pipeline contains substantial fixed work, including lifting, intermediate-representation processing, harness construction, compilation, linking, and verifier startup. This makes raw program length an incomplete predictor of cost in the tested regime.
+E2 addresses a different dimension by varying the feasible symbolic path count in a controlled program family. Its recorded timing trend supports the motivation for selective analysis within the tested range. It does not show that every real-world workload will follow the same relationship, nor does it by itself demonstrate that a hybrid design will be faster. That second claim depends on the fraction of cases discharged, the cost of abstract analysis, and the cost of fallback.
 
-E2 isolates a different factor. When feasible symbolic path count is deliberately increased, end-to-end verification time increases substantially. The controlled family therefore exposes a cost dimension that E1 only weakly exercised. The result motivates an optimization that does not attempt to make symbolic execution universally cheaper: instead, the system should avoid invoking symbolic execution when a cheaper analysis can already prove the policy result.
+The abstract analyzer is designed around this distinction. It returns \safe, \violation, or \unknown; it does not treat uncertainty as permission. The three-valued interface gives the system a way to preserve the symbolic verifier as the authority for cases that the abstract domain cannot settle. This is the central design rationale and is independent of whether the current Phase 5 performance hypothesis is ultimately confirmed.
 
-E3 demonstrates that this approach is possible for a meaningful subset of the tested corpus. The abstract analyzer discharged exactly the categories constructed to be abstractly decidable, while conservatively returning \textsc{Unknown} for the categories designed to require symbolic reasoning. The absence of false SAFE and false VIOLATION decisions is particularly important because the security cost of an incorrect SAFE decision is qualitatively different from the cost of an unnecessary fallback.
+The project's reported Phase 5 summaries would, if verified, suggest a trade-off that is worth testing: conclusively discharged cases could avoid symbolic execution, while fallback cases would pay the abstract-stage overhead before receiving the reference verdict. But the raw E3/E4/E5 artifacts were not available to the final independent results audit. The 50\% discharge and 45.53\% savings values are therefore not used as evidence for this paper's conclusions. They should be treated as testable claims pending artifact recovery or a new execution campaign.
 
-E4 provides the main end-to-end performance result. The hybrid workflow reduces the overall median time because half of the tested programs terminate after the abstract stage. The fallback cases do not become faster; they become slightly slower because the abstract stage adds overhead before symbolic verification. Therefore, the benefit depends on the proportion of workloads that can be safely discharged.
-
-This leads to an important interpretation of the research contribution. The proposed method is not a universal replacement for symbolic verification. It is a selective front-end whose value depends on the availability of policy decisions that can be proven cheaply. The \textsc{Unknown} outcome is therefore a feature of the design rather than a failure state.
+The engineering record also includes an unsuccessful attempt to run a real-world Katran object through the frozen verifier. Because the attempt did not produce an authoritative policy result, it cannot support a performance comparison. It instead points to a practical requirement for future work: establish compatibility and obtain a valid baseline verdict before interpreting timing data from a production-oriented program.
 
 \section{Threats to Validity and Limitations}
 
@@ -390,7 +388,7 @@ The 50.0\% discharge rate is a property of the evaluated 24-program corpus. It m
 
 \section{Reproducibility and Provenance}
 
-The experiments preserve the major controls needed to reproduce the evaluated configuration. The KRAKENGUARD source revision, policy hash, compiler, kernel, architecture, hook type, compiler flags, container image digest, corpus metadata, and raw execution artifacts are recorded in the repository.
+The repository specifies the major controls needed to reproduce the configuration: KRAKENGUARD revision, policy hash, compiler, kernel, architecture, hook type, compiler flags, container image digest, corpus metadata, and expected raw execution artifacts. For Phase 5, however, the final independent results audit did not find the complete execution artifacts needed to recompute the reported results.
 
 The repository records Phase 5 design, correction-validation, fallback-validation, and execution-gate artifacts. The gate review authorized execution; it did not establish that the performance experiments had run. The independent results audit explicitly found that the claimed execution commit and E3/E4/E5 raw result sets were absent from the audited repository state. Consequently, the E3 discharge counts, E4 timing summaries, and E5 scaling table elsewhere in older result summaries are not treated here as completed, independently reproducible experiments. A provenance record or README summary is not a substitute for raw execution rows and a reproducible aggregation path.
 
