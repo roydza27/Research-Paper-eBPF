@@ -1,0 +1,50 @@
+name: Build manuscript PDF
+
+on:
+  push:
+    branches:
+      - paper/revision-literature-and-presentation
+    paths:
+      - 'docs/manuscript/**'
+      - '.github/workflows/build-manuscript-pdf.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-update-pdf:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out manuscript branch
+        uses: actions/checkout@v4
+        with:
+          ref: paper/revision-literature-and-presentation
+          fetch-depth: 0
+
+      - name: Install TeX toolchain
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y latexmk texlive-latex-recommended texlive-latex-extra texlive-fonts-recommended texlive-bibtex-extra
+
+      - name: Build PDF
+        working-directory: docs/manuscript
+        run: latexmk -pdf -interaction=nonstopmode -halt-on-error main.tex
+
+      - name: Check output
+        working-directory: docs/manuscript
+        run: |
+          test -s main.pdf
+          pdfinfo main.pdf | grep -E '^(Pages|Page size|PDF version):'
+
+      - name: Commit updated PDF to the same branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/manuscript/main.pdf
+          if git diff --cached --quiet; then
+            echo "The generated PDF is unchanged."
+          else
+            git commit -m "paper: rebuild manuscript PDF"
+            git push origin HEAD:paper/revision-literature-and-presentation
+          fi
