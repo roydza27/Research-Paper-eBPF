@@ -112,15 +112,7 @@ V_{\mathrm{sym}}(P,\Pi), & A(P,\Pi)=\mathrm{UNKNOWN}.
 \end{equation}
 Here, $A$ is the abstract analyzer and $V_{\mathrm{sym}}$ is the authoritative symbolic verifier. The hybrid method does not claim that symbolic execution becomes intrinsically faster. Its potential benefit comes from avoiding symbolic execution entirely for programs that the abstract stage can decide.
 
-\section{Review of Literature}
-
-Recent eBPF research covers several dimensions of the security and isolation problem. KRAKENGUARD directly addresses fine-grained eBPF isolation using symbolic analysis and serves as the primary baseline for this study \citep{patel2026krakenguard}. BCF applies proof-guided abstraction refinement to improve verifier precision while constraining kernel complexity \citep{sun2025bcf}. Approximation Enforced Execution investigates runtime enforcement for untrusted Linux kernel extensions and changes the assumptions around verifier enforcement \citep{sun2025aee}. Veritas/SpecCheck uses specification-based testing to detect eBPF verifier misbehavior \citep{lyu2025veritas}.
-
-Multi-tenant execution isolation is also being investigated independently of policy verification. vBPF explores eBPF virtualization and tenant/state isolation \citep{zhang2026vbpf}, while PeeR addresses scheduling and resource isolation for latency-critical eBPF applications \citep{carin2026peer}. BPF Token changes the delegation model for BPF operations through user-namespace-bound BPF filesystems \citep{bpftoken}. SeaBee addresses protection of security-critical eBPF infrastructure against privileged tampering \citep{seabee}.
-
-These systems motivate the broader multi-tenant security context but do not make them interchangeable baselines for the specific policy-verification experiment in this paper. In particular, the present work evaluates a hybrid verification strategy against a frozen KRAKENGUARD policy-analysis configuration rather than proposing a new BPF namespace, virtualization layer, scheduler, or verifier.
-
-\section{Research Objectives and Questions}
+\subsection{Research Objectives and Questions}
 
 The research problem is to reduce unnecessary symbolic policy-verification work without converting uncertainty into an unsafe decision.
 
@@ -138,6 +130,15 @@ The Phase 5 hypotheses are evaluation targets, not findings until the full execu
     \item \textbf{H5-P: End-to-end cost.} Hybrid verification reduces complete verification time when abstract-analysis cost plus any required fallback cost is lower than symbolic-only verification.
     \item \textbf{H5-S: Fallback scaling.} Fallback amount and cost can be characterized as symbolic path complexity increases.
 \end{itemize}
+
+
+\section{Review of Literature}
+
+Recent eBPF research covers several dimensions of the security and isolation problem. KRAKENGUARD directly addresses fine-grained eBPF isolation using symbolic analysis and serves as the primary baseline for this study \citep{patel2026krakenguard}. BCF applies proof-guided abstraction refinement to improve verifier precision while constraining kernel complexity \citep{sun2025bcf}. Approximation Enforced Execution investigates runtime enforcement for untrusted Linux kernel extensions and changes the assumptions around verifier enforcement \citep{sun2025aee}. Veritas/SpecCheck uses specification-based testing to detect eBPF verifier misbehavior \citep{lyu2025veritas}.
+
+Multi-tenant execution isolation is also being investigated independently of policy verification. vBPF explores eBPF virtualization and tenant/state isolation \citep{zhang2026vbpf}, while PeeR addresses scheduling and resource isolation for latency-critical eBPF applications \citep{carin2026peer}. BPF Token changes the delegation model for BPF operations through user-namespace-bound BPF filesystems \citep{bpftoken}. SeaBee addresses protection of security-critical eBPF infrastructure against privileged tampering \citep{seabee}.
+
+These systems motivate the broader multi-tenant security context but do not make them interchangeable baselines for the specific policy-verification experiment in this paper. In particular, the present work evaluates a hybrid verification strategy against a frozen KRAKENGUARD policy-analysis configuration rather than proposing a new BPF namespace, virtualization layer, scheduler, or verifier.
 
 \section{Hybrid Verification Design}
 
