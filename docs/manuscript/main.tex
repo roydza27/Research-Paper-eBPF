@@ -168,22 +168,22 @@ The system is intentionally simple:
     align=center, minimum height=12mm, text width=42mm, inner sep=5pt, line width=.8pt},
   violation/.style={draw=black, fill=gray!28, rounded corners=2mm,
     align=center, minimum height=12mm, text width=38mm, inner sep=5pt, line width=.8pt},
-  arr/.style={-{Latex[length=2.5mm]}, line width=.9pt, draw=black!75},
+  arr/.style={-{Latex[length=2.5mm]}, line width=.9pt, draw=black},
   goodarr/.style={-{Latex[length=2.5mm]}, line width=1.1pt, draw=black, densely dashed},
   warnarr/.style={-{Latex[length=2.5mm]}, line width=1.1pt, draw=black, dashed},
   badarr/.style={-{Latex[length=2.5mm]}, line width=1.1pt, draw=black, densely dotted}
 ]
 \node[proc] (program) at (0,0) {\textbf{Compiled eBPF Program}\\[-1pt]\footnotesize Bytecode and control-flow graph};
 \node[analyzer] (analyzer) at (0,-1.55) {\textbf{Abstract Policy Analyzer}\\[-1pt]\footnotesize Conservative static analysis of reachability and policy-relevant operations};
-\node[safe] (safe) at (-5.1,-3.45) {\textbf{\textcolor{green!40!black}{SAFE}}\\Accept program\\[-1pt]\footnotesize Policy compliance proved};
-\node[unknown] (unknown) at (0,-3.45) {\textbf{\textcolor{orange!70!black}{UNKNOWN}}\\Fallback required\\[-1pt]\footnotesize Insufficient abstract information};
-\node[violation] (violation) at (5.1,-3.45) {\textbf{\textcolor{red!75!black}{VIOLATION}}\\Reject program\\[-1pt]\footnotesize Policy violation proved};
+\node[safe] (safe) at (-5.1,-3.45) {\textbf{SAFE}\\Accept program\\[-1pt]\footnotesize Policy compliance proved};
+\node[unknown] (unknown) at (0,-3.45) {\textbf{UNKNOWN}\\Fallback required\\[-1pt]\footnotesize Insufficient abstract information};
+\node[violation] (violation) at (5.1,-3.45) {\textbf{VIOLATION}\\Reject program\\[-1pt]\footnotesize Policy violation proved};
 \node[proc] (symbolic) at (0,-5.15) {\textbf{KRAKENGUARD Symbolic Verification}\\[-1pt]\footnotesize Path exploration and constraint solving};
 \node[analyzer] (verdict) at (0,-6.75) {\textbf{Final Policy Verdict}\\[-1pt]\footnotesize Accept or reject; unresolved errors fail closed};
 \draw[arr] (program)--(analyzer);
-\draw[goodarr] (analyzer.south west) -- node[above left,align=center,font=\scriptsize,text=green!40!black] {Policy proved\\compliant} (safe.north);
+\draw[goodarr] (analyzer.south west) -- node[above left,align=center,font=\scriptsize,text=black] {Policy proved\\compliant} (safe.north);
 \draw[warnarr] (analyzer.south) -- node[right,font=\scriptsize,text=orange!80!black,xshift=2pt] {Inconclusive} (unknown.north);
-\draw[badarr] (analyzer.south east) -- node[above right,align=center,font=\scriptsize,text=red!75!black] {Violation proved} (violation.north);
+\draw[badarr] (analyzer.south east) -- node[above right,align=center,font=\scriptsize,text=black] {Violation proved} (violation.north);
 \draw[warnarr] (unknown.south)--(symbolic.north);
 \draw[arr] (symbolic)--(verdict);
 \end{tikzpicture}
@@ -286,9 +286,9 @@ P0--P3 remained nearly flat despite a large increase in compiled instruction cou
     \fill (\x,\val) circle (2pt);
     \node[below] at (\x,660) {\scriptsize \lab};
   }
-  \draw[thick] plot coordinates {(1,681.82) (2,679.87) (3,677.55) (4,672.43) (5,688.57) (6,692.90) (7,686.70) (8,707.61)};
+  % Discrete programs are shown as points, not connected as a continuous series.
 \end{tikzpicture}
-\caption{E1 median end-to-end verification time for eight compiled micro-programs.}
+\caption{E1 median end-to-end verification time by program. Points show medians; stems show distance from the 660 ms reference baseline. The vertical axis is truncated for legibility.}
 \label{fig:e1-time}
 \end{figure}
 
