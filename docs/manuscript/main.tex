@@ -1,22 +1,33 @@
-\documentclass[conference]{IEEEtran}
+\documentclass[12pt,a4paper]{article}
 
-\usepackage{cite}
+% Submission format: A4, 12 pt, 1.5 spacing. XeLaTeX/LuaLaTeX uses Times New Roman;
+% pdfLaTeX uses a metrically compatible Times family.
+\usepackage[margin=1in,headheight=14pt]{geometry}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage{mathptmx}
+\else
+  \usepackage{fontspec}
+  \setmainfont{Times New Roman}
+\fi
+\usepackage{setspace}
+\onehalfspacing
 \usepackage{amsmath,amssymb}
 \usepackage{booktabs}
 \usepackage{array}
 \usepackage{graphicx}
 \usepackage{tikz}
 \usepackage{url}
-\usepackage{balance}
 \usepackage{microtype}
 \usepackage[hidelinks]{hyperref}
+\usepackage[natbibapa]{apacite}
 
-% IEEEtran owns page geometry and heading typography. These settings improve
-% paragraph robustness without overriding the conference layout.
-\emergencystretch=1.5em
-\interdisplaylinepenalty=2500
+\setlength{\parindent}{0.5in}
+\setlength{\parskip}{0pt}
 \setlength{\tabcolsep}{4pt}
 \renewcommand{\arraystretch}{1.08}
+\emergencystretch=1.5em
 \newcommand{\ebpf}{eBPF}
 \newcommand{\safe}{\textsc{Safe}}
 \newcommand{\violation}{\textsc{Violation}}
@@ -29,28 +40,26 @@
 \title{Scalable Fine-Grained eBPF Isolation through Hybrid Policy Verification}
 
 \author{
-\IEEEauthorblockN{Royal Dsouza}
-\IEEEauthorblockA{
-MCA Program\\
-St. Aloysius University, Miri, India
-}
+\textbf{Royal Dsouza}\\
+MCA Program, St. Aloysius University, Miri, India\\
+Email: \textit{[add institutional email]}\\
+ORCID: \textit{[add if available]}
 }
 
 \maketitle
 
 \begin{abstract}
-Multi-tenant cloud systems use extended Berkeley Packet Filter (eBPF) programs for networking, observability, and security while sharing a Linux kernel. Kernel-verifier acceptance and tenant-specific policy compliance are related but distinct properties. This paper studies a selective-analysis design in which a conservative abstract policy analyzer decides straightforward cases and sends unresolved cases to a symbolic verifier. The project first established a reproducible baseline and measured two controlled workloads: a compiled-feature micro-corpus (E1) and a synthetic family with 1--64 feasible symbolic paths (E2). The E1 evidence audit passed with qualifications; the measurements suggest that instruction count alone is a weak predictor of end-to-end cost in the tested micro-corpus, while E2 shows increasing cost across its controlled path family. The project also implemented a three-valued abstract analyzer, a 24-program validation corpus, and a Phase 5 execution protocol. However, the repository's final results audit did not accept E3--E5 as completed experiments because the required execution artifacts were not present in the audited repository state. We therefore treat the often-cited 50\% discharge and 45.53\% savings figures as unverified report values, not established findings. The paper contributes a conservative design, a reproducible evaluation methodology, baseline observations, and an explicit account of the evidence still needed to support an end-to-end performance claim.
+Multi-tenant systems use extended Berkeley Packet Filter (eBPF) programs for networking, observability, and security in a shared kernel. Kernel-verifier acceptance does not guarantee compliance with a tenant-specific policy. This study examines a hybrid design combining conservative abstract analysis with symbolic-verification fallback. The analyzer returns SAFE, VIOLATION, or UNKNOWN; unresolved cases and analysis failures never authorize acceptance. The evaluation includes an audited baseline experiment (E1) and a controlled path-count experiment (E2). E1 suggests instruction count alone does not explain end-to-end verification time in the tested small corpus, while recorded E2 medians rise from 746.14 ms at one path to 1,231.16 ms at 64 paths. Raw E3--E5 artifacts were unavailable to the final independent audit, so reported hybrid discharge and savings figures remain unverified. The contribution is a conservative architecture, baseline characterization, and reproducible evaluation plan—not a confirmed general performance improvement.
 \end{abstract}
 
-\begin{IEEEkeywords}
-eBPF, multi-tenant cloud security, eBPF isolation, symbolic execution, abstract analysis, policy verification, KRAKENGUARD
-\end{IEEEkeywords}
+\noindent\textbf{Keywords:} eBPF, multi-tenant cloud security, eBPF isolation, symbolic execution, abstract analysis, policy verification, KRAKENGUARD
+
 
 \section{Introduction}
 
 Cloud infrastructure increasingly consolidates multiple workloads on shared Linux hosts. This multi-tenant model improves utilization, but it also means that security mechanisms operating inside the kernel must distinguish what one tenant is authorized to do from what another tenant is allowed to do. Extended Berkeley Packet Filter (eBPF) provides a programmable interface for networking, tracing, observability, and security, making it attractive for cloud-native infrastructure. At the same time, its kernel-level execution model makes isolation and policy enforcement important security concerns.
 
-The Linux eBPF verifier provides a fundamental safety gate, but verifier safety and fine-grained tenant policy compliance are different questions. A program may satisfy verifier safety requirements while still violating a tenant-specific policy governing helper calls, maps, memory, return values, or interactions with other programs. Recent systems have therefore explored fine-grained policy analysis and related verifier-assurance mechanisms, while broader studies characterize the Linux eBPF runtime and its operational context \cite{gbadamosi2024ebpfruntime}. KRAKENGUARD, for example, uses symbolic analysis to reason about fine-grained eBPF isolation policies and identifies symbolic path and expression growth as an important scalability concern \cite{patel2026krakenguard}. Other recent work addresses verifier precision through proof-guided refinement, verifier-resilient execution, verifier testing, tenant virtualization, and resource isolation \cite{sun2025bcf,sun2025aee,lyu2025veritas,zhang2026vbpf,carin2026peer}.
+The Linux eBPF verifier provides a fundamental safety gate, but verifier safety and fine-grained tenant policy compliance are different questions. A program may satisfy verifier safety requirements while still violating a tenant-specific policy governing helper calls, maps, memory, return values, or interactions with other programs. Recent systems have therefore explored fine-grained policy analysis and related verifier-assurance mechanisms, while broader studies characterize the Linux eBPF runtime and its operational context \citep{gbadamosi2024ebpfruntime}. KRAKENGUARD, for example, uses symbolic analysis to reason about fine-grained eBPF isolation policies and identifies symbolic path and expression growth as an important scalability concern \citep{patel2026krakenguard}. Other recent work addresses verifier precision through proof-guided refinement, verifier-resilient execution, verifier testing, tenant virtualization, and resource isolation \citep{sun2025bcf,sun2025aee,lyu2025veritas,zhang2026vbpf,carin2026peer}.
 
 This work focuses on a narrower question within that broader multi-tenant security problem: whether expensive symbolic policy verification can be invoked selectively rather than universally. The central research question is:
 
@@ -70,7 +79,7 @@ The paper makes four contributions:
     \item We audit the strength and limits of the available evidence, separating measured baseline observations from Phase 5 results that are not independently reproducible from the audited repository state.
 \end{enumerate}
 
-\section{Background and Motivation}
+\subsection{Background and Motivation}
 
 \subsection{eBPF in Multi-Tenant Infrastructure}
 
@@ -84,7 +93,7 @@ The policy may constrain operations such as helper calls, map accesses, memory b
 
 \subsection{Symbolic Policy Verification}
 
-KRAKENGUARD provides a relevant baseline for fine-grained eBPF isolation. Its verification pipeline lifts eBPF bytecode into an intermediate representation, resolves helpers and other symbols, constructs a verification harness, and uses KLEE-based symbolic execution to explore policy-relevant behavior \cite{patel2026krakenguard}. This makes symbolic execution useful for cases where the policy decision depends on values that cannot be determined by simple local inspection.
+KRAKENGUARD provides a relevant baseline for fine-grained eBPF isolation. Its verification pipeline lifts eBPF bytecode into an intermediate representation, resolves helpers and other symbols, constructs a verification harness, and uses KLEE-based symbolic execution to explore policy-relevant behavior \citep{patel2026krakenguard}. This makes symbolic execution useful for cases where the policy decision depends on values that cannot be determined by simple local inspection.
 
 The drawback is that symbolic execution can require exploration of multiple feasible execution paths. If a program has $P$ feasible paths, the symbolic workload can increase as $P$ increases. The exact relationship is workload dependent; this paper does not assume a universal asymptotic complexity. Instead, E2 experimentally controls path growth in a synthetic family.
 
@@ -103,15 +112,7 @@ V_{\mathrm{sym}}(P,\Pi), & A(P,\Pi)=\mathrm{UNKNOWN}.
 \end{equation}
 Here, $A$ is the abstract analyzer and $V_{\mathrm{sym}}$ is the authoritative symbolic verifier. The hybrid method does not claim that symbolic execution becomes intrinsically faster. Its potential benefit comes from avoiding symbolic execution entirely for programs that the abstract stage can decide.
 
-\section{Related Work}
-
-Recent eBPF research covers several dimensions of the security and isolation problem. KRAKENGUARD directly addresses fine-grained eBPF isolation using symbolic analysis and serves as the primary baseline for this study \cite{patel2026krakenguard}. BCF applies proof-guided abstraction refinement to improve verifier precision while constraining kernel complexity \cite{sun2025bcf}. Approximation Enforced Execution investigates runtime enforcement for untrusted Linux kernel extensions and changes the assumptions around verifier enforcement \cite{sun2025aee}. Veritas/SpecCheck uses specification-based testing to detect eBPF verifier misbehavior \cite{lyu2025veritas}.
-
-Multi-tenant execution isolation is also being investigated independently of policy verification. vBPF explores eBPF virtualization and tenant/state isolation \cite{zhang2026vbpf}, while PeeR addresses scheduling and resource isolation for latency-critical eBPF applications \cite{carin2026peer}. BPF Token changes the delegation model for BPF operations through user-namespace-bound BPF filesystems \cite{bpftoken}. SeaBee addresses protection of security-critical eBPF infrastructure against privileged tampering \cite{seabee}.
-
-These systems motivate the broader multi-tenant security context but do not make them interchangeable baselines for the specific policy-verification experiment in this paper. In particular, the present work evaluates a hybrid verification strategy against a frozen KRAKENGUARD policy-analysis configuration rather than proposing a new BPF namespace, virtualization layer, scheduler, or verifier.
-
-\section{Research Problem and Hypotheses}
+\subsection{Research Objectives and Questions}
 
 The research problem is to reduce unnecessary symbolic policy-verification work without converting uncertainty into an unsafe decision.
 
@@ -129,6 +130,15 @@ The Phase 5 hypotheses are evaluation targets, not findings until the full execu
     \item \textbf{H5-P: End-to-end cost.} Hybrid verification reduces complete verification time when abstract-analysis cost plus any required fallback cost is lower than symbolic-only verification.
     \item \textbf{H5-S: Fallback scaling.} Fallback amount and cost can be characterized as symbolic path complexity increases.
 \end{itemize}
+
+
+\section{Review of Literature}
+
+Recent eBPF research covers several dimensions of the security and isolation problem. KRAKENGUARD directly addresses fine-grained eBPF isolation using symbolic analysis and serves as the primary baseline for this study \citep{patel2026krakenguard}. BCF applies proof-guided abstraction refinement to improve verifier precision while constraining kernel complexity \citep{sun2025bcf}. Approximation Enforced Execution investigates runtime enforcement for untrusted Linux kernel extensions and changes the assumptions around verifier enforcement \citep{sun2025aee}. Veritas/SpecCheck uses specification-based testing to detect eBPF verifier misbehavior \citep{lyu2025veritas}.
+
+Multi-tenant execution isolation is also being investigated independently of policy verification. vBPF explores eBPF virtualization and tenant/state isolation \citep{zhang2026vbpf}, while PeeR addresses scheduling and resource isolation for latency-critical eBPF applications \citep{carin2026peer}. BPF Token changes the delegation model for BPF operations through user-namespace-bound BPF filesystems \citep{bpftoken}. SeaBee addresses protection of security-critical eBPF infrastructure against privileged tampering \citep{seabee}.
+
+These systems motivate the broader multi-tenant security context but do not make them interchangeable baselines for the specific policy-verification experiment in this paper. In particular, the present work evaluates a hybrid verification strategy against a frozen KRAKENGUARD policy-analysis configuration rather than proposing a new BPF namespace, virtualization layer, scheduler, or verifier.
 
 \section{Hybrid Verification Design}
 
@@ -173,7 +183,7 @@ The system is intentionally simple:
 \label{fig:architecture}
 \end{figure*}
 
-The analyzer operates on the compiled eBPF object and its control-flow graph rather than relying only on source-level C syntax. This distinction follows from the semantics of the BPF instruction set and the Linux toolchain, in which source constructs may be optimized or transformed before verification \cite{linuxbpfdocs,thaler2024bpfisa}. It tracks reachability, selected integer facts, policy conditions, helper access, map access, memory ranges, return values, and analysis status.
+The analyzer operates on the compiled eBPF object and its control-flow graph rather than relying only on source-level C syntax. This distinction follows from the semantics of the BPF instruction set and the Linux toolchain, in which source constructs may be optimized or transformed before verification \citep{linuxbpfdocs,thaler2024bpfisa}. It tracks reachability, selected integer facts, policy conditions, helper access, map access, memory ranges, return values, and analysis status.
 
 \subsection{Three-Valued Abstract Decision}
 
@@ -194,7 +204,7 @@ The analyzer is designed around a one-sided safety requirement: an abstract anal
 \]
 Only the symbolic fallback can resolve an unresolved case. This design also makes the hybrid system compatible with the role of KRAKENGUARD as the authoritative reference for the experiments.
 
-\section{Experimental Methodology}
+\section{Research Methodology}
 
 \subsection{Frozen Baseline and Environment}
 
@@ -321,7 +331,7 @@ E5 is designed to examine hybrid behavior across symbolic path strata. The corpu
 
 The experiment reports abstract time, fallback time, total hybrid time, and fallback fraction. It does not assume that the abstract analyzer accelerates symbolic execution itself. Its intended benefit is elimination of unnecessary symbolic invocations.
 
-\section{Results and Evidence Status}
+\section{Results / Findings}
 
 \subsection{E1: Program Features Do Not Explain Cost on Their Own}
 
@@ -376,7 +386,7 @@ The project's reported Phase 5 summaries would, if verified, suggest a trade-off
 
 The engineering record also includes an unsuccessful attempt to run a real-world Katran object through the frozen verifier. Because the attempt did not produce an authoritative policy result, it cannot support a performance comparison. It instead points to a practical requirement for future work: establish compatibility and obtain a valid baseline verdict before interpreting timing data from a production-oriented program.
 
-\section{Threats to Validity and Limitations}
+\section{Limitations of the Study}
 
 Several limitations bound the conclusions.
 
@@ -396,7 +406,7 @@ E2 experimentally covers 1--64 feasible paths. E5 reaches only 1--32 paths for e
 Wall time is measured for the complete verification workflow. Client-process CPU time is not treated as equivalent to verifier wall time. Memory scaling and detailed solver-time scaling are not used as primary conclusions because they were not consistently exposed by the frozen pipeline.
 
 \subsection{Generalization}
-The 50.0\% discharge rate is a property of the evaluated 24-program corpus. It must not be interpreted as the fraction of arbitrary eBPF programs that can be discharged. Similarly, the 45.53\% savings figure is an observed corpus-level result and not a universal performance guarantee.
+The previously reported 50.0\% discharge rate and 45.53\% savings figure could not be independently recomputed because the required raw E3--E5 result sets were absent from the final audit. They are not established findings and must not be interpreted as measured performance outcomes until the raw artifacts are recovered or the experiments are rerun.
 
 \section{Reproducibility and Provenance}
 
@@ -408,7 +418,12 @@ This evidence boundary is consequential: the manuscript reports E1 as an audited
 
 \input{extended_sections}
 
-\section{Conclusion and Future Work}
+\section{Recommendations / Implications}
+The immediate recommendation is to recover the immutable Phase 5 execution tree or rerun E3--E5, preserve all raw rows, and independently regenerate every summary from a versioned analysis script. The report should include per-program paired timings, abstract-stage overhead, fallback time, discharge coverage, mismatch counts, failures, timeouts, and uncertainty summaries. Any correctness mismatch must block a performance claim until its cause is understood.
+
+For deployment, keep the abstract analyzer conservative, pin the policy and verifier versions, and treat unsupported semantics, timeouts, crashes, and malformed outputs as non-accepting outcomes. Evaluate additional program types, hooks, helper sets, map behaviors, and kernels before claiming broad applicability. Operational isolation of the analysis process and resource limits remain necessary; this analyzer is not a replacement for the Linux kernel verifier or a complete tenant-isolation mechanism.
+
+\section{Conclusion}
 
 This project began with a broad interest in multi-tenant eBPF confinement and narrowed the thesis question after reviewing newer work on fine-grained isolation, verifier precision, delegation, virtualization, and scheduling. That review matters: a new namespace, a generic LSM policy, or another verifier-testing tool would overlap with existing systems and would not by itself establish a defensible contribution. The surviving question is more specific: can a conservative abstract front-end avoid some symbolic policy-verification work without changing the final security decision?
 
@@ -418,11 +433,7 @@ The project also produced an abstract analyzer, a structured 24-program corpus, 
 
 This distinction does not make the project less useful; it makes the paper more defensible. The contribution at this stage is a carefully bounded hybrid design, a baseline analysis, and a reproducible evaluation plan with explicit failure semantics. Future work should complete the Phase 5 evidence audit, expand the corpus beyond synthetic XDP programs, measure additional hooks and policy forms, and investigate targeted refinement for cases that return \unknown. A separate real-world Katran attempt also exposed a compatibility boundary: the attempted run terminated before producing a valid verification result, so it is an engineering lesson rather than evidence of successful production-workload evaluation.
 
-\section*{Acknowledgment}
-The author thanks the maintainers and authors of the open-source eBPF analysis infrastructure used as experimental baselines. The experiments and analysis reported here are intended as a research evaluation and not as a production security guarantee.
-
-\balance
-\bibliographystyle{IEEEtran}
+\bibliographystyle{apacite}
 \bibliography{references}
 
 \end{document}
