@@ -260,6 +260,27 @@ P7 & 20 & 2 & 707.61\\
 
 P0--P3 remained nearly flat despite a large increase in compiled instruction count. P4 exhibited one genuine timing spike, which was retained rather than removed. E1 therefore indicates that raw instruction count alone does not explain the observed end-to-end cost in this small regime. Feature-dependent symbolic behavior and fixed pipeline overhead are separate dimensions.
 
+\\begin{figure}[htbp]
+\\centering
+\\begin{tikzpicture}[x=0.52cm,y=0.035cm]
+  \\draw[->] (0,660) -- (9,660) node[right] {Program};
+  \\draw[->] (0,660) -- (0,720) node[above,align=center] {Median time\\ (ms)};
+  \\foreach \\y in {670,680,690,700,710,720} {
+    \\draw[gray!25] (0,\\y) -- (8.4,\\y);
+    \\node[left] at (0,\\y) {\\scriptsize \\y};
+  }
+  \\foreach \\x/\\lab/\\val in {1/P0/681.82,2/P1/679.87,3/P2/677.55,4/P3/672.43,5/P4/688.57,6/P5/692.90,7/P6/686.70,8/P7/707.61} {
+    \\draw[gray!70] (\\x,660) -- (\\x,\\val);
+    \\fill (\\x,\\val) circle (2pt);
+    \\node[below] at (\\x,660) {\\scriptsize \\lab};
+  }
+  \\draw[thick] plot coordinates {(1,681.82) (2,679.87) (3,677.55) (4,672.43) (5,688.57) (6,692.90) (7,686.70) (8,707.61)};
+\\end{tikzpicture}
+\\caption{E1 median end-to-end verification time for eight compiled micro-programs.}
+\\label{fig:e1-time}
+\\end{figure}
+
+
 \subsection{E2: Controlled Symbolic Path Scaling}
 
 E2 isolates feasible symbolic path growth more directly. The controlled program family produced 1, 2, 4, 8, 16, 32, and 64 feasible KLEE paths. Each level used two warmups and seven measured repetitions, for 63 total executions and 49 measured observations.
