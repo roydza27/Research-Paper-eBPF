@@ -12,6 +12,7 @@
   \setmainfont{Times New Roman}
 \fi
 \usepackage{setspace}
+\usepackage{titlesec}
 \onehalfspacing
 \usepackage{amsmath,amssymb}
 \usepackage{booktabs}
@@ -23,7 +24,7 @@
 \usepackage[hidelinks]{hyperref}
 \usepackage[natbibapa]{apacite}
 
-\setlength{\parindent}{0.5in}
+% Use left-aligned numbered headings, matching the supplied reference paper.\n\titleformat{\section}{\normalfont\large\bfseries}{\thesection.}{0.6em}{}\n\titleformat{\subsection}{\normalfont\normalsize\bfseries}{\thesubsection}{0.6em}{}\n\titlespacing*{\section}{0pt}{1.3ex plus 0.4ex minus 0.2ex}{0.7ex}\n\titlespacing*{\subsection}{0pt}{1.0ex plus 0.3ex minus 0.2ex}{0.4ex}\n\setlength{\parindent}{0.5in}
 \setlength{\parskip}{0pt}
 \setlength{\tabcolsep}{4pt}
 \renewcommand{\arraystretch}{1.08}
@@ -259,6 +260,27 @@ P7 & 20 & 2 & 707.61\\
 
 P0--P3 remained nearly flat despite a large increase in compiled instruction count. P4 exhibited one genuine timing spike, which was retained rather than removed. E1 therefore indicates that raw instruction count alone does not explain the observed end-to-end cost in this small regime. Feature-dependent symbolic behavior and fixed pipeline overhead are separate dimensions.
 
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[x=0.52cm,y=0.035cm]
+  \draw[->] (0,660) -- (9,660) node[right] {Program};
+  \draw[->] (0,660) -- (0,720) node[above,align=center] {Median time\ (ms)};
+  \foreach \y in {670,680,690,700,710,720} {
+    \draw[gray!25] (0,\y) -- (8.4,\y);
+    \node[left] at (0,\y) {\scriptsize \y};
+  }
+  \foreach \x/\lab/\val in {1/P0/681.82,2/P1/679.87,3/P2/677.55,4/P3/672.43,5/P4/688.57,6/P5/692.90,7/P6/686.70,8/P7/707.61} {
+    \draw[gray!70] (\x,660) -- (\x,\val);
+    \fill (\x,\val) circle (2pt);
+    \node[below] at (\x,660) {\scriptsize \lab};
+  }
+  \draw[thick] plot coordinates {(1,681.82) (2,679.87) (3,677.55) (4,672.43) (5,688.57) (6,692.90) (7,686.70) (8,707.61)};
+\end{tikzpicture}
+\caption{E1 median end-to-end verification time for eight compiled micro-programs.}
+\label{fig:e1-time}
+\end{figure}
+
+
 \subsection{E2: Controlled Symbolic Path Scaling}
 
 E2 isolates feasible symbolic path growth more directly. The controlled program family produced 1, 2, 4, 8, 16, 32, and 64 feasible KLEE paths. Each level used two warmups and seven measured repetitions, for 63 total executions and 49 measured observations.
@@ -267,26 +289,49 @@ E2 isolates feasible symbolic path growth more directly. The controlled program 
 \centering
 \caption{E2 verification cost versus observed feasible symbolic paths.}
 \label{tab:e2}
-\begin{tabular}{rrr}
+\begin{tabular}{rrrr}
 \toprule
-Paths & Median (ms) & Mean (ms)\\
+Paths & Median (ms) & Mean (ms) & Median change\\
 \midrule
-1  & 746.14  & 757.28\\
-2  & 749.93  & 752.64\\
-4  & 762.77  & 770.22\\
-8  & 789.88  & 789.19\\
-16 & 853.02  & 854.79\\
-32 & 973.44  & 972.45\\
-64 & 1231.16 & 1266.86\\
+1  & 746.14  & 757.28  & --\\
+2  & 749.93  & 752.64  & 0.5\%\\
+4  & 762.77  & 770.22  & 1.7\%\\
+8  & 789.88  & 789.19  & 3.6\%\\
+16 & 853.02  & 854.79  & 8.0\%\\
+32 & 973.44  & 972.45  & 14.1\%\\
+64 & 1231.16 & 1266.86 & 26.5\%\\
 \bottomrule
 \end{tabular}
 \end{table}
 
-The median increased by approximately 65.0\% from one path to 64 paths. A linear fit in the tested regime was approximately:
+The median increased by approximately 65.0\% from one path to 64 paths. Table~\\ref{tab:e2} also shows that the stepwise percentage increase becomes larger at higher path counts; the final doubling from 32 to 64 paths is associated with a 26.5\% median increase. A linear fit in the tested regime was approximately:
 \[
 T(P) \approx 740\ \mathrm{ms} + 7.6\ \mathrm{ms}\cdot P,
 \]
 with $R^2>0.999$ for the measured points. This is an empirical model for the tested family, not a claim of universal asymptotic complexity. E2 establishes the motivation for reducing the number of programs that require symbolic verification.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[x=0.82cm,y=0.0048cm]
+  \draw[->] (0,700) -- (6.8,700) node[right] {Paths (log scale)};
+  \draw[->] (0,700) -- (0,1320) node[above,align=center] {Median time\ (ms)};
+  \foreach \y in {800,900,1000,1100,1200,1300} {
+    \draw[gray!25] (0,\y) -- (6.25,\y);
+    \node[left] at (0,\y) {\scriptsize \y};
+  }
+  \foreach \x/\lab in {0/1,1/2,2/4,3/8,4/16,5/32,6/64} {
+    \draw (\x,700) -- (\x,690);
+    \node[below] at (\x,690) {\scriptsize \lab};
+  }
+  \draw[thick] plot coordinates {(0,746.14) (1,749.93) (2,762.77) (3,789.88) (4,853.02) (5,973.44) (6,1231.16)};
+  \foreach \x/\y in {0/746.14,1/749.93,2/762.77,3/789.88,4/853.02,5/973.44,6/1231.16} {
+    \fill (\x,\y) circle (1.5pt);
+  }
+\end{tikzpicture}
+\caption{Recorded E2 median verification time by feasible KLEE path count. The horizontal axis uses powers of two for readability.}
+\label{fig:e2-scaling}
+\end{figure}
+
 
 \subsection{Phase 5 Corpus}
 
@@ -368,6 +413,27 @@ E3 & Not independently verified & Claimed discharge counts require raw execution
 E4 & Not independently verified & Claimed timing savings require all paired runs and recomputed aggregates. \\
 E5 & Not independently verified & Claimed strata summaries require reproducible source telemetry. \\
 Katran & Unsuccessful attempt & The run terminated before producing a valid verification result. \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+
+\begin{table}[htbp]
+\centering
+\caption{Consolidated quantitative findings and evidence boundaries.}
+\label{tab:quant-summary}
+\begin{tabular}{p{0.19\linewidth}p{0.24\linewidth}p{0.45\linewidth}}
+\toprule
+Measure & Recorded value & Interpretation \\
+\midrule
+E1 corpus & 8 programs; 72 runs & Two warmups and seven measured repetitions per program; dataset integrity audited with qualifications. \\
+E1 median range & 672.43--707.61 ms & A 35.18 ms span across the eight program medians; not a general size-cost law. \\
+E1 instruction range & 2--20 instructions & One intended source branch was optimized away; basic-block count was heuristic. \\
+E2 corpus & 7 path strata; 63 runs & 1, 2, 4, 8, 16, 32, and 64 paths; two warmups plus seven measured repetitions per stratum. \\
+E2 median endpoints & 746.14 to 1231.16 ms & Approximately 65.0\% higher at 64 paths than at one path. \\
+E2 descriptive fit & $T(P)\approx740+7.6P$ ms & Empirical fit for this synthetic family only; not a universal complexity claim. \\
+E4 planned matrix & 432 executions & 24 programs, two conditions, and nine runs per condition; planned count is not proof of completed runs. \\
+E3--E5 outcomes & Not verified & Raw Phase 5 execution artifacts were unavailable for independent recomputation. \\
 \bottomrule
 \end{tabular}
 \end{table}
