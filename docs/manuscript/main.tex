@@ -24,7 +24,12 @@
 \usepackage[hidelinks]{hyperref}
 \usepackage[natbibapa]{apacite}
 
-% Use left-aligned numbered headings, matching the supplied reference paper.\n\titleformat{\section}{\normalfont\large\bfseries}{\thesection.}{0.6em}{}\n\titleformat{\subsection}{\normalfont\normalsize\bfseries}{\thesubsection}{0.6em}{}\n\titlespacing*{\section}{0pt}{1.3ex plus 0.4ex minus 0.2ex}{0.7ex}\n\titlespacing*{\subsection}{0pt}{1.0ex plus 0.3ex minus 0.2ex}{0.4ex}\n\setlength{\parindent}{0.5in}
+% Left-aligned numbered headings, consistent with the reference paper.
+\titleformat{\section}{\normalfont\large\bfseries}{\thesection.}{0.6em}{}
+\titleformat{\subsection}{\normalfont\normalsize\bfseries}{\thesubsection}{0.6em}{}
+\titlespacing*{\section}{0pt}{1.3ex plus 0.4ex minus 0.2ex}{0.7ex}
+\titlespacing*{\subsection}{0pt}{1.0ex plus 0.3ex minus 0.2ex}{0.4ex}
+\setlength{\parindent}{0.5in}
 \setlength{\parskip}{0pt}
 \setlength{\tabcolsep}{4pt}
 \renewcommand{\arraystretch}{1.08}
@@ -73,12 +78,13 @@ The proposed approach places a lightweight abstract policy analyzer before symbo
 The work does not replace the Linux verifier or KRAKENGUARD. It investigates a selective policy-analysis workflow and documents both its prototype design and the evidence required to evaluate its performance credibly.
 
 The paper makes four contributions:
-\begin{enumerate}
-    \item We characterize the cost behavior of a frozen KRAKENGUARD configuration using controlled program-feature and symbolic-path experiments.
-    \item We design a conservative abstract policy-analysis stage with explicit \textsc{Safe}, \textsc{Violation}, and \textsc{Unknown} outcomes.
-    \item We implement a conservative three-valued abstract analyzer and specify how it integrates with symbolic fallback.
-    \item We audit the strength and limits of the available evidence, separating measured baseline observations from Phase 5 results that are not independently reproducible from the audited repository state.
-\end{enumerate}
+\noindent\textbf{Contribution 1.} We characterize the cost behavior of a frozen KRAKENGUARD configuration using controlled program-feature and symbolic-path experiments.
+
+\noindent\textbf{Contribution 2.} We design a conservative abstract policy-analysis stage with explicit \textsc{Safe}, \textsc{Violation}, and \textsc{Unknown} outcomes.
+
+\noindent\textbf{Contribution 3.} We implement a conservative three-valued abstract analyzer and specify how it integrates with symbolic fallback.
+
+\noindent\textbf{Contribution 4.} We audit the strength and limits of the available evidence, separating measured baseline observations from Phase 5 results that are not independently reproducible from the audited repository state.
 
 \subsection{Background and Motivation}
 
@@ -125,12 +131,13 @@ Can inexpensive abstract policy analysis discharge policy-safe eBPF programs bef
 The evaluation is divided into two logical questions. First, can the abstract stage safely classify a useful subset of programs? Second, does avoiding symbolic verification reduce complete end-to-end verification cost?
 
 The Phase 5 hypotheses are evaluation targets, not findings until the full execution matrix is available and independently checked:
-\begin{itemize}
-    \item \textbf{H5-C: Correctness.} Abstractly discharged final decisions agree with the frozen symbolic reference on the validation corpus.
-    \item \textbf{H5-COV: Selective discharge.} A measurable subset of the corpus can be classified without symbolic fallback.
-    \item \textbf{H5-P: End-to-end cost.} Hybrid verification reduces complete verification time when abstract-analysis cost plus any required fallback cost is lower than symbolic-only verification.
-    \item \textbf{H5-S: Fallback scaling.} Fallback amount and cost can be characterized as symbolic path complexity increases.
-\end{itemize}
+\noindent \textbf{H5-C: Correctness.} Abstractly discharged final decisions agree with the frozen symbolic reference on the validation corpus.
+
+\noindent \textbf{H5-COV: Selective discharge.} A measurable subset of the corpus can be classified without symbolic fallback.
+
+\noindent \textbf{H5-P: End-to-end cost.} Hybrid verification reduces complete verification time when abstract-analysis cost plus any required fallback cost is lower than symbolic-only verification.
+
+\noindent \textbf{H5-S: Fallback scaling.} Fallback amount and cost can be characterized as symbolic path complexity increases.
 
 
 \section{Review of Literature}
@@ -151,20 +158,20 @@ The system is intentionally simple:
 \centering
 \begin{tikzpicture}[
   font=\small,
-  proc/.style={draw=blue!65!black, fill=blue!7, rounded corners=2mm,
+  proc/.style={draw=black, fill=gray!12, rounded corners=2mm,
     align=center, minimum height=9mm, text width=43mm, inner sep=5pt, line width=.8pt},
-  analyzer/.style={draw=violet!75!black, fill=violet!9, rounded corners=2mm,
+  analyzer/.style={draw=black, fill=gray!22, rounded corners=2mm,
     align=center, minimum height=11mm, text width=65mm, inner sep=6pt, line width=.9pt},
-  safe/.style={draw=green!45!black, fill=green!10, rounded corners=2mm,
+  safe/.style={draw=black, fill=gray!5, rounded corners=2mm,
     align=center, minimum height=12mm, text width=38mm, inner sep=5pt, line width=.8pt},
-  unknown/.style={draw=orange!80!black, fill=orange!12, rounded corners=2mm,
+  unknown/.style={draw=black, fill=gray!16, rounded corners=2mm,
     align=center, minimum height=12mm, text width=42mm, inner sep=5pt, line width=.8pt},
-  violation/.style={draw=red!75!black, fill=red!8, rounded corners=2mm,
+  violation/.style={draw=black, fill=gray!28, rounded corners=2mm,
     align=center, minimum height=12mm, text width=38mm, inner sep=5pt, line width=.8pt},
   arr/.style={-{Latex[length=2.5mm]}, line width=.9pt, draw=black!75},
-  goodarr/.style={-{Latex[length=2.5mm]}, line width=1.1pt, draw=green!50!black},
-  warnarr/.style={-{Latex[length=2.5mm]}, line width=1.1pt, draw=orange!85!black},
-  badarr/.style={-{Latex[length=2.5mm]}, line width=1.1pt, draw=red!75!black}
+  goodarr/.style={-{Latex[length=2.5mm]}, line width=1.1pt, draw=black, densely dashed},
+  warnarr/.style={-{Latex[length=2.5mm]}, line width=1.1pt, draw=black, dashed},
+  badarr/.style={-{Latex[length=2.5mm]}, line width=1.1pt, draw=black, densely dotted}
 ]
 \node[proc] (program) at (0,0) {\textbf{Compiled eBPF Program}\\[-1pt]\footnotesize Bytecode and control-flow graph};
 \node[analyzer] (analyzer) at (0,-1.55) {\textbf{Abstract Policy Analyzer}\\[-1pt]\footnotesize Conservative static analysis of reachability and policy-relevant operations};
@@ -189,11 +196,11 @@ The analyzer operates on the compiled eBPF object and its control-flow graph rat
 \subsection{Three-Valued Abstract Decision}
 
 The analyzer returns exactly one of three abstract decisions:
-\begin{itemize}
-    \item \textsc{Safe}: every reachable abstract state is proven policy compliant.
-    \item \textsc{Violation}: a policy-forbidden action is proven reachable.
-    \item \textsc{Unknown}: the available abstract domain cannot prove compliance or violation.
-\end{itemize}
+\noindent \textsc{Safe}: every reachable abstract state is proven policy compliant.
+
+\noindent \textsc{Violation}: a policy-forbidden action is proven reachable.
+
+\noindent \textsc{Unknown}: the available abstract domain cannot prove compliance or violation.
 
 The distinction between \textsc{Unknown} and \textsc{Safe} is fundamental. Unsupported instructions, unknown helper identities, unresolved map identity or access mode, insufficient memory proofs, and unresolved branch conditions conservatively produce \textsc{Unknown}. A syntactic occurrence of a forbidden operation is not sufficient for \textsc{Violation} unless its reachability is established.
 
@@ -219,16 +226,21 @@ The fixed policy used by E1 and Phase 5 has SHA-256:
 \]
 
 The experimental environment is:
-\begin{itemize}
-    \item Linux kernel 7.2.3-arch1-2, x86\_64;
-    \item AMD Ryzen 5 5600H, 12 logical cores;
-    \item approximately 7.1 GiB RAM;
-    \item Clang/LLVM 22.1.8;
-    \item BPF target with \texttt{-mcpu=v1};
-    \item optimization \texttt{-O2 -g};
-    \item XDP hook type;
-    \item Docker-based KRAKENGUARD artifact with immutable image digest \texttt{sha256:9633a6922518589803a4c9b8123d0549e54b5f57c1d04f9e383e822fd9ae3bd4}.
-\end{itemize}
+\noindent Linux kernel 7.2.3-arch1-2, x86\_64;
+
+\noindent AMD Ryzen 5 5600H, 12 logical cores;
+
+\noindent approximately 7.1 GiB RAM;
+
+\noindent Clang/LLVM 22.1.8;
+
+\noindent BPF target with \texttt{-mcpu=v1};
+
+\noindent optimization \texttt{-O2 -g};
+
+\noindent XDP hook type;
+
+\noindent Docker-based KRAKENGUARD artifact with immutable image digest \texttt{sha256:9633a6922518589803a4c9b8123d0549e54b5f57c1d04f9e383e822fd9ae3bd4}.
 
 The compiler flags were \texttt{-target bpf -mcpu=v1 -D\_\_TARGET\_ARCH\_x86 -O2 -g} with the required system include path.
 
@@ -244,7 +256,7 @@ The compiled corpus ranged from a 2-instruction minimal XDP program to a 20-inst
 \label{tab:e1}
 \begin{tabular}{lrrr}
 \toprule
-Program & Instructions & Paths & Median (ms)\\
+\textbf{Program} & \textbf{Instructions} & \textbf{Paths} & \textbf{Median (ms)}\\
 \midrule
 P0 & 2  & 1 & 681.82\\
 P1 & 5  & 1 & 679.87\\
@@ -336,12 +348,13 @@ with $R^2>0.999$ for the measured points. This is an empirical model for the tes
 \subsection{Phase 5 Corpus}
 
 The Phase 5 validation corpus contains 24 programs divided equally into four categories:
-\begin{itemize}
-    \item \textbf{A:} abstractly provable compliant, 6 programs;
-    \item \textbf{B:} abstractly uncertain but symbolically compliant, 6 programs;
-    \item \textbf{C:} abstractly provable violation, 6 programs;
-    \item \textbf{D:} abstractly uncertain and symbolically violating, 6 programs.
-\end{itemize}
+\noindent \textbf{A:} abstractly provable compliant, 6 programs;
+
+\noindent \textbf{B:} abstractly uncertain but symbolically compliant, 6 programs;
+
+\noindent \textbf{C:} abstractly provable violation, 6 programs;
+
+\noindent \textbf{D:} abstractly uncertain and symbolically violating, 6 programs.
 
 This structure separates easy cases from cases that intentionally require the symbolic fallback.
 
