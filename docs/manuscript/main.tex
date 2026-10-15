@@ -12,6 +12,7 @@
   \setmainfont{Times New Roman}
 \fi
 \usepackage{setspace}
+\usepackage{titlesec}
 \onehalfspacing
 \usepackage{amsmath,amssymb}
 \usepackage{booktabs}
@@ -23,7 +24,7 @@
 \usepackage[hidelinks]{hyperref}
 \usepackage[natbibapa]{apacite}
 
-\setlength{\parindent}{0.5in}
+% Use left-aligned numbered headings, matching the supplied reference paper.\n\titleformat{\section}{\normalfont\large\bfseries}{\thesection.}{0.6em}{}\n\titleformat{\subsection}{\normalfont\normalsize\bfseries}{\thesubsection}{0.6em}{}\n\titlespacing*{\section}{0pt}{1.3ex plus 0.4ex minus 0.2ex}{0.7ex}\n\titlespacing*{\subsection}{0pt}{1.0ex plus 0.3ex minus 0.2ex}{0.4ex}\n\setlength{\parindent}{0.5in}
 \setlength{\parskip}{0pt}
 \setlength{\tabcolsep}{4pt}
 \renewcommand{\arraystretch}{1.08}
@@ -287,6 +288,29 @@ The median increased by approximately 65.0\% from one path to 64 paths. A linear
 T(P) \approx 740\ \mathrm{ms} + 7.6\ \mathrm{ms}\cdot P,
 \]
 with $R^2>0.999$ for the measured points. This is an empirical model for the tested family, not a claim of universal asymptotic complexity. E2 establishes the motivation for reducing the number of programs that require symbolic verification.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[x=0.82cm,y=0.0048cm]
+  \draw[->] (0,700) -- (6.8,700) node[right] {Paths (log scale)};
+  \draw[->] (0,700) -- (0,1320) node[above,align=center] {Median time\ (ms)};
+  \foreach \y in {800,900,1000,1100,1200,1300} {
+    \draw[gray!25] (0,\y) -- (6.25,\y);
+    \node[left] at (0,\y) {\scriptsize \y};
+  }
+  \foreach \x/\lab in {0/1,1/2,2/4,3/8,4/16,5/32,6/64} {
+    \draw (\x,700) -- (\x,690);
+    \node[below] at (\x,690) {\scriptsize \lab};
+  }
+  \draw[thick] plot coordinates {(0,746.14) (1,749.93) (2,762.77) (3,789.88) (4,853.02) (5,973.44) (6,1231.16)};
+  \foreach \x/\y in {0/746.14,1/749.93,2/762.77,3/789.88,4/853.02,5/973.44,6/1231.16} {
+    \fill (\x,\y) circle (1.5pt);
+  }
+\end{tikzpicture}
+\caption{Recorded E2 median verification time by feasible KLEE path count. The horizontal axis uses powers of two for readability.}
+\label{fig:e2-scaling}
+\end{figure}
+
 
 \subsection{Phase 5 Corpus}
 
