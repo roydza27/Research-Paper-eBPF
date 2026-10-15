@@ -417,6 +417,27 @@ Katran & Unsuccessful attempt & The run terminated before producing a valid veri
 \end{tabular}
 \end{table}
 
+
+\begin{table}[htbp]
+\centering
+\caption{Consolidated quantitative findings and evidence boundaries.}
+\label{tab:quant-summary}
+\begin{tabular}{p{0.19\linewidth}p{0.24\linewidth}p{0.45\linewidth}}
+\toprule
+Measure & Recorded value & Interpretation \\
+\midrule
+E1 corpus & 8 programs; 72 runs & Two warmups and seven measured repetitions per program; dataset integrity audited with qualifications. \\
+E1 median range & 672.43--707.61 ms & A 35.18 ms span across the eight program medians; not a general size-cost law. \\
+E1 instruction range & 2--20 instructions & One intended source branch was optimized away; basic-block count was heuristic. \\
+E2 corpus & 7 path strata; 63 runs & 1, 2, 4, 8, 16, 32, and 64 paths; two warmups plus seven measured repetitions per stratum. \\
+E2 median endpoints & 746.14 to 1231.16 ms & Approximately 65.0\% higher at 64 paths than at one path. \\
+E2 descriptive fit & $T(P)\approx740+7.6P$ ms & Empirical fit for this synthetic family only; not a universal complexity claim. \\
+E4 planned matrix & 432 executions & 24 programs, two conditions, and nine runs per condition; planned count is not proof of completed runs. \\
+E3--E5 outcomes & Not verified & Raw Phase 5 execution artifacts were unavailable for independent recomputation. \\
+\bottomrule
+\end{tabular}
+\end{table}
+
 Older project summaries report a 12/24 abstract-discharge rate and 45.53\% E4 savings. Because the required execution artifacts were not available to the final audit, neither figure is presented as an established result here. The same applies to claims of zero correctness mismatches across the full Phase 5 matrix. These figures can be reinstated as results only after the immutable execution artifacts are recovered, run accounting is checked, and all summaries are regenerated from raw telemetry.
 
 \section{Discussion}
