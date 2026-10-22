@@ -9,6 +9,7 @@ bounded region, the only sound abstract/symbolic scope is the whole ELF program.
 from __future__ import annotations
 
 import argparse
+import ast
 import json
 import os
 import platform
@@ -28,8 +29,10 @@ def _semantic_verdict(value: Any) -> str:
     if not isinstance(value, str):
         return "UNKNOWN"
     value = value.strip().upper()
-    if value in {"REJECT", "REJECTED", "VIOLATION"}:
+    if value in {"REJECT", "REJECTED", "VIOLATION", "POLICY VIOLATION"}:
         return "VIOLATION"
+    if value in {"COMPLIANT", "VERIFIED"}:
+        return "SAFE"
     return value if value in SEMANTIC else "UNKNOWN"
 
 
@@ -154,18 +157,25 @@ def _symbolic_worker(args: argparse.Namespace) -> int:
     sys.path.insert(0, str(baseline))
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
     from daemon.krakenguard_client import KrakenGuardClient
-    import importlib.util
+    # Load only the existing verdict-parser function AST. Importing the full
+    # validator module has top-level side effects (including result-directory
+    # creation), which this isolated runner must avoid.
     validator_path = Path(__file__).with_name("validate-phase5-corpus.py")
-    spec = importlib.util.spec_from_file_location("phase5_validator", validator_path)
-    if spec is None or spec.loader is None:
-        raise RuntimeError("cannot load existing KRAKENGUARD verdict parser")
-    validator = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(validator)
+    source = ast.parse(validator_path.read_text(), filename=str(validator_path))
+    parser_node = next((node for node in source.body
+                        if isinstance(node, ast.FunctionDef)
+                        and node.name == "extract_krakenguard_verdict"), None)
+    if parser_node is None:
+        raise RuntimeError("existing KRAKENGUARD verdict parser was not found")
+    parser_module = ast.Module(body=[parser_node], type_ignores=[])
+    namespace = {"Path": Path, "BASELINE_DIR": baseline}
+    exec(compile(ast.fix_missing_locations(parser_module), str(validator_path), "exec"), namespace)
+    extract_verdict = namespace["extract_krakenguard_verdict"]
     socket_path = args.socket_path or str(baseline / "socket" / "krakenguard.sock")
     socket_path = os.path.relpath(socket_path, Path.cwd())
     client = KrakenGuardClient(socket_path)
     response = client.verify(object_file=args.object, constraints_file=args.policy)
-    passed, verdict = validator.extract_krakenguard_verdict(response)
+    passed, verdict = extract_verdict(response)
     result = {
         "verdict": _semantic_verdict(verdict),
         "reason": f"existing extract_krakenguard_verdict; response status={getattr(response, 'status', None)}",
