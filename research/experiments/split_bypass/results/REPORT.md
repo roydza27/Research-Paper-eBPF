@@ -18,7 +18,7 @@
 - `design/region-api-design.md`: region API contract, soundness obligations, evaluation protocol.
 - `README.md`: commands, raw schema, status vocabulary and separation from historical result directories.
 
-The corpus generator has not been run in this editing environment. No generated ELF files or oracle verdicts are committed. Source code is embedded as deterministic templates and is materialized under `programs/` when the generator is executed. The manifest intentionally leaves semantic verdicts null until an actual reference response is captured.
+Fourteen deterministic C source files are committed under `programs/`, and the generator reproduces those same source definitions. No compiled ELF files or oracle verdicts are committed. A dedicated CI build job has been added to compile the sources and upload the actual build manifest/object artifacts; its result is pending. The manifest intentionally leaves semantic verdicts null until an actual reference response is captured.
 
 ## Validation log
 
@@ -32,7 +32,7 @@ The corpus generator has not been run in this editing environment. No generated 
 | Existing E3/E4/E5 audit tests | **3 passed, 2 failed** | GitHub Actions run #9; both failures require the absent compiled historical `research/experiments/corpus/phase5/programs/a1.o`. Historical object binaries are not present in the checkout. The test file's other three tests passed. |
 | Existing split-and-bypass tests | **18 passed** | GitHub Actions run #9; `research/experiments/tests/test_split_analyze_bypass.py` |
 | New controlled evaluation unit tests | **7 passed, 14 subtests passed** | GitHub Actions run #9; `research/experiments/split_bypass/tests/test_controlled_evaluation.py` |
-| Corpus generation / compilation | Not executed | No new corpus generator/clang command was run |
+| Corpus generation / compilation | CI job added; result pending | Separate `corpus-build` job compiles the fourteen fixtures and uploads the manifest/ELFs; no build outcome claimed until the job completes |
 | Reference-oracle smoke | Not executed | No live KRAKENGUARD service/socket verified |
 | Baseline-vs-experiment measurements | Not executed | No raw runs exist |
 | Region-level abstract analysis | Not implemented | Design only; whole-program API remains |
