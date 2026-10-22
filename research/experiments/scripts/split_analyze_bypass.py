@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import argparse
 import ast
+import hashlib
 import json
 import os
 import platform
@@ -24,6 +25,36 @@ from typing import Any, Callable
 SEMANTIC = {"SAFE", "VIOLATION", "UNKNOWN"}
 INTEGRATION_BASE_COMMIT = "9250b53243714f00868f8c73a3c794634cfc5ad2"
 PROTOTYPE_SOURCE_COMMIT = "0d81b13a03c6294051620c6157b10b8d36922a81"
+
+
+def sha256_file(path: str | Path) -> str | None:
+    candidate = Path(path)
+    if not candidate.is_file():
+        return None
+    digest = hashlib.sha256()
+    with candidate.open("rb") as stream:
+        for chunk in iter(lambda: stream.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def current_git_commit() -> str | None:
+    try:
+        proc = subprocess.run(["git", "rev-parse", "HEAD"], capture_output=True,
+                              text=True, timeout=5, check=False)
+        return proc.stdout.strip() if proc.returncode == 0 else None
+    except (OSError, subprocess.TimeoutExpired):
+        return None
+
+
+def tool_version(command: str) -> str | None:
+    try:
+        proc = subprocess.run([command, "--version"], capture_output=True,
+                              text=True, timeout=5, check=False)
+        output = proc.stdout.strip() or proc.stderr.strip()
+        return output.splitlines()[0] if output else None
+    except (OSError, subprocess.TimeoutExpired):
+        return None
 
 
 def _semantic_verdict(value: Any) -> str:
@@ -121,9 +152,11 @@ def gate(scope_id: str, abstract_runner: Callable[[], dict[str, Any]],
         "abstract_duration_ms": abstract_ms,
         "abstract_reason": abstract.get("proof", abstract.get("reason", "")),
         "abstract_error": abstract_error,
+        "abstract_timeout": bool(abstract_error and "timeout" in abstract_error.lower()),
         "symbolic_invoked": False, "symbolic_verdict": None,
         "symbolic_duration_ms": None, "symbolic_reason": None,
-        "symbolic_error": None, "disposition": "unresolved",
+        "symbolic_error": None, "symbolic_timeout": False,
+        "disposition": "unresolved",
     }
     if av == "SAFE":
         row["disposition"] = "abstract_pass"
@@ -140,6 +173,7 @@ def gate(scope_id: str, abstract_runner: Callable[[], dict[str, Any]],
         row["symbolic_error"] = symbolic.get("error")
     except TimeoutError as exc:
         sv = "UNKNOWN"
+        row["symbolic_timeout"] = True
         row["symbolic_error"] = f"timeout: {exc}"
     except Exception as exc:
         sv = "UNKNOWN"
@@ -160,7 +194,8 @@ def _abstract_worker(args: argparse.Namespace) -> int:
     from abstract_policy_analyzer import AbstractPolicyAnalyzer
     analyzer = AbstractPolicyAnalyzer(args.object, args.policy)
     result = analyzer.analyze()
-    payload = {"result": result, "cfg": extract_cfg(analyzer)}
+    payload = {"result": result, "cfg": extract_cfg(analyzer),
+               "instruction_count": len(getattr(analyzer, "instructions", []))}
     print(json.dumps(payload))
     return 0
 
@@ -205,6 +240,7 @@ def run_program(args: argparse.Namespace) -> dict[str, Any]:
     run_start_ns = time.monotonic_ns()
     cfg_holder: dict[str, Any] = {"blocks": []}
     abstract_holder: dict[str, Any] = {}
+    analysis_meta_holder: dict[str, Any] = {"instruction_count": None}
 
     def abstract_once() -> dict[str, Any]:
         cmd = [sys.executable, str(Path(__file__).resolve()), "--abstract-worker",
@@ -220,6 +256,7 @@ def run_program(args: argparse.Namespace) -> dict[str, Any]:
             payload = json.loads(proc.stdout.strip().splitlines()[-1])
             abstract_holder["result"] = payload["result"]
             cfg_holder["blocks"] = payload["cfg"]
+            analysis_meta_holder["instruction_count"] = payload.get("instruction_count")
             return payload["result"]
         except (ValueError, KeyError, IndexError, TypeError) as exc:
             raise RuntimeError(f"abstract worker returned invalid output: {proc.stdout[-2000:]}") from exc
@@ -257,13 +294,22 @@ def run_program(args: argparse.Namespace) -> dict[str, Any]:
     result["abstract_reason"] = result.get("abstract_reason") or (
         abstract_holder.get("result", {}).get("proof", "")
     )
+    overall_verdict = (result["abstract_verdict"] if not result["symbolic_invoked"]
+                       else result["symbolic_verdict"])
+    branch_count = sum(1 for block in cfg if len(block["successors"]) > 1)
     return {
-        "schema": "split-analyze-bypass-prototype/v1",
+        "schema": "split-analyze-bypass-experiment/v2",
         "program_id": args.program_id or Path(args.object).stem,
+        "source_commit": current_git_commit(),
         "source_provenance": {
+            "current_source_commit": current_git_commit(),
             "integration_base_commit": INTEGRATION_BASE_COMMIT,
             "prototype_source_commit": PROTOTYPE_SOURCE_COMMIT,
             "experiment_script": "research/experiments/scripts/split_analyze_bypass.py",
+        },
+        "input_checksums": {
+            "object_sha256": sha256_file(args.object),
+            "policy_sha256": sha256_file(args.policy),
         },
         "run_configuration": {
             "abstract_timeout_seconds": args.abstract_timeout_seconds,
@@ -283,15 +329,32 @@ def run_program(args: argparse.Namespace) -> dict[str, Any]:
             "note": "Per-block entry assumptions remain null; no block-state propagation is implemented.",
         },
         "cfg": {"blocks": cfg, "reachable_order": order},
+        "program_level_results": [result],
+        "region_level_results": {
+            "available": False,
+            "results": [],
+            "reason": "No sound region API exists; CFG blocks are metadata only and receive no verdicts.",
+        },
+        "result_scope": {
+            "program_level": {"available": True, "result_count": 1},
+            "region_level": {"available": False, "result_count": 0},
+            "block_verdicts_available": False,
+        },
         "units": [result],
         "overall_status": result["disposition"],
-        "overall_verdict": (result["abstract_verdict"] if not result["symbolic_invoked"]
-                            else result["symbolic_verdict"]),
+        "final_disposition": result["disposition"],
+        "overall_verdict": overall_verdict,
+        "final_verdict": overall_verdict,
         "errors": [e for e in [result.get("abstract_error"), result.get("symbolic_error")] if e],
         "metrics": {
             "end_to_end_duration_ms": (time.monotonic_ns() - run_start_ns) / 1_000_000,
+            "instruction_count": analysis_meta_holder["instruction_count"],
+            "basic_block_count": len(cfg),
             "cfg_block_count": len(cfg),
+            "branch_count": branch_count,
+            "branch_count_definition": "number of CFG blocks with more than one successor; not an instruction count",
             "reachable_block_count": sum(1 for block in cfg if block["reachable"]),
+            "abstractly_discharged_regions": None,
             "units_processed": 1,
             "abstract_pass_count": int(result["disposition"] == "abstract_pass"),
             "symbolic_fallback_count": int(result["symbolic_invoked"]),
@@ -302,6 +365,10 @@ def run_program(args: argparse.Namespace) -> dict[str, Any]:
         "tool_versions": {
             "python": platform.python_version(),
             "platform": platform.platform(),
+            "kernel": platform.release(),
+            "architecture": platform.machine(),
+            "clang_version": tool_version("clang"),
+            "llvm_objdump_version": tool_version("llvm-objdump"),
             "abstract_analyzer_git_blob": "ca07c1ad340e4220f227a8051b91a62faa0dce5d",
             "krakenguard_expected_commit": "e7bd84005b304c5a10efcdb04914d1882b3cccf7",
         },
