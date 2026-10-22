@@ -1,6 +1,11 @@
+import subprocess
+import sys
 import unittest
+from pathlib import Path
 from types import SimpleNamespace
 
+SCRIPT_DIR = Path(__file__).resolve().parents[1] / "scripts"
+sys.path.insert(0, str(SCRIPT_DIR))
 from split_analyze_bypass import control_flow_order, extract_cfg, gate
 
 
@@ -97,6 +102,39 @@ class CFGTests(unittest.TestCase):
         records = extract_cfg(SimpleNamespace(instructions=[SimpleNamespace(pc=0)], basic_blocks=blocks))
         join = next(r for r in records if r["start_pc"] == 3)
         self.assertEqual(set(join["predecessors"]), {"bb_1", "bb_2"})
+
+    def test_straight_line_multiple_blocks(self):
+        blocks = {
+            0: SimpleNamespace(start_pc=0, instructions=[SimpleNamespace(pc=0)], successors=[1]),
+            1: SimpleNamespace(start_pc=1, instructions=[SimpleNamespace(pc=1)], successors=[2]),
+            2: SimpleNamespace(start_pc=2, instructions=[SimpleNamespace(pc=2)], successors=[]),
+        }
+        records = extract_cfg(SimpleNamespace(instructions=[SimpleNamespace(pc=0)], basic_blocks=blocks))
+        self.assertEqual(control_flow_order(records), ["bb_0", "bb_1", "bb_2"])
+        self.assertTrue(all(r["reachable"] for r in records))
+
+    def test_join_does_not_fabricate_incoming_register_state(self):
+        blocks = {
+            0: SimpleNamespace(start_pc=0, instructions=[SimpleNamespace(pc=0)], successors=[1, 2]),
+            1: SimpleNamespace(start_pc=1, instructions=[SimpleNamespace(pc=1)], successors=[3]),
+            2: SimpleNamespace(start_pc=2, instructions=[SimpleNamespace(pc=2)], successors=[3]),
+            3: SimpleNamespace(start_pc=3, instructions=[SimpleNamespace(pc=3)], successors=[]),
+        }
+        records = extract_cfg(SimpleNamespace(instructions=[SimpleNamespace(pc=0)], basic_blocks=blocks))
+        join = next(r for r in records if r["start_pc"] == 3)
+        self.assertIsNone(join["entry_assumptions"])
+        self.assertIsNone(join["block_verdict"])
+        self.assertEqual(set(join["predecessors"]), {"bb_1", "bb_2"})
+
+    def test_original_analyzer_blob_is_unchanged(self):
+        repo_root = Path(__file__).resolve().parents[3]
+        analyzer_path = repo_root / "research" / "analyzer" / "abstract_policy_analyzer.py"
+        self.assertTrue(analyzer_path.exists(), "run from a complete repository checkout")
+        blob = subprocess.run(
+            ["git", "-C", str(repo_root), "hash-object", str(analyzer_path)],
+            capture_output=True, text=True, check=True,
+        ).stdout.strip()
+        self.assertEqual(blob, "ca07c1ad340e4220f227a8051b91a62faa0dce5d")
 
     def test_loop_order_terminates_and_includes_revisited_block(self):
         blocks = {
