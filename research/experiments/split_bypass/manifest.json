@@ -1,0 +1,87 @@
+{
+  "schema": "split-bypass-corpus/v1",
+  "status": "source_fixtures_not_yet_compiled_or_oracle_verified",
+  "source_commit": "6457dacd48d21965b85b52acc55502179718f4ab",
+  "policy_path": "research/experiments/corpus/phase5/policies/phase5_policy.json",
+  "policy_sha256_expected": "270403272d736ae7aee2ceda3bf8d088b6ac0cb476bb99ce0218dd8f33c3c603",
+  "compiler_flags": [
+    "-target", "bpf",
+    "-mcpu=v1",
+    "-D__TARGET_ARCH_x86",
+    "-O2",
+    "-g",
+    "-I/usr/include"
+  ],
+  "programs": [
+    {
+      "program_id": "A-straight",
+      "source": "family_a_straight.c",
+      "family": "A",
+      "structural_hypothesis": "straight-line; actual instruction and block counts must be measured from compiled ELF",
+      "object_path": null,
+      "object_sha256": null,
+      "instruction_count": null,
+      "basic_block_count": null,
+      "branch_count": null,
+      "reference_verdict": null,
+      "reference_evidence": null,
+      "status": "pending_compile_and_reference_run"
+    },
+    {
+      "program_id": "B-branches",
+      "source": "family_b_branches.c",
+      "family": "B",
+      "structural_hypothesis": "input-dependent branch with two alternatives; actual CFG must be inspected",
+      "object_path": null,
+      "object_sha256": null,
+      "instruction_count": null,
+      "basic_block_count": null,
+      "branch_count": null,
+      "reference_verdict": null,
+      "reference_evidence": null,
+      "status": "pending_compile_and_reference_run"
+    },
+    {
+      "program_id": "C-join",
+      "source": "family_c_join.c",
+      "family": "C",
+      "structural_hypothesis": "distinct values on predecessor paths converge; compiler optimization may alter or eliminate the join",
+      "object_path": null,
+      "object_sha256": null,
+      "instruction_count": null,
+      "basic_block_count": null,
+      "branch_count": null,
+      "reference_verdict": null,
+      "reference_evidence": null,
+      "status": "pending_compile_and_reference_run"
+    },
+    {
+      "program_id": "D-unknown",
+      "source": "family_d_unknown.c",
+      "family": "D",
+      "structural_hypothesis": "packet/input-derived branch intended to exercise conservative UNKNOWN; this is not a preassigned analyzer result",
+      "object_path": null,
+      "object_sha256": null,
+      "instruction_count": null,
+      "basic_block_count": null,
+      "branch_count": null,
+      "reference_verdict": null,
+      "reference_evidence": null,
+      "status": "pending_compile_and_reference_run"
+    },
+    {
+      "program_id": "E-loop",
+      "source": "family_e_loop.c",
+      "family": "E",
+      "structural_hypothesis": "bounded loop intended to exercise revisit/loop handling; emitted loop and verifier acceptance must be confirmed",
+      "object_path": null,
+      "object_sha256": null,
+      "instruction_count": null,
+      "basic_block_count": null,
+      "branch_count": null,
+      "reference_verdict": null,
+      "reference_evidence": null,
+      "status": "pending_compile_and_reference_run"
+    }
+  ]
+}
