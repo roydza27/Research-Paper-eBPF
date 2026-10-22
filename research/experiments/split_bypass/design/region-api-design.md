@@ -8,15 +8,15 @@ The current KRAKENGUARD client is invoked with `object_file` and `constraints_fi
 
 ## 2. Corpus families and hypotheses
 
-Ten initial source fixtures are defined in `scripts/prepare_corpus.py` and emitted to `programs/` when the generator is run.
+Fourteen initial source fixtures are defined in `scripts/prepare_corpus.py` and emitted to `programs/` when the generator is run.
 
 | IDs | Family | Controlled property | Important caveat |
 |---|---|---|---|
-| A01–A03 | Straight-line | Small/medium arithmetic and a helper call | Compiler optimization changes emitted instruction counts |
-| B01–B02 | Branching | Safe alternatives and a policy-sensitive DROP alternative | Actual policy verdict must come from the oracle |
-| C01–C02 | Join points | Different values reach a shared continuation | Compiler may transform or eliminate the intended join |
+| A01–A04 | Straight-line | Small/medium arithmetic and a helper call | Compiler optimization changes emitted instruction counts |
+| B01–B03 | Branching | Safe alternatives and a policy-sensitive DROP alternative | Actual policy verdict must come from the oracle |
+| C01–C03 | Join points | Different values reach a shared continuation | Compiler may transform or eliminate the intended join |
 | D01–D02 | UNKNOWN candidates | Helper-derived value and bounded packet access | UNKNOWN is a hypothesis; never assigned in advance |
-| E01 | Loop | Bounded loop with unrolling disabled | Emitted loop structure and verifier acceptance must be measured |
+| E01–E02 | Loop | Bounded loop with unrolling disabled | Emitted loop structure and verifier acceptance must be measured |
 
 The first iteration deliberately avoids asserting semantic labels. For every fixture, the manifest records source hash, compilation command and outcome, object hash when compiled, policy hash, and reference-oracle status. Instruction/branch/BB counts remain null when tools cannot produce a trustworthy count. A successful clang invocation alone does not prove kernel-verifier acceptance or policy correctness.
 
