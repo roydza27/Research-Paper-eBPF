@@ -23,6 +23,7 @@ python3 research/experiments/scripts/split_analyze_bypass.py \
   --policy research/experiments/corpus/phase5/policies/phase5_policy.json \
   --program-id a1 \
   --baseline-dir research/baselines/krakenguard/artifact \
+  --abstract-timeout-seconds 60 \
   --symbolic-timeout-seconds 120 \
   --output /tmp/split-analyze-bypass-a1.json
 ```
