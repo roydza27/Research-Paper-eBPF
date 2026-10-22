@@ -94,6 +94,7 @@ jobs:
           name: split-bypass-corpus-build-${{ github.run_id }}
           path: |
             research/experiments/split_bypass/programs/*.o
+            research/experiments/split_bypass/policies/*.json
             research/experiments/split_bypass/manifests/corpus-manifest-ci-${{ github.run_id }}.json
           if-no-files-found: warn
           retention-days: 14
