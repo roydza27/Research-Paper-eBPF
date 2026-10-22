@@ -1,6 +1,6 @@
 {
-  "child_process_cpu_time_us": 30049,
-  "cpu_time_us": 31649,
+  "child_process_cpu_time_us": 31096,
+  "cpu_time_us": 32901,
   "discharged": true,
   "error": null,
   "metrics": {
@@ -9,9 +9,9 @@
     "instructions": 8,
     "paths_analyzed": 1
   },
-  "parent_cpu_time_us": 1600,
+  "parent_cpu_time_us": 1805,
   "proof": "All 1 reachable exits return policy-allowed values and all modeled reachable operations are supported.",
   "status": "ok",
   "verdict": "SAFE",
-  "wall_time_us": 31351
+  "wall_time_us": 32703
 }

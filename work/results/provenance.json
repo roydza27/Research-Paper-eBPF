@@ -1,8 +1,8 @@
 {
-  "timestamp_utc": "2026-10-07T05:28:56.062035+00:00",
-  "repo_branch": "work-comparative-verification",
-  "repo_head": "883e95c2da778e9c2e9b1ece3b88dbd3668c730b",
-  "repo_tree": "1c2884c0b7c7470cd29e7e73580924edb8900bfa",
+  "timestamp_utc": "2026-10-22T02:40:03.628935+00:00",
+  "repo_branch": "manuscript/docx-export",
+  "repo_head": "822341ae8e309a6db46bc9ea7ab4303e09b4e4e5",
+  "repo_tree": "33f5cf85a4dd37f6180531317302290bd607c39d",
   "krakenguard_commit": "e7bd84005b304c5a10efcdb04914d1882b3cccf7",
   "policy_sha256": "270403272d736ae7aee2ceda3bf8d088b6ac0cb476bb99ce0218dd8f33c3c603",
   "kernel": "7.2.8-arch1-2",

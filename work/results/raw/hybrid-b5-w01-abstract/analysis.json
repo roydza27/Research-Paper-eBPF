@@ -1,14 +1,14 @@
 {
-  "child_process_cpu_time_us": 30267,
-  "cpu_time_us": 32200,
+  "child_process_cpu_time_us": 32074,
+  "cpu_time_us": 33937,
   "discharged": false,
   "error": null,
   "metrics": {
     "abstract_states": 1
   },
-  "parent_cpu_time_us": 1933,
+  "parent_cpu_time_us": 1863,
   "proof": "Conservative UNKNOWN: unsupported instruction at 1: w3 = *(u32 *)(r1 + 0x4)",
   "status": "ok",
   "verdict": "UNKNOWN",
-  "wall_time_us": 31797
+  "wall_time_us": 33572
 }

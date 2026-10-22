@@ -1,6 +1,6 @@
 {
-  "child_process_cpu_time_us": 28011,
-  "cpu_time_us": 29740,
+  "child_process_cpu_time_us": 31327,
+  "cpu_time_us": 33017,
   "discharged": true,
   "error": null,
   "metrics": {
@@ -9,9 +9,9 @@
     "instructions": 5,
     "paths_analyzed": 1
   },
-  "parent_cpu_time_us": 1729,
+  "parent_cpu_time_us": 1690,
   "proof": "All 1 reachable terminal paths establish a policy violation.",
   "status": "ok",
   "verdict": "VIOLATION",
-  "wall_time_us": 29483
+  "wall_time_us": 32636
 }
