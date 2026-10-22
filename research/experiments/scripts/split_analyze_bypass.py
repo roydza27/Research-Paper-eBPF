@@ -151,6 +151,18 @@ def gate(scope_id: str, abstract_runner: Callable[[], dict[str, Any]],
     return row
 
 
+def _abstract_worker(args: argparse.Namespace) -> int:
+    """Run the existing whole-program analyzer in a killable child process."""
+    root = Path(__file__).resolve().parents[2]
+    sys.path.insert(0, str(root / "analyzer"))
+    from abstract_policy_analyzer import AbstractPolicyAnalyzer
+    analyzer = AbstractPolicyAnalyzer(args.object, args.policy)
+    result = analyzer.analyze()
+    payload = {"result": result, "cfg": extract_cfg(analyzer)}
+    print(json.dumps(payload))
+    return 0
+
+
 def _symbolic_worker(args: argparse.Namespace) -> int:
     """Isolated worker so the parent can enforce a hard wall-clock timeout."""
     baseline = Path(args.baseline_dir).resolve()
@@ -188,22 +200,26 @@ def _symbolic_worker(args: argparse.Namespace) -> int:
 
 
 def run_program(args: argparse.Namespace) -> dict[str, Any]:
-    root = Path(__file__).resolve().parents[2]
-    sys.path.insert(0, str(root / "analyzer"))
-    from abstract_policy_analyzer import AbstractPolicyAnalyzer
-
-    analyzer = AbstractPolicyAnalyzer(args.object, args.policy)
-    t0 = time.monotonic_ns()
-    abstract_result = analyzer.analyze()
-    abstract_ms = (time.monotonic_ns() - t0) / 1_000_000
-    cfg = extract_cfg(analyzer)
-    order = control_flow_order(cfg)
-    scope = "program"
-    fallback_info: dict[str, Any] = {}
+    cfg_holder: dict[str, Any] = {"blocks": []}
+    abstract_holder: dict[str, Any] = {}
 
     def abstract_once() -> dict[str, Any]:
-        fallback_info["elapsed_ms"] = abstract_ms
-        return abstract_result
+        cmd = [sys.executable, str(Path(__file__).resolve()), "--abstract-worker",
+               "--object", args.object, "--policy", args.policy]
+        try:
+            proc = subprocess.run(cmd, capture_output=True, text=True,
+                                  timeout=args.abstract_timeout_seconds, check=False)
+        except subprocess.TimeoutExpired as exc:
+            raise TimeoutError(f"abstract analyzer exceeded {args.abstract_timeout_seconds}s") from exc
+        if proc.returncode != 0:
+            raise RuntimeError(f"abstract worker exit {proc.returncode}: {proc.stderr[-2000:]}")
+        try:
+            payload = json.loads(proc.stdout.strip().splitlines()[-1])
+            abstract_holder["result"] = payload["result"]
+            cfg_holder["blocks"] = payload["cfg"]
+            return payload["result"]
+        except (ValueError, KeyError, IndexError, TypeError) as exc:
+            raise RuntimeError(f"abstract worker returned invalid output: {proc.stdout[-2000:]}") from exc
 
     def symbolic_once() -> dict[str, Any]:
         if not args.baseline_dir:
@@ -220,7 +236,7 @@ def run_program(args: argparse.Namespace) -> dict[str, Any]:
             proc = subprocess.run(cmd, capture_output=True, text=True,
                                   timeout=args.symbolic_timeout_seconds, check=False)
         except subprocess.TimeoutExpired as exc:
-            raise TimeoutError(f"exceeded {args.symbolic_timeout_seconds}s") from exc
+            raise TimeoutError(f"symbolic verifier exceeded {args.symbolic_timeout_seconds}s") from exc
         if proc.returncode != 0:
             return {"verdict": "UNKNOWN", "error": f"worker exit {proc.returncode}: {proc.stderr[-2000:]}",
                     "reason": "symbolic worker failed"}
@@ -232,8 +248,12 @@ def run_program(args: argparse.Namespace) -> dict[str, Any]:
 
     # A single program-scope gate is intentional: block verdicts would be unsound
     # without explicit incoming-state and path-constraint support in the analyzer.
-    result = gate(scope, abstract_once, symbolic_once)
-    result["abstract_duration_ms"] = abstract_ms
+    result = gate("program", abstract_once, symbolic_once)
+    cfg = cfg_holder["blocks"]
+    order = control_flow_order(cfg)
+    result["abstract_reason"] = result.get("abstract_reason") or (
+        abstract_holder.get("result", {}).get("proof", "")
+    )
     return {
         "schema": "split-analyze-bypass-prototype/v1",
         "program_id": args.program_id or Path(args.object).stem,
@@ -248,7 +268,8 @@ def run_program(args: argparse.Namespace) -> dict[str, Any]:
                             else result["symbolic_verdict"]),
         "errors": [e for e in [result.get("abstract_error"), result.get("symbolic_error")] if e],
         "tool_versions": {"python": platform.python_version(), "platform": platform.platform()},
-        "limits": {"symbolic_timeout_seconds": args.symbolic_timeout_seconds},
+        "limits": {"abstract_timeout_seconds": args.abstract_timeout_seconds,
+                   "symbolic_timeout_seconds": args.symbolic_timeout_seconds},
         "experiment_mode": "program_scope_safety_wrapper_not_block_level",
     }
 
@@ -261,13 +282,19 @@ def main() -> int:
     p.add_argument("--output", help="new result JSON path; existing files are refused")
     p.add_argument("--baseline-dir", help="path to frozen KRAKENGUARD artifact directory")
     p.add_argument("--socket-path")
+    p.add_argument("--abstract-timeout-seconds", type=float, default=60.0)
     p.add_argument("--symbolic-timeout-seconds", type=float, default=120.0)
+    p.add_argument("--abstract-worker", action="store_true", help=argparse.SUPPRESS)
     p.add_argument("--symbolic-worker", action="store_true", help=argparse.SUPPRESS)
     args = p.parse_args()
+    if args.abstract_worker:
+        return _abstract_worker(args)
     if args.symbolic_worker:
         return _symbolic_worker(args)
     if not args.output:
         p.error("--output is required outside symbolic-worker mode")
+    if args.abstract_timeout_seconds <= 0:
+        p.error("--abstract-timeout-seconds must be positive")
     if args.symbolic_timeout_seconds <= 0:
         p.error("--symbolic-timeout-seconds must be positive")
     output = Path(args.output)
