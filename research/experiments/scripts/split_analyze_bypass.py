@@ -262,6 +262,13 @@ def run_program(args: argparse.Namespace) -> dict[str, Any]:
         "scope_limitation": "The analyzer cannot classify extracted blocks independently. CFG is metadata only; no per-block verdicts are fabricated.",
         "object": str(Path(args.object).resolve()),
         "policy": str(Path(args.policy).resolve()),
+        "entry_assumptions": {
+            "scope": "whole_program_entry",
+            "registers": {**{f"r{i}": "unknown" for i in range(10)}, "r10": {"kind": "const", "value": 0}},
+            "path_constraints": [],
+            "memory_and_map_state": "not represented as a complete entry-state object by the current analyzer",
+            "note": "Per-block entry assumptions remain null; no block-state propagation is implemented.",
+        },
         "cfg": {"blocks": cfg, "reachable_order": order},
         "units": [result],
         "overall_status": result["disposition"],
