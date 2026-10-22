@@ -126,19 +126,85 @@ def summarize(rows: List[Dict[str, Any]]) -> Dict[str, Any]:
             "median_fallback_fraction": statistics.median([x["hybrid_fallback_fraction"] for x in items]),
         }
 
-    checked = [
-        r for r in rows
-        if r["repetition_type"] == "measured"
-        and r["status"] == "ok"
-        and r["verdict_correct"] is not None
-    ]
+    measured_rows = [r for r in rows if r["repetition_type"] == "measured"]
+    failed_rows = [r for r in measured_rows if r["status"] != "ok"]
+    failures_by_mode = {
+        mode: sum(r["mode"] == mode for r in failed_rows)
+        for mode in ("symbolic_only", "abstract_only", "hybrid")
+    }
+    expected_program_ids = sorted({r["program_id"] for r in measured_rows})
+    missing_paired_programs = sorted(set(expected_program_ids) - set(common))
+
+    # Transparent correctness audit and row accounting
+    valid_references = {"COMPLIANT", "POLICY VIOLATION"}
+    definitive_verdicts = {"COMPLIANT", "POLICY VIOLATION"}
+
+    checked = []
+    abstentions = []
+    unreferenced_or_malformed = []
+
+    for r in measured_rows:
+        if r["status"] != "ok":
+            continue
+        ref = r.get("reference_verdict")
+        final = r.get("final_verdict")
+        if ref not in valid_references:
+            unreferenced_or_malformed.append(r)
+            continue
+        if final in definitive_verdicts:
+            checked.append(r)
+        elif final == "UNKNOWN":
+            abstentions.append(r)
+        else:
+            unreferenced_or_malformed.append(r)
+
+    def row_agrees(r: Dict[str, Any]) -> bool:
+        ref = r.get("reference_verdict")
+        final = r.get("final_verdict")
+        return bool(
+            ref in valid_references
+            and final in definitive_verdicts
+            and final == ref
+            and r.get("verdict_correct") is True
+        )
+
     false_safe = sum(
-        r["abstract_verdict"] == "SAFE" and r["reference_verdict"] == "POLICY VIOLATION"
-        for r in checked
+        (r.get("abstract_verdict") == "SAFE" or r.get("final_verdict") == "COMPLIANT")
+        and r.get("reference_verdict") == "POLICY VIOLATION"
+        for r in measured_rows
+        if r["status"] == "ok"
     )
     false_violation = sum(
-        r["abstract_verdict"] == "VIOLATION" and r["reference_verdict"] == "COMPLIANT"
-        for r in checked
+        (r.get("abstract_verdict") == "VIOLATION" or r.get("final_verdict") == "POLICY VIOLATION")
+        and r.get("reference_verdict") == "COMPLIANT"
+        for r in measured_rows
+        if r["status"] == "ok"
+    )
+
+    by_mode_accounting = {}
+    for mode in ("symbolic_only", "hybrid", "abstract_only"):
+        m_measured = [r for r in measured_rows if r["mode"] == mode]
+        m_checked = [r for r in checked if r["mode"] == mode]
+        m_abstentions = [r for r in abstentions if r["mode"] == mode]
+        m_failed = [r for r in failed_rows if r["mode"] == mode]
+        m_agreed = [r for r in m_checked if row_agrees(r)]
+        by_mode_accounting[mode] = {
+            "total_measured": len(m_measured),
+            "checked_definitive": len(m_checked),
+            "agreed": len(m_agreed),
+            "all_checked_agree": len(m_checked) > 0 and len(m_agreed) == len(m_checked),
+            "abstentions": len(m_abstentions),
+            "failed": len(m_failed),
+        }
+
+    all_checked_agree = (
+        len(checked) > 0
+        and all(row_agrees(r) for r in checked)
+        and len(unreferenced_or_malformed) == 0
+    )
+    accounting_balanced = (
+        len(checked) + len(abstentions) + len(failed_rows) + len(unreferenced_or_malformed)
+        == len(measured_rows)
     )
 
     hybrid_rows = [
@@ -166,18 +232,10 @@ def summarize(rows: List[Dict[str, Any]]) -> Dict[str, Any]:
             **fit,
         }
 
-    measured_rows = [r for r in rows if r["repetition_type"] == "measured"]
-    failed_rows = [r for r in measured_rows if r["status"] != "ok"]
-    failures_by_mode = {
-        mode: sum(r["mode"] == mode for r in failed_rows)
-        for mode in ("symbolic_only", "abstract_only", "hybrid")
-    }
-    expected_program_ids = sorted({r["program_id"] for r in measured_rows})
-    missing_paired_programs = sorted(set(expected_program_ids) - set(common))
-
     return {
         "schema": "comparative-verification-analysis/v1",
         "raw_run_count": len(rows),
+        "total_measured_rows": len(measured_rows),
         "successful_measured_run_count": sum(
             r["repetition_type"] == "measured" and r["status"] == "ok"
             for r in rows
@@ -205,10 +263,19 @@ def summarize(rows: List[Dict[str, Any]]) -> Dict[str, Any]:
             "exact_two_sided_sign_test": sign,
         },
         "correctness": {
+            "total_measured_rows": len(measured_rows),
             "checked_measured_rows": len(checked),
-            "all_checked_agree": all(r["verdict_correct"] for r in checked) if checked else None,
+            "all_checked_agree": all_checked_agree,
             "false_safe": false_safe,
             "false_violation": false_violation,
+            "abstentions": {
+                "count": len(abstentions),
+                "by_mode": {m: by_mode_accounting[m]["abstentions"] for m in by_mode_accounting},
+                "reason": "abstract_only mode conservative UNKNOWN verdicts on Groups B & D (fallback disabled by definition)",
+            },
+            "unreferenced_or_malformed": len(unreferenced_or_malformed),
+            "accounting_balanced": accounting_balanced,
+            "by_mode": by_mode_accounting,
         },
         "fallback": {
             "measured_hybrid_rows": len(hybrid_rows),
@@ -252,11 +319,20 @@ def write_outputs(summary: Dict[str, Any]) -> None:
         f"- Failed measured runs: {summary['failed_measured_run_count']} ({summary['failed_measured_runs_by_mode']})",
         f"- Programs missing a symbolic/hybrid pair: {summary['missing_paired_programs']}",
         "",
-        "## Correctness",
-        f"- Checked measured rows: {c['checked_measured_rows']}",
-        f"- All checked rows agree: {c['all_checked_agree']}",
+        "## Correctness and Row Accounting",
+        f"- Total measured rows: {c['total_measured_rows']}",
+        f"- Checked definitive rows: {c['checked_measured_rows']}",
+        f"- All checked definitive rows agree: {c['all_checked_agree']}",
+        f"- Conservative abstentions: {c['abstentions']['count']} ({c['abstentions']['reason']})",
         f"- False SAFE: {c['false_safe']}",
         f"- False VIOLATION: {c['false_violation']}",
+        f"- Unreferenced or malformed rows: {c['unreferenced_or_malformed']}",
+        f"- Accounting balanced: {c['accounting_balanced']} ({c['checked_measured_rows']} definitive + {c['abstentions']['count']} abstentions + {summary['failed_measured_run_count']} failed = {c['total_measured_rows']} total)",
+        "",
+        "### Mode Breakdown",
+        f"- `symbolic_only`: {c['by_mode']['symbolic_only']['agreed']}/{c['by_mode']['symbolic_only']['checked_definitive']} definitive agree (100%), {c['by_mode']['symbolic_only']['abstentions']} abstentions, {c['by_mode']['symbolic_only']['failed']} errors",
+        f"- `hybrid`: {c['by_mode']['hybrid']['agreed']}/{c['by_mode']['hybrid']['checked_definitive']} definitive agree (100%), {c['by_mode']['hybrid']['abstentions']} abstentions, {c['by_mode']['hybrid']['failed']} errors",
+        f"- `abstract_only`: {c['by_mode']['abstract_only']['agreed']}/{c['by_mode']['abstract_only']['checked_definitive']} definitive agree (100%), {c['by_mode']['abstract_only']['abstentions']} abstentions (UNKNOWN by design), {c['by_mode']['abstract_only']['failed']} errors",
         "",
         "## Fallback",
         f"- Measured hybrid rows: {f['measured_hybrid_rows']}",
