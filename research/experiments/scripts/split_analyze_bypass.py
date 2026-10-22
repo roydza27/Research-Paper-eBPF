@@ -31,7 +31,7 @@ def _semantic_verdict(value: Any) -> str:
     value = value.strip().upper()
     if value in {"REJECT", "REJECTED", "VIOLATION", "POLICY VIOLATION"}:
         return "VIOLATION"
-    if value in {"COMPLIANT", "VERIFIED"}:
+    if value == "COMPLIANT":
         return "SAFE"
     return value if value in SEMANTIC else "UNKNOWN"
 
@@ -200,6 +200,7 @@ def _symbolic_worker(args: argparse.Namespace) -> int:
 
 
 def run_program(args: argparse.Namespace) -> dict[str, Any]:
+    run_start_ns = time.monotonic_ns()
     cfg_holder: dict[str, Any] = {"blocks": []}
     abstract_holder: dict[str, Any] = {}
 
@@ -267,7 +268,23 @@ def run_program(args: argparse.Namespace) -> dict[str, Any]:
         "overall_verdict": (result["abstract_verdict"] if not result["symbolic_invoked"]
                             else result["symbolic_verdict"]),
         "errors": [e for e in [result.get("abstract_error"), result.get("symbolic_error")] if e],
-        "tool_versions": {"python": platform.python_version(), "platform": platform.platform()},
+        "metrics": {
+            "end_to_end_duration_ms": (time.monotonic_ns() - run_start_ns) / 1_000_000,
+            "cfg_block_count": len(cfg),
+            "reachable_block_count": sum(1 for block in cfg if block["reachable"]),
+            "units_processed": 1,
+            "abstract_pass_count": int(result["disposition"] == "abstract_pass"),
+            "symbolic_fallback_count": int(result["symbolic_invoked"]),
+            "symbolic_pass_count": int(result["disposition"] == "symbolic_pass"),
+            "violation_count": int(result["disposition"] == "violation"),
+            "unresolved_count": int(result["disposition"] == "unresolved"),
+        },
+        "tool_versions": {
+            "python": platform.python_version(),
+            "platform": platform.platform(),
+            "abstract_analyzer_git_blob": "ca07c1ad340e4220f227a8051b91a62faa0dce5d",
+            "krakenguard_expected_commit": "e7bd84005b304c5a10efcdb04914d1882b3cccf7",
+        },
         "limits": {"abstract_timeout_seconds": args.abstract_timeout_seconds,
                    "symbolic_timeout_seconds": args.symbolic_timeout_seconds},
         "experiment_mode": "program_scope_safety_wrapper_not_block_level",
