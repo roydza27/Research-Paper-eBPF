@@ -1,12 +1,12 @@
-/opt/krakenguard/bin/klee -kdalloc -kdalloc-heap-start-address=0x00040000000 -kdalloc-heap-size=1 -libc=uclibc --external-calls=all --disable-verify -solver-backend=z3 -silent-klee-assume=true --exit-on-error -max-memory=750000 -search=dfs -single-object-resolution=true -verification=true -restrict-helper-function=true -enable-conditional-policy=true -config-file=/data/requests/6c87f59d-f409-425a-8de1-c02d1a51da6d/input/phase5_policy.json --output-dir=/data/requests/6c87f59d-f409-425a-8de1-c02d1a51da6d/output /data/requests/6c87f59d-f409-425a-8de1-c02d1a51da6d/input/final_linked_ir.bc
-PID: 2086
+/opt/krakenguard/bin/klee -kdalloc -kdalloc-heap-start-address=0x00040000000 -kdalloc-heap-size=1 -libc=uclibc --external-calls=all --disable-verify -solver-backend=z3 -silent-klee-assume=true --exit-on-error -max-memory=750000 -search=dfs -single-object-resolution=true -verification=true -restrict-helper-function=true -enable-conditional-policy=true -config-file=/data/requests/65351c90-712b-44e8-b21d-a8d108ea341f/input/phase5_policy.json --output-dir=/data/requests/65351c90-712b-44e8-b21d-a8d108ea341f/output /data/requests/65351c90-712b-44e8-b21d-a8d108ea341f/input/final_linked_ir.bc
+PID: 726
 Using monotonic steady clock with 1/1000000000s resolution
-Started: 2026-10-07 05:29:49
+Started: 2026-10-22 02:41:06
 BEGIN searcher description
 DFSSearcher
 END searcher description
-Finished: 2026-10-07 05:29:50
-Elapsed: 00:00:01
+Finished: 2026-10-22 02:41:06
+Elapsed: 00:00:00
 KLEE: done: explored paths = 32
 KLEE: done: avg. constructs per query = 44
 KLEE: done: total queries = 32

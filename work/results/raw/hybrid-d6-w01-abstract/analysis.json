@@ -1,14 +1,14 @@
 {
-  "child_process_cpu_time_us": 32223,
-  "cpu_time_us": 33774,
+  "child_process_cpu_time_us": 29945,
+  "cpu_time_us": 31689,
   "discharged": false,
   "error": null,
   "metrics": {
     "abstract_states": 3
   },
-  "parent_cpu_time_us": 1551,
+  "parent_cpu_time_us": 1744,
   "proof": "Conservative UNKNOWN: mixed or unresolved reachable outcomes",
   "status": "ok",
   "verdict": "UNKNOWN",
-  "wall_time_us": 33461
+  "wall_time_us": 31460
 }

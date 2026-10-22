@@ -7,6 +7,6 @@ KLEE: WARNING: undefined reference to function: mmap
 KLEE: WARNING: undefined reference to function: open
 KLEE: WARNING: undefined reference to function: write
 KLEE: WARNING: undefined reference to function: kill (UNSAFE)!
-KLEE: WARNING ONCE: calling external: ioctl(0, 21505, 140406106882048) at libc/termios/tcgetattr.c:43 12
+KLEE: WARNING ONCE: calling external: ioctl(0, 21505, 140353053130752) at libc/termios/tcgetattr.c:43 12
 KLEE: WARNING ONCE: calling __user_main with extra arguments.
 KLEE: WARNING ONCE: Alignment of memory from call "malloc" is not modelled. Using alignment of 8.

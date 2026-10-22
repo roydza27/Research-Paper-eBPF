@@ -1,0 +1,51 @@
+Pre-Flight Smoke Test Execution Log - 2026-10-22T08:03:23Z
+Policy: /home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/corpus/phase5/policies/phase5_policy.json
+Socket: research/baselines/krakenguard/artifact/socket/krakenguard.sock
+
+KRAKENGUARD Health: {'version': '1.0', 'request_id': '1e92ac1d-b6d9-4746-885a-e3b38d848209', 'status': 'success', 'retained': False, 'execution': {'duration_seconds': 6.031990051269531e-05, 'paths_explored': 0, 'total_instructions': 0, 'return_code': 0}}
+
+=== Testing Program a1 (Group A) ===
+Object: /home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/corpus/phase5/programs/a1.o
+Abstract Verdict: SAFE
+Discharged: True
+Abstract Proof: All 1 reachable exits return policy-allowed values and all modeled reachable operations are supported.
+Abstract Runtime: 127.202 ms
+Final Verdict: COMPLIANT (Reference: COMPLIANT, Match: True)
+Total Verification Wall Time: 127.202 ms
+
+=== Testing Program b1 (Group B) ===
+Object: /home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/corpus/phase5/programs/b1.o
+Abstract Verdict: UNKNOWN
+Discharged: False
+Abstract Proof: Conservative UNKNOWN: unsupported instruction at 1: w2 = *(u32 *)(r1 + 0x4)
+Abstract Runtime: 34.217 ms
+Invoking symbolic fallback via KRAKENGUARD...
+Symbolic Status: success
+Symbolic Verdict: COMPLIANT
+KLEE Stats: {'paths_explored': 2, 'total_instructions': 12811, 'completed_paths': None, 'total_queries': None}
+Symbolic Runtime: 1318.935 ms
+Final Verdict: COMPLIANT (Reference: COMPLIANT, Match: True)
+Total Verification Wall Time: 1353.151 ms
+
+=== Testing Program c1 (Group C) ===
+Object: /home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/corpus/phase5/programs/c1.o
+Abstract Verdict: VIOLATION
+Discharged: True
+Abstract Proof: All 1 reachable terminal paths establish a policy violation.
+Abstract Runtime: 33.754 ms
+Final Verdict: POLICY VIOLATION (Reference: POLICY VIOLATION, Match: True)
+Total Verification Wall Time: 33.754 ms
+
+=== Testing Program d1 (Group D) ===
+Object: /home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/corpus/phase5/programs/d1.o
+Abstract Verdict: UNKNOWN
+Discharged: False
+Abstract Proof: Conservative UNKNOWN: mixed or unresolved reachable outcomes
+Abstract Runtime: 34.251 ms
+Invoking symbolic fallback via KRAKENGUARD...
+Symbolic Status: success
+Symbolic Verdict: POLICY VIOLATION
+KLEE Stats: {'paths_explored': 2, 'total_instructions': 12804, 'completed_paths': None, 'total_queries': None}
+Symbolic Runtime: 700.280 ms
+Final Verdict: POLICY VIOLATION (Reference: POLICY VIOLATION, Match: True)
+Total Verification Wall Time: 734.532 ms
