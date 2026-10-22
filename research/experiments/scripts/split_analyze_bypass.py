@@ -258,7 +258,7 @@ def main() -> int:
     p.add_argument("--object", required=True)
     p.add_argument("--policy", required=True)
     p.add_argument("--program-id")
-    p.add_argument("--output", required=True, help="new result JSON path; existing files are refused")
+    p.add_argument("--output", help="new result JSON path; existing files are refused")
     p.add_argument("--baseline-dir", help="path to frozen KRAKENGUARD artifact directory")
     p.add_argument("--socket-path")
     p.add_argument("--symbolic-timeout-seconds", type=float, default=120.0)
@@ -266,6 +266,8 @@ def main() -> int:
     args = p.parse_args()
     if args.symbolic_worker:
         return _symbolic_worker(args)
+    if not args.output:
+        p.error("--output is required outside symbolic-worker mode")
     if args.symbolic_timeout_seconds <= 0:
         p.error("--symbolic-timeout-seconds must be positive")
     output = Path(args.output)
