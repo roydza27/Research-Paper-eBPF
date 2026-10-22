@@ -36,11 +36,21 @@ jobs:
             mkdir -p "$(dirname "$client")"
             printf '%s\n' 'class KrakenGuardClient:' '    def __init__(self, *args, **kwargs):' '        raise RuntimeError("KRAKENGUARD unavailable in unit-test CI; no service invocation allowed")' > "$client"
           fi
-      - name: Existing abstract analyzer soundness tests
-        run: python -m pytest -q research/tests/test_phase5_abstract_soundness.py
-      - name: Existing E3/E4/E5 audit tests (tests only; no matrix execution)
-        run: python -m pytest -q research/tests/test_phase5_e3_e4_e5_audit.py
-      - name: Existing Split–Analyze–Bypass tests
-        run: python -m pytest -q research/experiments/tests/test_split_analyze_bypass.py
-      - name: Controlled corpus and analysis unit tests
-        run: python -m pytest -q research/experiments/split_bypass/tests/test_controlled_evaluation.py
+      - name: Run all test suites and report each outcome
+        shell: bash
+        run: |
+          set +e
+          python -m pytest -q research/tests/test_phase5_abstract_soundness.py
+          abstract_status=$?
+          python -m pytest -q research/tests/test_phase5_e3_e4_e5_audit.py
+          audit_status=$?
+          python -m pytest -q research/experiments/tests/test_split_analyze_bypass.py
+          prototype_status=$?
+          python -m pytest -q research/experiments/split_bypass/tests/test_controlled_evaluation.py
+          controlled_status=$?
+          printf '\nSuite exit codes: abstract=%s audit=%s prototype=%s controlled=%s\n' \
+            "$abstract_status" "$audit_status" "$prototype_status" "$controlled_status"
+          if [ "$abstract_status" -ne 0 ] || [ "$audit_status" -ne 0 ] || \
+             [ "$prototype_status" -ne 0 ] || [ "$controlled_status" -ne 0 ]; then
+            exit 1
+          fi
