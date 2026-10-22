@@ -14,6 +14,16 @@ def result(verdict, **extra):
 
 
 class GateTests(unittest.TestCase):
+    def test_reference_compliant_verdict_maps_to_safe(self):
+        row = gate("program", lambda: result("COMPLIANT"), lambda: result("VIOLATION"))
+        self.assertEqual(row["abstract_verdict"], "SAFE")
+        self.assertEqual(row["disposition"], "abstract_pass")
+
+    def test_reference_policy_violation_maps_to_violation(self):
+        row = gate("program", lambda: result("POLICY VIOLATION"), lambda: result("SAFE"))
+        self.assertEqual(row["abstract_verdict"], "VIOLATION")
+        self.assertEqual(row["disposition"], "violation")
+
     def test_all_abstract_safe(self):
         calls = []
         row = gate("program", lambda: result("SAFE"), lambda: calls.append("symbolic") or result("SAFE"))
