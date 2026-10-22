@@ -64,11 +64,20 @@ class GateTests(unittest.TestCase):
             raise TimeoutError("deadline")
         row = gate("program", lambda: result("UNKNOWN"), fail)
         self.assertEqual(row["disposition"], "unresolved")
+        self.assertTrue(row["symbolic_timeout"])
         self.assertIn("timeout", row["symbolic_error"])
 
     def test_unrecognized_verdict_fails_closed(self):
         row = gate("program", lambda: result("TOOL_ERROR"), lambda: result("SAFE"))
         self.assertEqual(row["abstract_verdict"], "UNKNOWN")
+        self.assertEqual(row["disposition"], "symbolic_pass")
+
+    def test_abstract_timeout_is_explicit_and_fallback_can_resolve(self):
+        def timeout():
+            raise TimeoutError("abstract deadline")
+        row = gate("program", timeout, lambda: result("SAFE"))
+        self.assertTrue(row["abstract_timeout"])
+        self.assertTrue(row["symbolic_invoked"])
         self.assertEqual(row["disposition"], "symbolic_pass")
 
     def test_reject_alias_normalizes_to_violation(self):
