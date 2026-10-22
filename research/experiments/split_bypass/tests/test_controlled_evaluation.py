@@ -52,10 +52,10 @@ class SummaryTests(unittest.TestCase):
             {"program_id": "p2", "pipeline": "baseline", "reference_verdict": "SAFE",
              "overall_verdict": "VIOLATION", "end_to_end_duration_ms": 3},
         ], bootstrap_samples=100, seed=7)
-        row = report["per_program_pipeline"][0]
-        self.assertEqual(row["false_safe_count"], 1)
-        self.assertEqual(row["false_reject_count"], 1)
-        self.assertEqual(row["oracle_agreement_rate"], 0.0)
+        rows = report["per_program_pipeline"]
+        self.assertEqual(sum(row["false_safe_count"] for row in rows), 1)
+        self.assertEqual(sum(row["false_reject_count"] for row in rows), 1)
+        self.assertTrue(all(row["oracle_agreement_rate"] == 0.0 for row in rows))
 
     def test_only_explicit_pair_ids_create_paired_estimates(self):
         rows = [
