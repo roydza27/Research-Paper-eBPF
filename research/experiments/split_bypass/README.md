@@ -54,7 +54,7 @@ Do not commit host-specific object files, sockets, service logs containing secre
 
 Each record should include: `program_id`, `pipeline` (`baseline` or `experimental`), `run_id`, `pair_id`, `repeat_index`, `seed`, source commit, tool versions, input SHA-256 values, instruction/basic-block/branch/reachable-block counts, `abstract_verdict`, `abstract_duration_ms`, `symbolic_invoked`, `symbolic_verdict`, `symbolic_duration_ms`, `end_to_end_duration_ms`, `final_verdict`, `status`, `timeout`, `error`, and `reference_verdict`. Use null for unavailable values; never substitute zero.
 
-The existing runner output can be archived as-is, but baseline and experimental observations should be normalized into the schema above for paired analysis. A `pair_id` must identify matched runs under the same program, policy, host configuration, warmup/repetition position and seed. The summarizer only calculates paired latency differences when an explicit pair ID exists.
+The refined runner emits `split-analyze-bypass-experiment/v2`: source commit, object/policy SHA-256, Python/platform/kernel/tool versions, instruction/basic-block/branch/reachable-block metrics, explicit abstract/symbolic timeout flags, final disposition, and separate program-level versus region-level result sections. Region-level results are explicitly marked unsupported and empty; no block verdict is copied from the whole-program verdict. Baseline and experimental observations should be normalized into the schema above for paired analysis. A `pair_id` must identify matched runs under the same program, policy, host configuration, warmup/repetition position and seed. The summarizer only calculates paired latency differences when an explicit pair ID exists.
 
 ## Status vocabulary
 
