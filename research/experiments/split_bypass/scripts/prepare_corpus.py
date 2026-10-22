@@ -67,6 +67,25 @@ int A03_helper_clock(struct xdp_md *ctx)
 char LICENSE[] SEC("license") = "GPL";
 """,
     },
+    "A04_map_lookup": {
+        "family": "A_straight_line", "hypothesis": "straight-line map lookup; map identity and policy rule must be checked",
+        "source": HEADER + """struct {
+    __uint(type, BPF_MAP_TYPE_ARRAY);
+    __uint(max_entries, 1);
+    __type(key, __u32);
+    __type(value, __u64);
+} e1_map SEC(".maps");
+
+SEC("xdp")
+int A04_map_lookup(struct xdp_md *ctx)
+{
+    __u32 key = 0;
+    __u64 *value = bpf_map_lookup_elem(&e1_map, &key);
+    return value ? XDP_PASS : XDP_PASS;
+}
+char LICENSE[] SEC("license") = "GPL";
+""",
+    },
     "B01_branch_safe": {
         "family": "B_branching", "hypothesis": "unresolved condition with safe alternatives",
         "source": HEADER + """SEC("xdp")
@@ -88,6 +107,24 @@ int B02_branch_policy_sensitive(struct xdp_md *ctx)
     __u64 now = bpf_ktime_get_ns();
     if (now & 1)
         return XDP_DROP;
+    return XDP_PASS;
+}
+char LICENSE[] SEC("license") = "GPL";
+""",
+    },
+    "B03_branch_depth": {
+        "family": "B_branching", "hypothesis": "multiple unresolved conditions and several source-level paths",
+        "source": HEADER + """SEC("xdp")
+int B03_branch_depth(struct xdp_md *ctx)
+{
+    __u32 len = ctx->data_end - ctx->data;
+    if (ctx->ingress_ifindex & 1) {
+        if (len & 1)
+            return XDP_PASS;
+        return XDP_PASS;
+    }
+    if (len > 128)
+        return XDP_PASS;
     return XDP_PASS;
 }
 char LICENSE[] SEC("license") = "GPL";
@@ -121,6 +158,23 @@ int C02_join_policy_sensitive(struct xdp_md *ctx)
     else
         joined = 1;
     if (joined)
+        return XDP_DROP;
+    return XDP_PASS;
+}
+char LICENSE[] SEC("license") = "GPL";
+""",
+    },
+    "C03_join_violation_candidate": {
+        "family": "C_join_points", "hypothesis": "one join predecessor can produce a policy-sensitive DROP",
+        "source": HEADER + """SEC("xdp")
+int C03_join_violation_candidate(struct xdp_md *ctx)
+{
+    volatile __u32 joined;
+    if (ctx->ingress_ifindex & 1)
+        joined = 0;
+    else
+        joined = 1;
+    if (joined == 1)
         return XDP_DROP;
     return XDP_PASS;
 }
@@ -172,9 +226,28 @@ int E01_bounded_loop(struct xdp_md *ctx)
 char LICENSE[] SEC("license") = "GPL";
 """,
     },
+    "E02_nested_bounded_loop": {
+        "family": "E_loops", "hypothesis": "nested bounded loops; verifier acceptance and emitted back-edges must be measured",
+        "source": HEADER + """SEC("xdp")
+int E02_nested_bounded_loop(struct xdp_md *ctx)
+{
+    volatile __u32 acc = ctx->ingress_ifindex;
+    __u32 i = 0;
+    __u32 j = 0;
+#pragma clang loop unroll(disable)
+    for (i = 0; i < 3; i++) {
+#pragma clang loop unroll(disable)
+        for (j = 0; j < 4; j++)
+            acc = (acc + i) ^ j;
+    }
+    return acc & 1 ? XDP_PASS : XDP_PASS;
+}
+char LICENSE[] SEC("license") = "GPL";
+""",
+    },
 }
 
-def sha256(path: Path) -> str:
+def sha256(path: Path):
     h = hashlib.sha256()
     with path.open("rb") as stream:
         for chunk in iter(lambda: stream.read(1024 * 1024), b""):
