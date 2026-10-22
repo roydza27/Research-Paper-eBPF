@@ -17,7 +17,7 @@ llvm-objdump --version
 python3 --version
 ```
 
-Generate ten deterministic source fixtures and copy the selected policy into this experiment's policy directory. This first pass does not compile:
+Generate fourteen deterministic source fixtures and copy the selected policy into this experiment's policy directory. This first pass does not compile:
 
 ```bash
 python3 research/experiments/split_bypass/scripts/prepare_corpus.py \
