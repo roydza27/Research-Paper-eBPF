@@ -74,6 +74,37 @@ jobs:
             --compile \
             --include-dir /usr/include/x86_64-linux-gnu \
             --manifest-output "research/experiments/split_bypass/manifests/corpus-manifest-ci-${GITHUB_RUN_ID}.json"
+      - name: Run program-scope analyzer smoke without KRAKENGUARD
+        if: success()
+        run: |
+          python research/experiments/scripts/split_analyze_bypass.py \
+            --object research/experiments/split_bypass/programs/A01_straight_small.o \
+            --policy research/experiments/split_bypass/policies/policy-270403272d73.json \
+            --program-id A01_straight_small \
+            --output "research/experiments/split_bypass/results/raw/runner-smoke-${GITHUB_RUN_ID}.json"
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          path = Path("research/experiments/split_bypass/results/raw") / f"runner-smoke-{os.environ['GITHUB_RUN_ID']}.json"
+          payload = json.loads(path.read_text())
+          assert payload["schema"] == "split-analyze-bypass-experiment/v2"
+          assert payload["input_checksums"]["object_sha256"]
+          assert payload["input_checksums"]["policy_sha256"]
+          assert payload["result_scope"]["region_level"]["available"] is False
+          assert payload["result_scope"]["block_verdicts_available"] is False
+          assert payload["metrics"]["instruction_count"] is not None
+          assert payload["overall_verdict"] in {"SAFE", "VIOLATION", "UNKNOWN"}
+          print(json.dumps({
+              "smoke_status": "executed",
+              "program_id": payload["program_id"],
+              "abstract_verdict": payload["units"][0]["abstract_verdict"],
+              "symbolic_invoked": payload["units"][0]["symbolic_invoked"],
+              "final_disposition": payload["final_disposition"],
+              "instruction_count": payload["metrics"]["instruction_count"],
+              "region_level_supported": payload["region_level_results"]["available"],
+              "note": "No live KRAKENGUARD service was invoked; UNKNOWN remains unresolved if fallback is unavailable."
+          }, indent=2))
+          PY
       - name: Fail if any compilation failed, after manifest is written
         run: |
           python - <<'PY'
@@ -96,5 +127,6 @@ jobs:
             research/experiments/split_bypass/programs/*.o
             research/experiments/split_bypass/policies/*.json
             research/experiments/split_bypass/manifests/corpus-manifest-ci-${{ github.run_id }}.json
+            research/experiments/split_bypass/results/raw/runner-smoke-${{ github.run_id }}.json
           if-no-files-found: warn
           retention-days: 14
