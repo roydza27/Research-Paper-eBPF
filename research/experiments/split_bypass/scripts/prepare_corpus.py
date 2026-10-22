@@ -92,8 +92,9 @@ char LICENSE[] SEC("license") = "GPL";
 int B01_branch_safe(struct xdp_md *ctx)
 {
     __u32 len = ctx->data_end - ctx->data;
+    volatile __u64 stamp = 0;
     if (len & 1)
-        return XDP_PASS;
+        stamp = bpf_ktime_get_ns();
     return XDP_PASS;
 }
 char LICENSE[] SEC("license") = "GPL";
@@ -118,13 +119,14 @@ char LICENSE[] SEC("license") = "GPL";
 int B03_branch_depth(struct xdp_md *ctx)
 {
     __u32 len = ctx->data_end - ctx->data;
+    volatile __u64 stamp = 0;
     if (ctx->ingress_ifindex & 1) {
+        stamp = bpf_ktime_get_ns();
         if (len & 1)
-            return XDP_PASS;
-        return XDP_PASS;
+            stamp ^= bpf_ktime_get_ns();
+    } else if (len > 128) {
+        stamp = bpf_ktime_get_ns();
     }
-    if (len > 128)
-        return XDP_PASS;
     return XDP_PASS;
 }
 char LICENSE[] SEC("license") = "GPL";
