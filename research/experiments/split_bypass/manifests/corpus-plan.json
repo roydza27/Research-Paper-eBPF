@@ -1,0 +1,512 @@
+{
+  "schema": "split-bypass-corpus-plan/v1",
+  "status": "planned_not_compiled",
+  "baseline_commit": "6457dacd48d21965b85b52acc55502179718f4ab",
+  "policy_input": "research/experiments/corpus/phase5/policies/phase5_policy.json",
+  "compilation_command_template": [
+    "clang",
+    "-target",
+    "bpf",
+    "-D__TARGET_ARCH_x86",
+    "-O2",
+    "-g",
+    "-I/usr/include",
+    "-c",
+    "<source_path>",
+    "-o",
+    "<elf_path>"
+  ],
+  "programs": [
+    {
+      "program_id": "A01_straight_small",
+      "family": "A_straight_line",
+      "hypothesis": "small straight-line arithmetic",
+      "source_path": "research/experiments/split_bypass/programs/A01_straight_small.c",
+      "source_sha256": null,
+      "elf_path": "research/experiments/split_bypass/programs/A01_straight_small.o",
+      "elf_sha256": null,
+      "build": {
+        "status": "not_attempted",
+        "command": null,
+        "returncode": null,
+        "stdout": null,
+        "stderr": null
+      },
+      "structure": {
+        "instruction_count": null,
+        "basic_block_count": null,
+        "branch_count": null,
+        "reachable_block_count": null,
+        "measurement_status": "not_measured"
+      },
+      "policy_path": "research/experiments/corpus/phase5/policies/phase5_policy.json",
+      "policy_sha256": null,
+      "reference_oracle": {
+        "status": "not_run",
+        "expected_semantic_verdict": null,
+        "raw_response_path": null,
+        "provenance": null
+      },
+      "region_verdicts": {
+        "available": false,
+        "reason": "region-level analysis is not implemented"
+      }
+    },
+    {
+      "program_id": "A02_straight_medium",
+      "family": "A_straight_line",
+      "hypothesis": "larger source-level arithmetic sequence; compiler may simplify it",
+      "source_path": "research/experiments/split_bypass/programs/A02_straight_medium.c",
+      "source_sha256": null,
+      "elf_path": "research/experiments/split_bypass/programs/A02_straight_medium.o",
+      "elf_sha256": null,
+      "build": {
+        "status": "not_attempted",
+        "command": null,
+        "returncode": null,
+        "stdout": null,
+        "stderr": null
+      },
+      "structure": {
+        "instruction_count": null,
+        "basic_block_count": null,
+        "branch_count": null,
+        "reachable_block_count": null,
+        "measurement_status": "not_measured"
+      },
+      "policy_path": "research/experiments/corpus/phase5/policies/phase5_policy.json",
+      "policy_sha256": null,
+      "reference_oracle": {
+        "status": "not_run",
+        "expected_semantic_verdict": null,
+        "raw_response_path": null,
+        "provenance": null
+      },
+      "region_verdicts": {
+        "available": false,
+        "reason": "region-level analysis is not implemented"
+      }
+    },
+    {
+      "program_id": "A03_helper_clock",
+      "family": "A_straight_line",
+      "hypothesis": "straight-line helper interaction",
+      "source_path": "research/experiments/split_bypass/programs/A03_helper_clock.c",
+      "source_sha256": null,
+      "elf_path": "research/experiments/split_bypass/programs/A03_helper_clock.o",
+      "elf_sha256": null,
+      "build": {
+        "status": "not_attempted",
+        "command": null,
+        "returncode": null,
+        "stdout": null,
+        "stderr": null
+      },
+      "structure": {
+        "instruction_count": null,
+        "basic_block_count": null,
+        "branch_count": null,
+        "reachable_block_count": null,
+        "measurement_status": "not_measured"
+      },
+      "policy_path": "research/experiments/corpus/phase5/policies/phase5_policy.json",
+      "policy_sha256": null,
+      "reference_oracle": {
+        "status": "not_run",
+        "expected_semantic_verdict": null,
+        "raw_response_path": null,
+        "provenance": null
+      },
+      "region_verdicts": {
+        "available": false,
+        "reason": "region-level analysis is not implemented"
+      }
+    },
+    {
+      "program_id": "A04_map_lookup",
+      "family": "A_straight_line",
+      "hypothesis": "straight-line map lookup; map identity and policy rule must be checked",
+      "source_path": "research/experiments/split_bypass/programs/A04_map_lookup.c",
+      "source_sha256": null,
+      "elf_path": "research/experiments/split_bypass/programs/A04_map_lookup.o",
+      "elf_sha256": null,
+      "build": {
+        "status": "not_attempted",
+        "command": null,
+        "returncode": null,
+        "stdout": null,
+        "stderr": null
+      },
+      "structure": {
+        "instruction_count": null,
+        "basic_block_count": null,
+        "branch_count": null,
+        "reachable_block_count": null,
+        "measurement_status": "not_measured"
+      },
+      "policy_path": "research/experiments/corpus/phase5/policies/phase5_policy.json",
+      "policy_sha256": null,
+      "reference_oracle": {
+        "status": "not_run",
+        "expected_semantic_verdict": null,
+        "raw_response_path": null,
+        "provenance": null
+      },
+      "region_verdicts": {
+        "available": false,
+        "reason": "region-level analysis is not implemented"
+      }
+    },
+    {
+      "program_id": "B01_branch_safe",
+      "family": "B_branching",
+      "hypothesis": "unresolved condition with safe alternatives",
+      "source_path": "research/experiments/split_bypass/programs/B01_branch_safe.c",
+      "source_sha256": null,
+      "elf_path": "research/experiments/split_bypass/programs/B01_branch_safe.o",
+      "elf_sha256": null,
+      "build": {
+        "status": "not_attempted",
+        "command": null,
+        "returncode": null,
+        "stdout": null,
+        "stderr": null
+      },
+      "structure": {
+        "instruction_count": null,
+        "basic_block_count": null,
+        "branch_count": null,
+        "reachable_block_count": null,
+        "measurement_status": "not_measured"
+      },
+      "policy_path": "research/experiments/corpus/phase5/policies/phase5_policy.json",
+      "policy_sha256": null,
+      "reference_oracle": {
+        "status": "not_run",
+        "expected_semantic_verdict": null,
+        "raw_response_path": null,
+        "provenance": null
+      },
+      "region_verdicts": {
+        "available": false,
+        "reason": "region-level analysis is not implemented"
+      }
+    },
+    {
+      "program_id": "B02_branch_policy_sensitive",
+      "family": "B_branching",
+      "hypothesis": "reachable DROP alternative; semantic policy outcome must come from oracle",
+      "source_path": "research/experiments/split_bypass/programs/B02_branch_policy_sensitive.c",
+      "source_sha256": null,
+      "elf_path": "research/experiments/split_bypass/programs/B02_branch_policy_sensitive.o",
+      "elf_sha256": null,
+      "build": {
+        "status": "not_attempted",
+        "command": null,
+        "returncode": null,
+        "stdout": null,
+        "stderr": null
+      },
+      "structure": {
+        "instruction_count": null,
+        "basic_block_count": null,
+        "branch_count": null,
+        "reachable_block_count": null,
+        "measurement_status": "not_measured"
+      },
+      "policy_path": "research/experiments/corpus/phase5/policies/phase5_policy.json",
+      "policy_sha256": null,
+      "reference_oracle": {
+        "status": "not_run",
+        "expected_semantic_verdict": null,
+        "raw_response_path": null,
+        "provenance": null
+      },
+      "region_verdicts": {
+        "available": false,
+        "reason": "region-level analysis is not implemented"
+      }
+    },
+    {
+      "program_id": "B03_branch_depth",
+      "family": "B_branching",
+      "hypothesis": "multiple unresolved conditions and several source-level paths",
+      "source_path": "research/experiments/split_bypass/programs/B03_branch_depth.c",
+      "source_sha256": null,
+      "elf_path": "research/experiments/split_bypass/programs/B03_branch_depth.o",
+      "elf_sha256": null,
+      "build": {
+        "status": "not_attempted",
+        "command": null,
+        "returncode": null,
+        "stdout": null,
+        "stderr": null
+      },
+      "structure": {
+        "instruction_count": null,
+        "basic_block_count": null,
+        "branch_count": null,
+        "reachable_block_count": null,
+        "measurement_status": "not_measured"
+      },
+      "policy_path": "research/experiments/corpus/phase5/policies/phase5_policy.json",
+      "policy_sha256": null,
+      "reference_oracle": {
+        "status": "not_run",
+        "expected_semantic_verdict": null,
+        "raw_response_path": null,
+        "provenance": null
+      },
+      "region_verdicts": {
+        "available": false,
+        "reason": "region-level analysis is not implemented"
+      }
+    },
+    {
+      "program_id": "C01_join_different_values",
+      "family": "C_join_points",
+      "hypothesis": "two predecessors assign different values before a shared comparison",
+      "source_path": "research/experiments/split_bypass/programs/C01_join_different_values.c",
+      "source_sha256": null,
+      "elf_path": "research/experiments/split_bypass/programs/C01_join_different_values.o",
+      "elf_sha256": null,
+      "build": {
+        "status": "not_attempted",
+        "command": null,
+        "returncode": null,
+        "stdout": null,
+        "stderr": null
+      },
+      "structure": {
+        "instruction_count": null,
+        "basic_block_count": null,
+        "branch_count": null,
+        "reachable_block_count": null,
+        "measurement_status": "not_measured"
+      },
+      "policy_path": "research/experiments/corpus/phase5/policies/phase5_policy.json",
+      "policy_sha256": null,
+      "reference_oracle": {
+        "status": "not_run",
+        "expected_semantic_verdict": null,
+        "raw_response_path": null,
+        "provenance": null
+      },
+      "region_verdicts": {
+        "available": false,
+        "reason": "region-level analysis is not implemented"
+      }
+    },
+    {
+      "program_id": "C02_join_policy_sensitive",
+      "family": "C_join_points",
+      "hypothesis": "joined state influences a downstream policy-sensitive return",
+      "source_path": "research/experiments/split_bypass/programs/C02_join_policy_sensitive.c",
+      "source_sha256": null,
+      "elf_path": "research/experiments/split_bypass/programs/C02_join_policy_sensitive.o",
+      "elf_sha256": null,
+      "build": {
+        "status": "not_attempted",
+        "command": null,
+        "returncode": null,
+        "stdout": null,
+        "stderr": null
+      },
+      "structure": {
+        "instruction_count": null,
+        "basic_block_count": null,
+        "branch_count": null,
+        "reachable_block_count": null,
+        "measurement_status": "not_measured"
+      },
+      "policy_path": "research/experiments/corpus/phase5/policies/phase5_policy.json",
+      "policy_sha256": null,
+      "reference_oracle": {
+        "status": "not_run",
+        "expected_semantic_verdict": null,
+        "raw_response_path": null,
+        "provenance": null
+      },
+      "region_verdicts": {
+        "available": false,
+        "reason": "region-level analysis is not implemented"
+      }
+    },
+    {
+      "program_id": "C03_join_violation_candidate",
+      "family": "C_join_points",
+      "hypothesis": "one join predecessor can produce a policy-sensitive DROP",
+      "source_path": "research/experiments/split_bypass/programs/C03_join_violation_candidate.c",
+      "source_sha256": null,
+      "elf_path": "research/experiments/split_bypass/programs/C03_join_violation_candidate.o",
+      "elf_sha256": null,
+      "build": {
+        "status": "not_attempted",
+        "command": null,
+        "returncode": null,
+        "stdout": null,
+        "stderr": null
+      },
+      "structure": {
+        "instruction_count": null,
+        "basic_block_count": null,
+        "branch_count": null,
+        "reachable_block_count": null,
+        "measurement_status": "not_measured"
+      },
+      "policy_path": "research/experiments/corpus/phase5/policies/phase5_policy.json",
+      "policy_sha256": null,
+      "reference_oracle": {
+        "status": "not_run",
+        "expected_semantic_verdict": null,
+        "raw_response_path": null,
+        "provenance": null
+      },
+      "region_verdicts": {
+        "available": false,
+        "reason": "region-level analysis is not implemented"
+      }
+    },
+    {
+      "program_id": "D01_helper_unknown_candidate",
+      "family": "D_unknown_fallback",
+      "hypothesis": "helper-derived unresolved value; UNKNOWN is a hypothesis, not an assigned outcome",
+      "source_path": "research/experiments/split_bypass/programs/D01_helper_unknown_candidate.c",
+      "source_sha256": null,
+      "elf_path": "research/experiments/split_bypass/programs/D01_helper_unknown_candidate.o",
+      "elf_sha256": null,
+      "build": {
+        "status": "not_attempted",
+        "command": null,
+        "returncode": null,
+        "stdout": null,
+        "stderr": null
+      },
+      "structure": {
+        "instruction_count": null,
+        "basic_block_count": null,
+        "branch_count": null,
+        "reachable_block_count": null,
+        "measurement_status": "not_measured"
+      },
+      "policy_path": "research/experiments/corpus/phase5/policies/phase5_policy.json",
+      "policy_sha256": null,
+      "reference_oracle": {
+        "status": "not_run",
+        "expected_semantic_verdict": null,
+        "raw_response_path": null,
+        "provenance": null
+      },
+      "region_verdicts": {
+        "available": false,
+        "reason": "region-level analysis is not implemented"
+      }
+    },
+    {
+      "program_id": "D02_packet_memory_candidate",
+      "family": "D_unknown_fallback",
+      "hypothesis": "bounded packet access and memory-state candidate; compile/verifier acceptance must be recorded",
+      "source_path": "research/experiments/split_bypass/programs/D02_packet_memory_candidate.c",
+      "source_sha256": null,
+      "elf_path": "research/experiments/split_bypass/programs/D02_packet_memory_candidate.o",
+      "elf_sha256": null,
+      "build": {
+        "status": "not_attempted",
+        "command": null,
+        "returncode": null,
+        "stdout": null,
+        "stderr": null
+      },
+      "structure": {
+        "instruction_count": null,
+        "basic_block_count": null,
+        "branch_count": null,
+        "reachable_block_count": null,
+        "measurement_status": "not_measured"
+      },
+      "policy_path": "research/experiments/corpus/phase5/policies/phase5_policy.json",
+      "policy_sha256": null,
+      "reference_oracle": {
+        "status": "not_run",
+        "expected_semantic_verdict": null,
+        "raw_response_path": null,
+        "provenance": null
+      },
+      "region_verdicts": {
+        "available": false,
+        "reason": "region-level analysis is not implemented"
+      }
+    },
+    {
+      "program_id": "E01_bounded_loop",
+      "family": "E_loops",
+      "hypothesis": "bounded loop; emitted loop structure depends on compiler and flags",
+      "source_path": "research/experiments/split_bypass/programs/E01_bounded_loop.c",
+      "source_sha256": null,
+      "elf_path": "research/experiments/split_bypass/programs/E01_bounded_loop.o",
+      "elf_sha256": null,
+      "build": {
+        "status": "not_attempted",
+        "command": null,
+        "returncode": null,
+        "stdout": null,
+        "stderr": null
+      },
+      "structure": {
+        "instruction_count": null,
+        "basic_block_count": null,
+        "branch_count": null,
+        "reachable_block_count": null,
+        "measurement_status": "not_measured"
+      },
+      "policy_path": "research/experiments/corpus/phase5/policies/phase5_policy.json",
+      "policy_sha256": null,
+      "reference_oracle": {
+        "status": "not_run",
+        "expected_semantic_verdict": null,
+        "raw_response_path": null,
+        "provenance": null
+      },
+      "region_verdicts": {
+        "available": false,
+        "reason": "region-level analysis is not implemented"
+      }
+    },
+    {
+      "program_id": "E02_nested_bounded_loop",
+      "family": "E_loops",
+      "hypothesis": "nested bounded loops; verifier acceptance and emitted back-edges must be measured",
+      "source_path": "research/experiments/split_bypass/programs/E02_nested_bounded_loop.c",
+      "source_sha256": null,
+      "elf_path": "research/experiments/split_bypass/programs/E02_nested_bounded_loop.o",
+      "elf_sha256": null,
+      "build": {
+        "status": "not_attempted",
+        "command": null,
+        "returncode": null,
+        "stdout": null,
+        "stderr": null
+      },
+      "structure": {
+        "instruction_count": null,
+        "basic_block_count": null,
+        "branch_count": null,
+        "reachable_block_count": null,
+        "measurement_status": "not_measured"
+      },
+      "policy_path": "research/experiments/corpus/phase5/policies/phase5_policy.json",
+      "policy_sha256": null,
+      "reference_oracle": {
+        "status": "not_run",
+        "expected_semantic_verdict": null,
+        "raw_response_path": null,
+        "provenance": null
+      },
+      "region_verdicts": {
+        "available": false,
+        "reason": "region-level analysis is not implemented"
+      }
+    }
+  ],
+  "note": "Null fields are intentionally unmeasured. Do not fill semantic verdicts from source hypotheses; run the reference oracle and preserve its raw response first."
+}

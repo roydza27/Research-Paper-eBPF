@@ -1,0 +1,132 @@
+name: Split Bypass evaluation checks
+
+on:
+  pull_request:
+    paths:
+      - "research/analyzer/**"
+      - "research/tests/**"
+      - "research/experiments/scripts/split_analyze_bypass.py"
+      - "research/experiments/tests/test_split_analyze_bypass.py"
+      - "research/experiments/split_bypass/**"
+      - ".github/workflows/split-bypass-evaluation.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  regression-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install test dependency
+        run: python -m pip install --upgrade pytest
+      - name: Stub unavailable KRAKENGUARD client for unit tests
+        shell: bash
+        run: |
+          # The frozen baseline artifact is not checked into this repository checkout.
+          # The test below imports the validator module to unit-test its verdict parser;
+          # it must not invoke a live verifier. This fail-fast stub only satisfies import.
+          client="research/baselines/krakenguard/artifact/daemon/krakenguard_client.py"
+          if [ ! -f "$client" ]; then
+            mkdir -p "$(dirname "$client")"
+            printf '%s\n' 'class KrakenGuardClient:' '    def __init__(self, *args, **kwargs):' '        raise RuntimeError("KRAKENGUARD unavailable in unit-test CI; no service invocation allowed")' > "$client"
+          fi
+      - name: Run all test suites and report each outcome
+        shell: bash
+        run: |
+          set +e
+          python -m pytest -q research/tests/test_phase5_abstract_soundness.py
+          abstract_status=$?
+          python -m pytest -q research/tests/test_phase5_e3_e4_e5_audit.py
+          audit_status=$?
+          python -m pytest -q research/experiments/tests/test_split_analyze_bypass.py
+          prototype_status=$?
+          python -m pytest -q research/experiments/split_bypass/tests/test_controlled_evaluation.py
+          controlled_status=$?
+          printf '\nSuite exit codes: abstract=%s audit=%s prototype=%s controlled=%s\n' \
+            "$abstract_status" "$audit_status" "$prototype_status" "$controlled_status"
+          if [ "$abstract_status" -ne 0 ] || [ "$audit_status" -ne 0 ] || \
+             [ "$prototype_status" -ne 0 ] || [ "$controlled_status" -ne 0 ]; then
+            exit 1
+          fi
+
+  corpus-build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install BPF compilation toolchain
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang llvm libbpf-dev
+      - name: Generate and compile controlled corpus
+        run: |
+          python research/experiments/split_bypass/scripts/prepare_corpus.py \
+            --policy research/experiments/corpus/phase5/policies/phase5_policy.json \
+            --compile \
+            --include-dir /usr/include/x86_64-linux-gnu \
+            --manifest-output "research/experiments/split_bypass/manifests/corpus-manifest-ci-${GITHUB_RUN_ID}.json"
+      - name: Run program-scope analyzer smoke without KRAKENGUARD
+        if: success()
+        run: |
+          python research/experiments/scripts/split_analyze_bypass.py \
+            --object research/experiments/split_bypass/programs/A01_straight_small.o \
+            --policy research/experiments/split_bypass/policies/policy-270403272d73.json \
+            --program-id A01_straight_small \
+            --output "research/experiments/split_bypass/results/raw/runner-smoke-${GITHUB_RUN_ID}.json"
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          path = Path("research/experiments/split_bypass/results/raw") / f"runner-smoke-{os.environ['GITHUB_RUN_ID']}.json"
+          payload = json.loads(path.read_text())
+          assert payload["schema"] == "split-analyze-bypass-experiment/v2"
+          assert payload["input_checksums"]["object_sha256"]
+          assert payload["input_checksums"]["policy_sha256"]
+          assert payload["result_scope"]["region_level"]["available"] is False
+          assert payload["result_scope"]["block_verdicts_available"] is False
+          assert payload["metrics"]["instruction_count"] is not None
+          assert payload["overall_verdict"] in {"SAFE", "VIOLATION", "UNKNOWN"}
+          print(json.dumps({
+              "smoke_status": "executed",
+              "program_id": payload["program_id"],
+              "abstract_verdict": payload["units"][0]["abstract_verdict"],
+              "symbolic_invoked": payload["units"][0]["symbolic_invoked"],
+              "final_disposition": payload["final_disposition"],
+              "instruction_count": payload["metrics"]["instruction_count"],
+              "region_level_supported": payload["region_level_results"]["available"],
+              "note": "No live KRAKENGUARD service was invoked; UNKNOWN remains unresolved if fallback is unavailable."
+          }, indent=2))
+          PY
+      - name: Fail if any compilation failed, after manifest is written
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          path = Path("research/experiments/split_bypass/manifests") / f"corpus-manifest-ci-{__import__('os').environ['GITHUB_RUN_ID']}.json"
+          manifest = json.loads(path.read_text())
+          failed = [p for p in manifest["programs"] if p["build"]["status"] != "compiled"]
+          for program in manifest["programs"]:
+              print(f'{program["program_id"]}: {program["build"]["status"]}; instructions={program["structure"].get("instruction_count")}; blocks={program["structure"].get("basic_block_count")}; branches={program["structure"].get("branch_count")}; elf_sha256={program["elf_sha256"]}')
+          if failed:
+              raise SystemExit(f"{len(failed)} program(s) did not compile; see manifest stdout/stderr fields")
+          PY
+      - name: Upload compiled corpus and manifest
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: split-bypass-corpus-build-${{ github.run_id }}
+          path: |
+            research/experiments/split_bypass/programs/*.o
+            research/experiments/split_bypass/policies/*.json
+            research/experiments/split_bypass/manifests/corpus-manifest-ci-${{ github.run_id }}.json
+            research/experiments/split_bypass/results/raw/runner-smoke-${{ github.run_id }}.json
+          if-no-files-found: warn
+          retention-days: 14

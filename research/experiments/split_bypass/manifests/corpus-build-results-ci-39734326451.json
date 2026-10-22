@@ -1,0 +1,406 @@
+{
+  "schema": "split-bypass-corpus-build-summary/v1",
+  "status": "compiled",
+  "generated_at_utc": "2026-10-22T06:30:39.510805+00:00",
+  "github_actions_run_id": 39734326451,
+  "github_actions_run_url": "https://github.com/roydza27/Research-Paper-eBPF/actions/runs/39734326451",
+  "source_commit": "dd02a09d2b4e6dc9d2aa7ca66bb764998313529c",
+  "environment": {
+    "python": "3.12.15 (main, Oct 1 2026, 02:35:59) [GCC 13.3.0]",
+    "platform": "Linux-6.17.0-1022-azure-x86_64-with-glibc2.39",
+    "kernel": "6.17.0-1022-azure",
+    "architecture": "x86_64",
+    "clang": "/usr/bin/clang",
+    "clang_version": "Ubuntu clang version 18.1.3 (1ubuntu1)",
+    "objdump": "/usr/bin/llvm-objdump",
+    "objdump_version": "Ubuntu LLVM version 18.1.3",
+    "target_arch": "x86",
+    "include_dir": "/usr/include/x86_64-linux-gnu"
+  },
+  "policy": {
+    "path": "research/experiments/corpus/phase5/policies/phase5_policy.json",
+    "sha256": "270403272d736ae7aee2ceda3bf8d088b6ac0cb476bb99ce0218dd8f33c3c603"
+  },
+  "compile_command_template": [
+    "clang",
+    "-target",
+    "bpf",
+    "-D__TARGET_ARCH_x86",
+    "-O2",
+    "-g",
+    "-I/usr/include/x86_64-linux-gnu",
+    "-c",
+    "<source_path>",
+    "-o",
+    "<elf_path>"
+  ],
+  "structural_metric_notes": {
+    "instruction_count": "Parsed from llvm-objdump disassembly",
+    "basic_block_count": "Objdump-derived leader estimate; provisional and should be cross-checked against analyzer CFG",
+    "branch_count": "Count of parsed branch instructions/branch-like lines from llvm-objdump; not a policy verdict",
+    "reachable_block_count": null,
+    "kernel_verifier_acceptance": "not tested",
+    "policy_verdict": "not run",
+    "oracle_agreement": "not measured"
+  },
+  "programs": [
+    {
+      "program_id": "A01_straight_small",
+      "source_path": "research/experiments/split_bypass/programs/A01_straight_small.c",
+      "source_sha256": "e7f8e8eabb9d0776330095af74ed4078db7343cc3b69d01a6b9b0d0a3b82892c",
+      "elf_path": "research/experiments/split_bypass/programs/A01_straight_small.o",
+      "elf_sha256": "fd24b8a9ebf8e56a9b44693a96084f421714cd8fef5c0fa7cb0584e6f9180d22",
+      "build_status": "compiled",
+      "compile_returncode": 0,
+      "policy_sha256": "270403272d736ae7aee2ceda3bf8d088b6ac0cb476bb99ce0218dd8f33c3c603",
+      "structure": {
+        "instruction_count": 2,
+        "basic_block_count": 1,
+        "branch_count": 0,
+        "reachable_block_count": null
+      },
+      "reference_oracle": {
+        "status": "not_run",
+        "expected_semantic_verdict": null,
+        "raw_response_path": null
+      },
+      "region_level_results": {
+        "available": false,
+        "results": []
+      }
+    },
+    {
+      "program_id": "A02_straight_medium",
+      "source_path": "research/experiments/split_bypass/programs/A02_straight_medium.c",
+      "source_sha256": "5aa9ab367514447f912d05431854eade852d8c695c2d3c65c8db2fd313834673",
+      "elf_path": "research/experiments/split_bypass/programs/A02_straight_medium.o",
+      "elf_sha256": "fc90a1c39a1d13578656c58e5ae710e4ba5602ad968d60ddf61a88e5e65d8288",
+      "build_status": "compiled",
+      "compile_returncode": 0,
+      "policy_sha256": "270403272d736ae7aee2ceda3bf8d088b6ac0cb476bb99ce0218dd8f33c3c603",
+      "structure": {
+        "instruction_count": 100,
+        "basic_block_count": 1,
+        "branch_count": 0,
+        "reachable_block_count": null
+      },
+      "reference_oracle": {
+        "status": "not_run",
+        "expected_semantic_verdict": null,
+        "raw_response_path": null
+      },
+      "region_level_results": {
+        "available": false,
+        "results": []
+      }
+    },
+    {
+      "program_id": "A03_helper_clock",
+      "source_path": "research/experiments/split_bypass/programs/A03_helper_clock.c",
+      "source_sha256": "ac82d9b387a0181ab3d164e0b9da4ef65b9a4dcf82cb535124be12c044b015d0",
+      "elf_path": "research/experiments/split_bypass/programs/A03_helper_clock.o",
+      "elf_sha256": "c2b93ece9b45b08b24f8fef352696310f5c408525de7eb72e94ee07567f1a9b9",
+      "build_status": "compiled",
+      "compile_returncode": 0,
+      "policy_sha256": "270403272d736ae7aee2ceda3bf8d088b6ac0cb476bb99ce0218dd8f33c3c603",
+      "structure": {
+        "instruction_count": 3,
+        "basic_block_count": 1,
+        "branch_count": 0,
+        "reachable_block_count": null
+      },
+      "reference_oracle": {
+        "status": "not_run",
+        "expected_semantic_verdict": null,
+        "raw_response_path": null
+      },
+      "region_level_results": {
+        "available": false,
+        "results": []
+      }
+    },
+    {
+      "program_id": "A04_map_lookup",
+      "source_path": "research/experiments/split_bypass/programs/A04_map_lookup.c",
+      "source_sha256": "3dd20d66c20115455458d1cf4768487a8f8aabc15ade4793a76f00e30e59853f",
+      "elf_path": "research/experiments/split_bypass/programs/A04_map_lookup.o",
+      "elf_sha256": "9e141a2658f15a03829aa997b10687439cd3c0512db519c56bfbbb07b5dbbc2b",
+      "build_status": "compiled",
+      "compile_returncode": 0,
+      "policy_sha256": "270403272d736ae7aee2ceda3bf8d088b6ac0cb476bb99ce0218dd8f33c3c603",
+      "structure": {
+        "instruction_count": 8,
+        "basic_block_count": 1,
+        "branch_count": 0,
+        "reachable_block_count": null
+      },
+      "reference_oracle": {
+        "status": "not_run",
+        "expected_semantic_verdict": null,
+        "raw_response_path": null
+      },
+      "region_level_results": {
+        "available": false,
+        "results": []
+      }
+    },
+    {
+      "program_id": "B01_branch_safe",
+      "source_path": "research/experiments/split_bypass/programs/B01_branch_safe.c",
+      "source_sha256": "b48e2b51510653a1789c5da334f3ea91424dc712de94890d5a10b83805beaf92",
+      "elf_path": "research/experiments/split_bypass/programs/B01_branch_safe.o",
+      "elf_sha256": "7abdb94a930abcee9c191565b76aa31289e52deac14401d8d077e026afc064a2",
+      "build_status": "compiled",
+      "compile_returncode": 0,
+      "policy_sha256": "270403272d736ae7aee2ceda3bf8d088b6ac0cb476bb99ce0218dd8f33c3c603",
+      "structure": {
+        "instruction_count": 11,
+        "basic_block_count": 3,
+        "branch_count": 1,
+        "reachable_block_count": null
+      },
+      "reference_oracle": {
+        "status": "not_run",
+        "expected_semantic_verdict": null,
+        "raw_response_path": null
+      },
+      "region_level_results": {
+        "available": false,
+        "results": []
+      }
+    },
+    {
+      "program_id": "B02_branch_policy_sensitive",
+      "source_path": "research/experiments/split_bypass/programs/B02_branch_policy_sensitive.c",
+      "source_sha256": "1a7016ae0241db42e9ebfaf438c187985937a3a26eb550f845d3c7ddcccbdf49",
+      "elf_path": "research/experiments/split_bypass/programs/B02_branch_policy_sensitive.o",
+      "elf_sha256": "43bd45d5202fb7d50766eb61c76b45e03f7a752d67dc6e5d788e83d9c5be090c",
+      "build_status": "compiled",
+      "compile_returncode": 0,
+      "policy_sha256": "270403272d736ae7aee2ceda3bf8d088b6ac0cb476bb99ce0218dd8f33c3c603",
+      "structure": {
+        "instruction_count": 7,
+        "basic_block_count": 2,
+        "branch_count": 1,
+        "reachable_block_count": null
+      },
+      "reference_oracle": {
+        "status": "not_run",
+        "expected_semantic_verdict": null,
+        "raw_response_path": null
+      },
+      "region_level_results": {
+        "available": false,
+        "results": []
+      }
+    },
+    {
+      "program_id": "B03_branch_depth",
+      "source_path": "research/experiments/split_bypass/programs/B03_branch_depth.c",
+      "source_sha256": "5bc48091cda628155cd8bcfbd8b1f15a43bd3c2ce9b38c91697aa54e8e32c0b6",
+      "elf_path": "research/experiments/split_bypass/programs/B03_branch_depth.o",
+      "elf_sha256": "9bb9ae680e5d25076df396a2e098ed810d0a2362e640fce7069e48e84559483f",
+      "build_status": "compiled",
+      "compile_returncode": 0,
+      "policy_sha256": "270403272d736ae7aee2ceda3bf8d088b6ac0cb476bb99ce0218dd8f33c3c603",
+      "structure": {
+        "instruction_count": 25,
+        "basic_block_count": 7,
+        "branch_count": 4,
+        "reachable_block_count": null
+      },
+      "reference_oracle": {
+        "status": "not_run",
+        "expected_semantic_verdict": null,
+        "raw_response_path": null
+      },
+      "region_level_results": {
+        "available": false,
+        "results": []
+      }
+    },
+    {
+      "program_id": "C01_join_different_values",
+      "source_path": "research/experiments/split_bypass/programs/C01_join_different_values.c",
+      "source_sha256": "8a121fd8f8926c94b27309853b2af1a15f1931b944b036407cc491a35e742eb5",
+      "elf_path": "research/experiments/split_bypass/programs/C01_join_different_values.o",
+      "elf_sha256": "14f2e1068166e519815c2e72f1884a2ff9809ce8555403d30ac5d79481375124",
+      "build_status": "compiled",
+      "compile_returncode": 0,
+      "policy_sha256": "270403272d736ae7aee2ceda3bf8d088b6ac0cb476bb99ce0218dd8f33c3c603",
+      "structure": {
+        "instruction_count": 12,
+        "basic_block_count": 4,
+        "branch_count": 2,
+        "reachable_block_count": null
+      },
+      "reference_oracle": {
+        "status": "not_run",
+        "expected_semantic_verdict": null,
+        "raw_response_path": null
+      },
+      "region_level_results": {
+        "available": false,
+        "results": []
+      }
+    },
+    {
+      "program_id": "C02_join_policy_sensitive",
+      "source_path": "research/experiments/split_bypass/programs/C02_join_policy_sensitive.c",
+      "source_sha256": "3e37ae305e3d1c2340457256e4d32779c362d2a508caf39b7587c20773065039",
+      "elf_path": "research/experiments/split_bypass/programs/C02_join_policy_sensitive.o",
+      "elf_sha256": "7837f7132a484c38836435f69ffa54d14d2cc907fcac58d4affbffb6454d71e6",
+      "build_status": "compiled",
+      "compile_returncode": 0,
+      "policy_sha256": "270403272d736ae7aee2ceda3bf8d088b6ac0cb476bb99ce0218dd8f33c3c603",
+      "structure": {
+        "instruction_count": 12,
+        "basic_block_count": 5,
+        "branch_count": 3,
+        "reachable_block_count": null
+      },
+      "reference_oracle": {
+        "status": "not_run",
+        "expected_semantic_verdict": null,
+        "raw_response_path": null
+      },
+      "region_level_results": {
+        "available": false,
+        "results": []
+      }
+    },
+    {
+      "program_id": "C03_join_violation_candidate",
+      "source_path": "research/experiments/split_bypass/programs/C03_join_violation_candidate.c",
+      "source_sha256": "aa597512fc7022dade944bf4c5edcadb7ecea5a1a135d93bf04d2c5416529425",
+      "elf_path": "research/experiments/split_bypass/programs/C03_join_violation_candidate.o",
+      "elf_sha256": "971c4ed62537238ff4c92894acc05a8fc75751760f04736cd74b362e41c899fc",
+      "build_status": "compiled",
+      "compile_returncode": 0,
+      "policy_sha256": "270403272d736ae7aee2ceda3bf8d088b6ac0cb476bb99ce0218dd8f33c3c603",
+      "structure": {
+        "instruction_count": 12,
+        "basic_block_count": 5,
+        "branch_count": 3,
+        "reachable_block_count": null
+      },
+      "reference_oracle": {
+        "status": "not_run",
+        "expected_semantic_verdict": null,
+        "raw_response_path": null
+      },
+      "region_level_results": {
+        "available": false,
+        "results": []
+      }
+    },
+    {
+      "program_id": "D01_helper_unknown_candidate",
+      "source_path": "research/experiments/split_bypass/programs/D01_helper_unknown_candidate.c",
+      "source_sha256": "ab975acbf3a8330a1c77f46566988dcaa54f90acf50268ca8c65eb269b7fdd95",
+      "elf_path": "research/experiments/split_bypass/programs/D01_helper_unknown_candidate.o",
+      "elf_sha256": "9ccc7723a34c746ae77724d3f594e0dc44eb2cf9cbac32feeb5918a35a882217",
+      "build_status": "compiled",
+      "compile_returncode": 0,
+      "policy_sha256": "270403272d736ae7aee2ceda3bf8d088b6ac0cb476bb99ce0218dd8f33c3c603",
+      "structure": {
+        "instruction_count": 8,
+        "basic_block_count": 2,
+        "branch_count": 1,
+        "reachable_block_count": null
+      },
+      "reference_oracle": {
+        "status": "not_run",
+        "expected_semantic_verdict": null,
+        "raw_response_path": null
+      },
+      "region_level_results": {
+        "available": false,
+        "results": []
+      }
+    },
+    {
+      "program_id": "D02_packet_memory_candidate",
+      "source_path": "research/experiments/split_bypass/programs/D02_packet_memory_candidate.c",
+      "source_sha256": "942e97e507872b6cb280dce38f743da33ebb33fb650bf37a4c2406efa941229d",
+      "elf_path": "research/experiments/split_bypass/programs/D02_packet_memory_candidate.o",
+      "elf_sha256": "1f2f7696f16786954721ee24503bef4646dffac05b768fa52400521225c9e168",
+      "build_status": "compiled",
+      "compile_returncode": 0,
+      "policy_sha256": "270403272d736ae7aee2ceda3bf8d088b6ac0cb476bb99ce0218dd8f33c3c603",
+      "structure": {
+        "instruction_count": 13,
+        "basic_block_count": 3,
+        "branch_count": 2,
+        "reachable_block_count": null
+      },
+      "reference_oracle": {
+        "status": "not_run",
+        "expected_semantic_verdict": null,
+        "raw_response_path": null
+      },
+      "region_level_results": {
+        "available": false,
+        "results": []
+      }
+    },
+    {
+      "program_id": "E01_bounded_loop",
+      "source_path": "research/experiments/split_bypass/programs/E01_bounded_loop.c",
+      "source_sha256": "0ee4b40b95f471d7cb4d632dfb938aff93fb8709bbff0f0aaff51e24833c721c",
+      "elf_path": "research/experiments/split_bypass/programs/E01_bounded_loop.o",
+      "elf_sha256": "0800243bdfc8c2007ec4d61441af255c414fcfecfdd6d1760d6288274064af2a",
+      "build_status": "compiled",
+      "compile_returncode": 0,
+      "policy_sha256": "270403272d736ae7aee2ceda3bf8d088b6ac0cb476bb99ce0218dd8f33c3c603",
+      "structure": {
+        "instruction_count": 15,
+        "basic_block_count": 3,
+        "branch_count": 1,
+        "reachable_block_count": null
+      },
+      "reference_oracle": {
+        "status": "not_run",
+        "expected_semantic_verdict": null,
+        "raw_response_path": null
+      },
+      "region_level_results": {
+        "available": false,
+        "results": []
+      }
+    },
+    {
+      "program_id": "E02_nested_bounded_loop",
+      "source_path": "research/experiments/split_bypass/programs/E02_nested_bounded_loop.c",
+      "source_sha256": "99dcfb60cae3c1b95c07780078e6f039426dbaf281fed24389037174c876eb06",
+      "elf_path": "research/experiments/split_bypass/programs/E02_nested_bounded_loop.o",
+      "elf_sha256": "3d81cf0cb44efb99983fed580b366f2b02aa803b00b3a4070db50202e16e6817",
+      "build_status": "compiled",
+      "compile_returncode": 0,
+      "policy_sha256": "270403272d736ae7aee2ceda3bf8d088b6ac0cb476bb99ce0218dd8f33c3c603",
+      "structure": {
+        "instruction_count": 23,
+        "basic_block_count": 7,
+        "branch_count": 4,
+        "reachable_block_count": null
+      },
+      "reference_oracle": {
+        "status": "not_run",
+        "expected_semantic_verdict": null,
+        "raw_response_path": null
+      },
+      "region_level_results": {
+        "available": false,
+        "results": []
+      }
+    }
+  ],
+  "notes": [
+    "This build manifest summarizes actual output from GitHub Actions run 39734326451. The full run artifact contains compiled objects and the generator's raw manifest.",
+    "Successful clang compilation is not kernel verifier acceptance or policy verification.",
+    "The first CI build failed for all fixtures because asm/types.h was not on the include path; the subsequent build succeeded after adding the Ubuntu architecture include directory.",
+    "The first successful build showed B01 and B03 optimized to one basic block; their source was revised to retain conditional helper side effects, and this manifest is from the subsequent successful build.",
+    "No expected semantic verdicts were fabricated. The policy oracle was not run.",
+    "ELF files are retained in the linked CI artifact; no object files are committed into the repository."
+  ]
+}
