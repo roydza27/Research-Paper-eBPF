@@ -25,6 +25,17 @@ jobs:
           python-version: "3.12"
       - name: Install test dependency
         run: python -m pip install --upgrade pytest
+      - name: Stub unavailable KRAKENGUARD client for unit tests
+        shell: bash
+        run: |
+          # The frozen baseline artifact is not checked into this repository checkout.
+          # The test below imports the validator module to unit-test its verdict parser;
+          # it must not invoke a live verifier. This fail-fast stub only satisfies import.
+          client="research/baselines/krakenguard/artifact/daemon/krakenguard_client.py"
+          if [ ! -f "$client" ]; then
+            mkdir -p "$(dirname "$client")"
+            printf '%s\n' 'class KrakenGuardClient:' '    def __init__(self, *args, **kwargs):' '        raise RuntimeError("KRAKENGUARD unavailable in unit-test CI; no service invocation allowed")' > "$client"
+          fi
       - name: Existing abstract analyzer soundness tests
         run: python -m pytest -q research/tests/test_phase5_abstract_soundness.py
       - name: Existing E3/E4/E5 audit tests (tests only; no matrix execution)
