@@ -12,7 +12,7 @@
 
 ## New artifacts
 
-- `scripts/prepare_corpus.py`: ten deterministic source fixtures across straight-line, branching, join, UNKNOWN-candidate, and bounded-loop families; compiler command/outcome and hashes are recorded in a generated manifest.
+- `scripts/prepare_corpus.py`: fourteen deterministic source fixtures across straight-line, branching, join, UNKNOWN-candidate, and bounded-loop families; compiler command/outcome and hashes are recorded in a generated manifest.
 - `scripts/analyze_runs.py`: normalized raw-run summary, per-program latency and verdict metrics, explicit-pair bootstrap intervals, false SAFE/false REJECT accounting when oracle labels exist.
 - `tests/test_controlled_evaluation.py`: deterministic tests for fixture definitions and summary semantics.
 - `design/region-api-design.md`: region API contract, soundness obligations, evaluation protocol.
