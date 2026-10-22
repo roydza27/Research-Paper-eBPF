@@ -72,6 +72,7 @@ jobs:
           python research/experiments/split_bypass/scripts/prepare_corpus.py \
             --policy research/experiments/corpus/phase5/policies/phase5_policy.json \
             --compile \
+            --include-dir /usr/include/x86_64-linux-gnu \
             --manifest-output "research/experiments/split_bypass/manifests/corpus-manifest-ci-${GITHUB_RUN_ID}.json"
       - name: Fail if any compilation failed, after manifest is written
         run: |
