@@ -1,6 +1,6 @@
 # Split–Analyze–Bypass controlled evaluation — status report
 
-**Status: preparation scaffold committed; empirical evaluation pending.** This report contains no claimed successful compilation, verifier run, test run, oracle agreement, latency result, or scalability result.
+**Status: preparation scaffold committed; empirical evaluation pending.** The CI test outcomes below are real and recorded. No successful corpus compilation, live verifier run, oracle agreement, latency result, or scalability result is claimed.
 
 ## Repository baseline
 
@@ -25,12 +25,14 @@ The corpus generator has not been run in this editing environment. No generated 
 | Check | Outcome | Evidence |
 |---|---|---|
 | Main commit inspection | Completed via GitHub repository API | Main HEAD above |
+| Initial CI setup attempt | Failed before tests | Run #5: `setup-python` pip cache failed because the repository has no `requirements.txt` or `pyproject.toml`; cache option was removed |
+| CI test run | Partial pass; overall job failed | [Run #9](https://github.com/roydza27/Research-Paper-eBPF/actions/runs/39733688861): analyzer, prototype, and new tests passed; audit suite has two missing-object failures |
 | Existing analyzer interface inspection | Completed by source inspection | Whole-program constructor/analyze flow |
-| Existing analyzer tests | Not executed | No shell in repository connector; local clone previously failed DNS resolution |
-| Existing E3/E4/E5 audit tests | Not executed | Same environment limitation; no claim of pass |
-| Existing split-and-bypass tests | Not executed | Same environment limitation; no claim of pass |
-| New unit tests | Not executed | Same environment limitation |
-| Corpus generation / compilation | Not executed | No compiler command was run |
+| Existing abstract analyzer soundness tests | **12 passed** | GitHub Actions run #9, Python 3.12.15; `research/tests/test_phase5_abstract_soundness.py` |
+| Existing E3/E4/E5 audit tests | **3 passed, 2 failed** | GitHub Actions run #9; both failures require the absent compiled historical `research/experiments/corpus/phase5/programs/a1.o`. Historical object binaries are not present in the checkout. The test file's other three tests passed. |
+| Existing split-and-bypass tests | **18 passed** | GitHub Actions run #9; `research/experiments/tests/test_split_analyze_bypass.py` |
+| New controlled evaluation unit tests | **7 passed, 14 subtests passed** | GitHub Actions run #9; `research/experiments/split_bypass/tests/test_controlled_evaluation.py` |
+| Corpus generation / compilation | Not executed | No new corpus generator/clang command was run |
 | Reference-oracle smoke | Not executed | No live KRAKENGUARD service/socket verified |
 | Baseline-vs-experiment measurements | Not executed | No raw runs exist |
 | Region-level abstract analysis | Not implemented | Design only; whole-program API remains |
