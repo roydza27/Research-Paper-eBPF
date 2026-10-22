@@ -54,3 +54,45 @@ jobs:
              [ "$prototype_status" -ne 0 ] || [ "$controlled_status" -ne 0 ]; then
             exit 1
           fi
+
+  corpus-build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install BPF compilation toolchain
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang llvm libbpf-dev
+      - name: Generate and compile controlled corpus
+        run: |
+          python research/experiments/split_bypass/scripts/prepare_corpus.py \
+            --policy research/experiments/corpus/phase5/policies/phase5_policy.json \
+            --compile \
+            --manifest-output "research/experiments/split_bypass/manifests/corpus-manifest-ci-${GITHUB_RUN_ID}.json"
+      - name: Fail if any compilation failed, after manifest is written
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          path = Path("research/experiments/split_bypass/manifests") / f"corpus-manifest-ci-{__import__('os').environ['GITHUB_RUN_ID']}.json"
+          manifest = json.loads(path.read_text())
+          failed = [p for p in manifest["programs"] if p["build"]["status"] != "compiled"]
+          for program in manifest["programs"]:
+              print(f'{program["program_id"]}: {program["build"]["status"]}; instructions={program["structure"].get("instruction_count")}; blocks={program["structure"].get("basic_block_count")}; branches={program["structure"].get("branch_count")}; elf_sha256={program["elf_sha256"]}')
+          if failed:
+              raise SystemExit(f"{len(failed)} program(s) did not compile; see manifest stdout/stderr fields")
+          PY
+      - name: Upload compiled corpus and manifest
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: split-bypass-corpus-build-${{ github.run_id }}
+          path: |
+            research/experiments/split_bypass/programs/*.o
+            research/experiments/split_bypass/manifests/corpus-manifest-ci-${{ github.run_id }}.json
+          if-no-files-found: warn
+          retention-days: 14
