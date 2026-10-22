@@ -12,11 +12,11 @@ class CorpusDefinitionTests(unittest.TestCase):
     def test_program_ids_are_stable_and_unique(self):
         self.assertEqual(len(SOURCES), len(set(SOURCES)))
         self.assertEqual(set(SOURCES), {
-            "A01_straight_small", "A02_straight_medium", "A03_helper_clock",
-            "B01_branch_safe", "B02_branch_policy_sensitive",
-            "C01_join_different_values", "C02_join_policy_sensitive",
+            "A01_straight_small", "A02_straight_medium", "A03_helper_clock", "A04_map_lookup",
+            "B01_branch_safe", "B02_branch_policy_sensitive", "B03_branch_depth",
+            "C01_join_different_values", "C02_join_policy_sensitive", "C03_join_violation_candidate",
             "D01_helper_unknown_candidate", "D02_packet_memory_candidate",
-            "E01_bounded_loop",
+            "E01_bounded_loop", "E02_nested_bounded_loop",
         })
 
     def test_every_source_is_a_complete_xdp_fixture(self):
