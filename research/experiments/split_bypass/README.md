@@ -21,14 +21,16 @@ Generate ten deterministic source fixtures and copy the selected policy into thi
 
 ```bash
 python3 research/experiments/split_bypass/scripts/prepare_corpus.py \
-  --policy research/experiments/corpus/phase5/policies/phase5_policy.json
+  --policy research/experiments/corpus/phase5/policies/phase5_policy.json \
+  --manifest-output research/experiments/split_bypass/manifests/corpus-manifest-preflight.json
 ```
 
-To also compile using the project's established clang convention (`-target bpf -D__TARGET_ARCH_x86 -O2 -g -I/usr/include`):
+To also compile using the project's established clang convention (`-target bpf -D__TARGET_ARCH_x86 -O2 -g -I/usr/include`), write a separate manifest rather than overwriting the preflight record:
 
 ```bash
 python3 research/experiments/split_bypass/scripts/prepare_corpus.py \
-  --policy research/experiments/corpus/phase5/policies/phase5_policy.json --compile
+  --policy research/experiments/corpus/phase5/policies/phase5_policy.json --compile \
+  --manifest-output research/experiments/split_bypass/manifests/corpus-manifest-compiled.json
 ```
 
 Compilation is not kernel verification and is not a reference-oracle verdict. The manifest records each compiler exit status, stderr/stdout, source and ELF SHA-256 where available, and disassembly-derived structural counts where parseable. If counts cannot be reliably parsed, they remain null. The script refuses to overwrite an existing manifest; archive the previous run and use a fresh checkout/run directory before repeating.
