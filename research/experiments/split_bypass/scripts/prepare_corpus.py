@@ -230,7 +230,7 @@ def disassembly_metrics(obj: Path, objdump: str) -> dict[str, Any]:
     }
 
 def prepare(policy_path: Path, clang: str, objdump: str, compile_objects: bool,
-            target_arch: str, include_dir: str) -> dict[str, Any]:
+            target_arch: str, include_dir: str, manifest_output: Path | None = None) -> dict[str, Any]:
     for directory in (PROGRAMS, POLICIES, MANIFESTS, BASE / "results/raw", BASE / "results/summary", BASE / "tests", BASE / "design"):
         directory.mkdir(parents=True, exist_ok=True)
     if not policy_path.is_file():
@@ -280,7 +280,10 @@ def prepare(policy_path: Path, clang: str, objdump: str, compile_objects: bool,
         "programs": rows,
         "warning": "No semantic verdicts are prefilled. Compiler success is not reference-verifier success."
     }
-    output = MANIFESTS / "corpus-manifest.json"
+    output = manifest_output or (MANIFESTS / "corpus-manifest.json")
+    if not output.is_absolute():
+        output = ROOT / output
+    output.parent.mkdir(parents=True, exist_ok=True)
     if output.exists():
         raise FileExistsError(f"refusing to overwrite manifest: {output}; archive it and choose a new run directory")
     output.write_text(json.dumps(manifest, indent=2) + "\n")
@@ -294,9 +297,11 @@ def main() -> int:
     parser.add_argument("--objdump", default=os.environ.get("LLVM_OBJDUMP", "llvm-objdump"))
     parser.add_argument("--target-arch", default=os.environ.get("BPF_ARCH", "x86"))
     parser.add_argument("--include-dir", default=os.environ.get("BPF_INCLUDE_DIR", "/usr/include"))
+    parser.add_argument("--manifest-output", type=Path, help="new manifest path; existing files are refused")
     args = parser.parse_args()
-    manifest = prepare(args.policy, args.clang, args.objdump, args.compile, args.target_arch, args.include_dir)
-    print(json.dumps({"manifest": str((MANIFESTS / "corpus-manifest.json").relative_to(ROOT)),
+    manifest_path = args.manifest_output or (MANIFESTS / "corpus-manifest.json")
+    manifest = prepare(args.policy, args.clang, args.objdump, args.compile, args.target_arch, args.include_dir, manifest_path)
+    print(json.dumps({"manifest": str(manifest_path),
                       "program_count": len(manifest["programs"]),
                       "compiled_count": sum(p["build"]["status"] == "compiled" for p in manifest["programs"]),
                       "verdicts_assigned": sum(p["reference_oracle"]["expected_semantic_verdict"] is not None for p in manifest["programs"])}, indent=2))
