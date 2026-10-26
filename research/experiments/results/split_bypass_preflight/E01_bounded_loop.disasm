@@ -1,0 +1,19 @@
+
+/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/results/split_bypass_preflight/E01_bounded_loop.o:	file format elf64-bpf
+
+Disassembly of section xdp:
+
+0000000000000000 <E01_bounded_loop>:
+       0:	61 11 0c 00 00 00 00 00	w1 = *(u32 *)(r1 + 0xc)
+       1:	63 1a fc ff 00 00 00 00	*(u32 *)(r10 - 0x4) = w1
+       2:	b4 01 00 00 00 00 00 00	w1 = 0x0
+       3:	61 a2 fc ff 00 00 00 00	w2 = *(u32 *)(r10 - 0x4)
+<L0>:
+       4:	24 02 00 00 03 00 00 00	w2 *= 0x3
+       5:	ac 12 00 00 00 00 00 00	w2 ^= w1
+       6:	63 2a fc ff 00 00 00 00	*(u32 *)(r10 - 0x4) = w2
+       7:	61 a2 fc ff 00 00 00 00	w2 = *(u32 *)(r10 - 0x4)
+       8:	04 01 00 00 01 00 00 00	w1 += 0x1
+       9:	56 01 fa ff 08 00 00 00	if w1 != 0x8 goto -0x6 <L0>
+      10:	b4 00 00 00 02 00 00 00	w0 = 0x2
+      11:	95 00 00 00 00 00 00 00	exit

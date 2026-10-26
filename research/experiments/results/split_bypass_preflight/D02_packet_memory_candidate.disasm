@@ -1,0 +1,20 @@
+
+/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/results/split_bypass_preflight/D02_packet_memory_candidate.o:	file format elf64-bpf
+
+Disassembly of section xdp:
+
+0000000000000000 <D02_packet_memory_candidate>:
+       0:	b4 00 00 00 02 00 00 00	w0 = 0x2
+       1:	61 12 04 00 00 00 00 00	w2 = *(u32 *)(r1 + 0x4)
+       2:	61 11 00 00 00 00 00 00	w1 = *(u32 *)(r1 + 0x0)
+       3:	bf 13 00 00 00 00 00 00	r3 = r1
+       4:	07 03 00 00 01 00 00 00	r3 += 0x1
+       5:	2d 23 06 00 00 00 00 00	if r3 > r2 goto +0x6 <L0>
+       6:	71 11 00 00 00 00 00 00	w1 = *(u8 *)(r1 + 0x0)
+       7:	73 1a ff ff 00 00 00 00	*(u8 *)(r10 - 0x1) = w1
+       8:	b4 00 00 00 01 00 00 00	w0 = 0x1
+       9:	71 a1 ff ff 00 00 00 00	w1 = *(u8 *)(r10 - 0x1)
+      10:	16 01 01 00 7f 00 00 00	if w1 == 0x7f goto +0x1 <L0>
+      11:	b4 00 00 00 02 00 00 00	w0 = 0x2
+<L0>:
+      12:	95 00 00 00 00 00 00 00	exit

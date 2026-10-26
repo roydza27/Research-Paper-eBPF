@@ -1,0 +1,127 @@
+{
+  "schema": "split-bypass-smoke-record/v1",
+  "run_id": "A01_straight_small_rep2",
+  "program_id": "A01_straight_small",
+  "fixture_family": "A_straight_line",
+  "policy_id": "c0f0ac4d1a5e",
+  "pipeline": "split_bypass",
+  "mode": "hybrid",
+  "repetition": 2,
+  "is_warmup": false,
+  "abstract_verdict": "UNKNOWN",
+  "symbolic_verdict": "SAFE",
+  "overall_verdict": "SAFE",
+  "routed_to_symbolic": true,
+  "symbolic_invoked": true,
+  "disposition": "symbolic_pass",
+  "unresolved_reason": null,
+  "fallback_scope": "whole_program",
+  "abstract_duration_ms": 104.603397,
+  "symbolic_duration_ms": 780.873215,
+  "end_to_end_duration_ms": 885.85147,
+  "cfg_block_count": 1,
+  "reachable_block_count": 1,
+  "prototype_record": {
+    "schema": "split-analyze-bypass-prototype/v1",
+    "program_id": "A01_straight_small",
+    "source_provenance": {
+      "integration_base_commit": "9250b53243714f00868f8c73a3c794634cfc5ad2",
+      "prototype_source_commit": "0d81b13a03c6294051620c6157b10b8d36922a81",
+      "experiment_script": "research/experiments/scripts/split_analyze_bypass.py"
+    },
+    "run_configuration": {
+      "abstract_timeout_seconds": 60.0,
+      "symbolic_timeout_seconds": 120.0,
+      "baseline_dir": "/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/baselines/krakenguard/artifact",
+      "socket_path": "research/baselines/krakenguard/artifact/socket/krakenguard.sock"
+    },
+    "scope": "whole_program",
+    "scope_limitation": "The analyzer cannot classify extracted blocks independently. CFG is metadata only; no per-block verdicts are fabricated.",
+    "object": "/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/split_bypass/programs/A01_straight_small.o",
+    "policy": "/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/split_bypass/policies/policy-c0f0ac4d1a5e.json",
+    "entry_assumptions": {
+      "scope": "whole_program_entry",
+      "registers": {
+        "r0": "unknown",
+        "r1": "unknown",
+        "r2": "unknown",
+        "r3": "unknown",
+        "r4": "unknown",
+        "r5": "unknown",
+        "r6": "unknown",
+        "r7": "unknown",
+        "r8": "unknown",
+        "r9": "unknown",
+        "r10": {
+          "kind": "const",
+          "value": 0
+        }
+      },
+      "path_constraints": [],
+      "memory_and_map_state": "not represented as a complete entry-state object by the current analyzer",
+      "note": "Per-block entry assumptions remain null; no block-state propagation is implemented."
+    },
+    "cfg": {
+      "blocks": [
+        {
+          "block_id": "bb_0",
+          "start_pc": 0,
+          "end_pc": 1,
+          "instruction_pcs": [
+            0,
+            1
+          ],
+          "predecessors": [],
+          "successors": [],
+          "reachable": true,
+          "entry_assumptions": null,
+          "block_verdict": null,
+          "scope_note": "metadata_only; analyzer has no sound independent-block API"
+        }
+      ],
+      "reachable_order": [
+        "bb_0"
+      ]
+    },
+    "units": [
+      {
+        "scope_id": "program",
+        "abstract_verdict": "UNKNOWN",
+        "abstract_duration_ms": 104.603397,
+        "abstract_reason": "Conservative UNKNOWN: unsupported instruction at 0: w0 = 0x2",
+        "abstract_error": null,
+        "symbolic_invoked": true,
+        "symbolic_verdict": "SAFE",
+        "symbolic_duration_ms": 780.873215,
+        "symbolic_reason": "existing extract_krakenguard_verdict; response status=success",
+        "symbolic_error": null,
+        "disposition": "symbolic_pass"
+      }
+    ],
+    "overall_status": "symbolic_pass",
+    "overall_verdict": "SAFE",
+    "errors": [],
+    "metrics": {
+      "end_to_end_duration_ms": 885.85147,
+      "cfg_block_count": 1,
+      "reachable_block_count": 1,
+      "units_processed": 1,
+      "abstract_pass_count": 0,
+      "symbolic_fallback_count": 1,
+      "symbolic_pass_count": 1,
+      "violation_count": 0,
+      "unresolved_count": 0
+    },
+    "tool_versions": {
+      "python": "3.14.7",
+      "platform": "Linux-7.2.8-arch1-2-x86_64-with-glibc2.44",
+      "abstract_analyzer_git_blob": "ca07c1ad340e4220f227a8051b91a62faa0dce5d",
+      "krakenguard_expected_commit": "e7bd84005b304c5a10efcdb04914d1882b3cccf7"
+    },
+    "limits": {
+      "abstract_timeout_seconds": 60.0,
+      "symbolic_timeout_seconds": 120.0
+    },
+    "experiment_mode": "program_scope_safety_wrapper_not_block_level"
+  }
+}

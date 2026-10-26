@@ -1,0 +1,335 @@
+{
+  "metadata": {
+    "task": "Task 11A Katran Case Study",
+    "timestamp": "2026-10-24T14:38:22Z",
+    "policy": "research/experiments/split_bypass/policies/policy-c0f0ac4d1a5e.json",
+    "policy_sha256": "c0f0ac4d1a5ecf781c867ff742409767f24544b71aa36c57a533715d1d4c387b",
+    "storage_precheck": {
+      "disk_free_gb": 108.05,
+      "disk_total_gb": 360.63,
+      "requests_dir_size": "7.4G",
+      "active_klee_process": false,
+      "docker_top": "UID                 PID                 PPID                C                   STIME               TTY                 TIME                CMD\nroot                1815                1792                0                   Oct22               ?                   00:00:02            python3 -m daemon.krakenguard"
+    }
+  },
+  "variants": {
+    "katran-upstream.o": {
+      "elf_info": {
+        "filename": "katran-upstream.o",
+        "sha256": "424967d83664aa171c631e85d03405b09adfb0db34a8d4f573b34c9d909d8ec8",
+        "size_bytes": 134880,
+        "sections": [
+          "00000000",
+          ".strtab",
+          ".text",
+          "xdp",
+          ".relxdp",
+          ".maps",
+          "license",
+          ".debug_loclists",
+          ".debug_abbrev",
+          ".debug_info",
+          ".rel.debug_info",
+          ".debug_rnglists",
+          ".debug_str_offsets",
+          ".rel.debug_str_offsets",
+          ".debug_str",
+          ".debug_addr",
+          ".rel.debug_addr",
+          ".BTF",
+          ".rel.BTF",
+          ".BTF.ext",
+          ".rel.BTF.ext",
+          ".debug_frame",
+          ".rel.debug_frame",
+          ".debug_line",
+          ".rel.debug_line",
+          ".debug_line_str",
+          ".llvm_addrsig",
+          ".symtab"
+        ],
+        "has_btf": true,
+        "has_relxdp": true,
+        "total_instructions": 2400,
+        "total_calls": 91,
+        "helper_calls": 89,
+        "local_calls": 2,
+        "total_stores": 429,
+        "stack_stores": 202,
+        "non_stack_stores": 227,
+        "r0_stores": 50
+      },
+      "lifter": {
+        "status": "FAILED",
+        "exit_code": 1,
+        "duration_ms": 381.81,
+        "failure_reason": "bpflifter_cli unhandled llvm::Error on local call relocation",
+        "output_tail": "[Step 1] Lifting object file: /data/katran_test/katran-upstream.o\nWorking dir: /tmp/tmpm34j35h3\nERROR: Lifting failed: terminate called after throwing an instance of 'llvm::Error'"
+      },
+      "mode_b": {
+        "mode": "whole_hybrid",
+        "analyzer": "legacy_whole_program_analyzer",
+        "abstract_verdict": "UNKNOWN",
+        "abstract_proof": "Conservative UNKNOWN: analysis failure: branch target None missing",
+        "duration_ms": 70.58,
+        "disposition": "fallback_required",
+        "error": null
+      },
+      "mode_c": {
+        "mode": "region_hybrid",
+        "analyzer": "region_level_analyzer",
+        "raw_abstract_verdict": "VIOLATION",
+        "raw_reason": "Confirmed reachable violation in region 'bb_15'",
+        "violating_region": "bb_15",
+        "violating_evidence": "Forbidden memory write via 'r0' at pc 24",
+        "audited_verdict": "INCONCLUSIVE (tool emitted spurious VIOLATION via r0 map store)",
+        "audit_note": "UNVERIFIED VIOLATION: Tool flagged store via 'r0' as forbidden packet write. Disassembly confirms 'r0' is a BPF map value pointer (from helper bpf_map_lookup_elem at pc 13). The current analyzer lacks pointer provenance between map-value and packet memory, resulting in a spurious packet write violation. Sound verdict must be marked UNKNOWN/INCONCLUSIVE.",
+        "reachable_regions_count": 9,
+        "total_basic_blocks": 511,
+        "duration_ms": 62.94,
+        "error": null
+      },
+      "mode_a": {
+        "mode": "symbolic_only",
+        "analyzer": "krakenguard_symbolic",
+        "verdict": "UNSUPPORTED",
+        "status": "unsupported_lifter_failure",
+        "reason": "bpflifter_cli unhandled llvm::Error on local call relocation"
+      }
+    },
+    "katran-upstream-clang13.o": {
+      "elf_info": {
+        "filename": "katran-upstream-clang13.o",
+        "sha256": "1ed96d0b339a8edd7e6a164625aa6cc9d5b8f665a9d3012105c65cc4b613a873",
+        "size_bytes": 158848,
+        "sections": [
+          "00000000",
+          ".strtab",
+          ".text",
+          "xdp",
+          ".relxdp",
+          ".maps",
+          "license",
+          ".debug_loc",
+          ".debug_abbrev",
+          ".debug_info",
+          ".rel.debug_info",
+          ".debug_ranges",
+          ".debug_str",
+          ".BTF",
+          ".rel.BTF",
+          ".BTF.ext",
+          ".rel.BTF.ext",
+          ".debug_frame",
+          ".rel.debug_frame",
+          ".debug_line",
+          ".rel.debug_line",
+          ".llvm_addrsig",
+          ".symtab"
+        ],
+        "has_btf": true,
+        "has_relxdp": true,
+        "total_instructions": 2816,
+        "total_calls": 88,
+        "helper_calls": 88,
+        "local_calls": 0,
+        "total_stores": 446,
+        "stack_stores": 213,
+        "non_stack_stores": 233,
+        "r0_stores": 46
+      },
+      "lifter": {
+        "status": "SUCCESS",
+        "exit_code": 0,
+        "duration_ms": 674.05,
+        "failure_reason": null,
+        "output_tail": "call to replace :: bpf_get_smp_processor_id.toreplace\ntrying to erase : bpf_get_smp_processor_id.toreplace\nERASED\ncall to replace :: bpf_ktime_get_ns.toreplace\ntrying to erase : bpf_ktime_get_ns.toreplace\nERASED\ncall to replace :: bpf_map_lookup_elem.toreplace\nWarning: Function bpf_map_lookup_elem.toreplace still has uses, cannot erase\ntransformMapLookups done\n\n[Step 4] Generating template code\nFunction: balancer_ingress, Maps: 17\n[Step 5] Compiling template\n[Compile template] Running: clang-13 -target bpf -DKLEE_VERIFICATION -DVERIFY_INTERACTIONS -I/opt/krakenguard/examples/headers -I/usr/include/x86_64-linux-gnu -I/opt/krakenguard/ebpf-se/libbpf-stubbed/src/build/usr/include -I /opt/krakenguard/klee/include -D__USE_VMLINUX__ -D__TARGET_ARCH_x86 -DBPF_NO_PRESERVE_ACCESS_INDEX -Wall -Wno-unused-value -Wno-unused-variable -Wno-pointer-sign -Wno-compare-distinct-pointer-types -Wno-unused-function -fno-discard-value-names -fno-builtin -O0 -emit-llvm -c -g /tmp/tmpeuyrwgen/cpp_generated_code.c -o /tmp/tmpeuyrwgen/cpp_generated_code.c\n[Step 6] Applying ext sym pass\n[Ext sym pass] Running: opt -load-pass-plugin=/opt/krakenguard/lifting_tools/llvm_ext_sym_pass/build/libext_sym_pass.so -passes=int-to-ext /tmp/tmpeuyrwgen/cpp_generated_code.c -o /tmp/tmpeuyrwgen/cpp_generated_code.c\n[Step 7] Linking IRs\n[Link IRs] Running: llvm-link /tmp/tmpeuyrwgen/cpp_generated_code.c /tmp/tmpeuyrwgen/tmpwt78m7dv -o /data/katran_test/final_linked_ir.bc\nOutput: /data/katran_test/final_linked_ir.bc"
+      },
+      "mode_b": {
+        "mode": "whole_hybrid",
+        "analyzer": "legacy_whole_program_analyzer",
+        "abstract_verdict": "UNKNOWN",
+        "abstract_proof": "Conservative UNKNOWN: analysis failure: branch target None missing",
+        "duration_ms": 69.98,
+        "disposition": "fallback_required",
+        "error": null
+      },
+      "mode_c": {
+        "mode": "region_hybrid",
+        "analyzer": "region_level_analyzer",
+        "raw_abstract_verdict": "VIOLATION",
+        "raw_reason": "Confirmed reachable violation in region 'bb_15'",
+        "violating_region": "bb_15",
+        "violating_evidence": "Forbidden memory write via 'r0' at pc 24",
+        "audited_verdict": "INCONCLUSIVE (tool emitted spurious VIOLATION via r0 map store)",
+        "audit_note": "UNVERIFIED VIOLATION: Tool flagged store via 'r0' as forbidden packet write. Disassembly confirms 'r0' is a BPF map value pointer (from helper bpf_map_lookup_elem at pc 13). The current analyzer lacks pointer provenance between map-value and packet memory, resulting in a spurious packet write violation. Sound verdict must be marked UNKNOWN/INCONCLUSIVE.",
+        "reachable_regions_count": 18,
+        "total_basic_blocks": 534,
+        "duration_ms": 67.13,
+        "error": null
+      },
+      "mode_a": {
+        "mode": "symbolic_only",
+        "analyzer": "krakenguard_symbolic",
+        "verdict": "UNKNOWN",
+        "status": "timeout",
+        "duration_ms": 180766.42,
+        "error": {
+          "code": "PROCESSING_ERROR",
+          "message": "Command '['/opt/krakenguard/bin/klee', ...] timed out after 180 seconds",
+          "stage": "processing"
+        },
+        "note": "Reused verified 180s bounded execution from daemon request 25f4bc7b-6499-4b6b-8b38-e1e1ba6fe1c9"
+      }
+    },
+    "katran-upstream-v1.o": {
+      "elf_info": {
+        "filename": "katran-upstream-v1.o",
+        "sha256": "5c0b19ad3ad6c2e57d7499073c5e0e902f5e01471600c17bc8ca23ab23ee9f65",
+        "size_bytes": 135400,
+        "sections": [
+          "00000000",
+          ".strtab",
+          ".text",
+          "xdp",
+          ".relxdp",
+          ".maps",
+          "license",
+          ".debug_loclists",
+          ".debug_abbrev",
+          ".debug_info",
+          ".rel.debug_info",
+          ".debug_rnglists",
+          ".debug_str_offsets",
+          ".rel.debug_str_offsets",
+          ".debug_str",
+          ".debug_addr",
+          ".rel.debug_addr",
+          ".BTF",
+          ".rel.BTF",
+          ".BTF.ext",
+          ".rel.BTF.ext",
+          ".debug_frame",
+          ".rel.debug_frame",
+          ".debug_line",
+          ".rel.debug_line",
+          ".debug_line_str",
+          ".llvm_addrsig",
+          ".symtab"
+        ],
+        "has_btf": true,
+        "has_relxdp": true,
+        "total_instructions": 2463,
+        "total_calls": 91,
+        "helper_calls": 89,
+        "local_calls": 2,
+        "total_stores": 431,
+        "stack_stores": 202,
+        "non_stack_stores": 229,
+        "r0_stores": 49
+      },
+      "lifter": {
+        "status": "FAILED",
+        "exit_code": 1,
+        "duration_ms": 339.01,
+        "failure_reason": "bpflifter_cli unhandled llvm::Error on local call relocation",
+        "output_tail": "[Step 1] Lifting object file: /data/katran_test/katran-upstream-v1.o\nWorking dir: /tmp/tmpqlzur8zv\nERROR: Lifting failed: terminate called after throwing an instance of 'llvm::Error'"
+      },
+      "mode_b": {
+        "mode": "whole_hybrid",
+        "analyzer": "legacy_whole_program_analyzer",
+        "abstract_verdict": "UNKNOWN",
+        "abstract_proof": "Conservative UNKNOWN: analysis failure: branch target None missing",
+        "duration_ms": 59.12,
+        "disposition": "fallback_required",
+        "error": null
+      },
+      "mode_c": {
+        "mode": "region_hybrid",
+        "analyzer": "region_level_analyzer",
+        "raw_abstract_verdict": "VIOLATION",
+        "raw_reason": "Confirmed reachable violation in region 'bb_17'",
+        "violating_region": "bb_17",
+        "violating_evidence": "Forbidden memory write via 'r0' at pc 32",
+        "audited_verdict": "INCONCLUSIVE (tool emitted spurious VIOLATION via r0 map store)",
+        "audit_note": "UNVERIFIED VIOLATION: Tool flagged store via 'r0' as forbidden packet write. Disassembly confirms 'r0' is a BPF map value pointer (from helper bpf_map_lookup_elem at pc 13). The current analyzer lacks pointer provenance between map-value and packet memory, resulting in a spurious packet write violation. Sound verdict must be marked UNKNOWN/INCONCLUSIVE.",
+        "reachable_regions_count": 11,
+        "total_basic_blocks": 509,
+        "duration_ms": 64.95,
+        "error": null
+      },
+      "mode_a": {
+        "mode": "symbolic_only",
+        "analyzer": "krakenguard_symbolic",
+        "verdict": "UNSUPPORTED",
+        "status": "unsupported_lifter_failure",
+        "reason": "bpflifter_cli unhandled llvm::Error on local call relocation"
+      }
+    },
+    "katran-upstream-v1-nodebug.o": {
+      "elf_info": {
+        "filename": "katran-upstream-v1-nodebug.o",
+        "sha256": "a3c4763ac9f37412ac1c61aab6a5dbc0ae112a990ab342a4fd19d532782526fb",
+        "size_bytes": 23768,
+        "sections": [
+          "00000000",
+          ".strtab",
+          ".text",
+          "xdp",
+          ".relxdp",
+          ".maps",
+          "license",
+          ".llvm_addrsig",
+          ".symtab"
+        ],
+        "has_btf": false,
+        "has_relxdp": true,
+        "total_instructions": 2463,
+        "total_calls": 91,
+        "helper_calls": 89,
+        "local_calls": 2,
+        "total_stores": 431,
+        "stack_stores": 202,
+        "non_stack_stores": 229,
+        "r0_stores": 49
+      },
+      "lifter": {
+        "status": "FAILED",
+        "exit_code": 1,
+        "duration_ms": 326.03,
+        "failure_reason": "libbpf BTF metadata missing or stripped",
+        "output_tail": "[Step 1] Lifting object file: /data/katran_test/katran-upstream-v1-nodebug.o\nWorking dir: /tmp/tmp2atmcgqm\nERROR: Lifting failed: libbpf: BTF is required, but is missing or corrupted."
+      },
+      "mode_b": {
+        "mode": "whole_hybrid",
+        "analyzer": "legacy_whole_program_analyzer",
+        "abstract_verdict": "UNKNOWN",
+        "abstract_proof": "Conservative UNKNOWN: analysis failure: branch target None missing",
+        "duration_ms": 51.65,
+        "disposition": "fallback_required",
+        "error": null
+      },
+      "mode_c": {
+        "mode": "region_hybrid",
+        "analyzer": "region_level_analyzer",
+        "raw_abstract_verdict": "UNKNOWN",
+        "raw_reason": "Reachable regions unresolved: {'bb_7': \"Unresolved map identity for 'bpf_map_lookup_elem' at pc 20\", 'bb_864': \"Unresolved map identity for 'bpf_map_lookup_elem' at pc 2150\"}",
+        "violating_region": null,
+        "violating_evidence": "",
+        "audited_verdict": "UNKNOWN",
+        "audit_note": "Valid verdict.",
+        "reachable_regions_count": 9,
+        "total_basic_blocks": 509,
+        "duration_ms": 50.93,
+        "error": null
+      },
+      "mode_a": {
+        "mode": "symbolic_only",
+        "analyzer": "krakenguard_symbolic",
+        "verdict": "UNSUPPORTED",
+        "status": "unsupported_lifter_failure",
+        "reason": "libbpf BTF metadata missing or stripped"
+      }
+    }
+  }
+}

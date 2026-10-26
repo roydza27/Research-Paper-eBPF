@@ -1,0 +1,6 @@
+COMMAND: /usr/bin/clang -target bpf -D__TARGET_ARCH_x86 -O2 -g -I/usr/include -c /home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/results/split_bypass_preflight/C01_join_different_values.c -o /home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/results/split_bypass_preflight/C01_join_different_values.o
+EXIT CODE: 0
+STDOUT:
+
+STDERR:
+

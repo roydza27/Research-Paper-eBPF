@@ -1,0 +1,209 @@
+{
+  "schema": "split-bypass-run-record/v2",
+  "run_id": "D02_packet_memory_candidate_whole_hybrid_rep3",
+  "pair_id": "D02_packet_memory_candidate_rep3",
+  "program_id": "D02_packet_memory_candidate",
+  "mode": "whole_hybrid",
+  "pipeline": "whole_hybrid",
+  "fixture_family": "D_unknown_fallback",
+  "repetition": 3,
+  "is_warmup": false,
+  "object": "/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/split_bypass/programs/D02_packet_memory_candidate.o",
+  "elf_path": "/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/split_bypass/programs/D02_packet_memory_candidate.o",
+  "elf_sha256": "d0422e35764a27bc868a00cc79ef2425169de3b3b9513c6e4f6bac0a1c05376e",
+  "source_path": "/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/split_bypass/programs/D02_packet_memory_candidate.c",
+  "source_sha256": "942e97e507872b6cb280dce38f743da33ebb33fb650bf37a4c2406efa941229d",
+  "policy": "/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/split_bypass/policies/policy-c0f0ac4d1a5e.json",
+  "policy_path": "/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/split_bypass/policies/policy-c0f0ac4d1a5e.json",
+  "policy_id": "c0f0ac4d1a5e",
+  "policy_sha256": "c0f0ac4d1a5ecf781c867ff742409767f24544b71aa36c57a533715d1d4c387b",
+  "analyzer": "legacy_whole_program_analyzer",
+  "analyzer_scope": "whole_program",
+  "abstract_stage_verdict": "UNKNOWN",
+  "abstract_verdict": "UNKNOWN",
+  "abstract_reason": "Conservative UNKNOWN: unsupported instruction at 0: w0 = 0x2",
+  "abstract_duration_ms": 103.356178,
+  "symbolic_invoked": true,
+  "symbolic_verdict": "SAFE",
+  "symbolic_reason": "existing extract_krakenguard_verdict; response status=success",
+  "symbolic_duration_ms": 756.032845,
+  "fallback_invoked": true,
+  "fallback_scope": "whole_program",
+  "overall_verdict": "SAFE",
+  "final_verdict": "SAFE",
+  "overall_status": "symbolic_pass",
+  "disposition": "symbolic_pass",
+  "regions_analyzed_count": null,
+  "reachable_regions_count": 5,
+  "basic_blocks_count": 5,
+  "regions": null,
+  "errors": [],
+  "timeouts": [],
+  "unresolved_reason": null,
+  "reference_verdict": "SAFE",
+  "oracle_agreement": true,
+  "end_to_end_duration_ms": 859.622244,
+  "metrics": {
+    "end_to_end_duration_ms": 859.622244,
+    "abstract_duration_ms": 103.356178,
+    "symbolic_duration_ms": 756.032845,
+    "symbolic_invoked": true,
+    "symbolic_fallback_count": 1,
+    "abstract_pass_count": 0,
+    "symbolic_pass_count": 1,
+    "violation_count": 0,
+    "unresolved_count": 0,
+    "cfg_block_count": 5,
+    "reachable_block_count": 5,
+    "regions_analyzed_count": null,
+    "reachable_regions_count": 5
+  },
+  "cfg": {
+    "blocks": [
+      {
+        "block_id": "bb_0",
+        "start_pc": 0,
+        "end_pc": 5,
+        "instruction_pcs": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "predecessors": [],
+        "successors": [
+          "bb_c",
+          "bb_6"
+        ],
+        "reachable": true,
+        "entry_assumptions": null,
+        "block_verdict": null,
+        "scope_note": "metadata_only; analyzer has no sound independent-block API"
+      },
+      {
+        "block_id": "bb_6",
+        "start_pc": 6,
+        "end_pc": 16,
+        "instruction_pcs": [
+          6,
+          7,
+          8,
+          9,
+          16
+        ],
+        "predecessors": [
+          "bb_0"
+        ],
+        "successors": [
+          "bb_12",
+          "bb_11"
+        ],
+        "reachable": true,
+        "entry_assumptions": null,
+        "block_verdict": null,
+        "scope_note": "metadata_only; analyzer has no sound independent-block API"
+      },
+      {
+        "block_id": "bb_c",
+        "start_pc": 12,
+        "end_pc": null,
+        "instruction_pcs": [],
+        "predecessors": [
+          "bb_0"
+        ],
+        "successors": [],
+        "reachable": true,
+        "entry_assumptions": null,
+        "block_verdict": null,
+        "scope_note": "metadata_only; analyzer has no sound independent-block API"
+      },
+      {
+        "block_id": "bb_11",
+        "start_pc": 17,
+        "end_pc": 17,
+        "instruction_pcs": [
+          17
+        ],
+        "predecessors": [
+          "bb_6"
+        ],
+        "successors": [
+          "bb_12"
+        ],
+        "reachable": true,
+        "entry_assumptions": null,
+        "block_verdict": null,
+        "scope_note": "metadata_only; analyzer has no sound independent-block API"
+      },
+      {
+        "block_id": "bb_12",
+        "start_pc": 18,
+        "end_pc": 18,
+        "instruction_pcs": [
+          18
+        ],
+        "predecessors": [
+          "bb_6",
+          "bb_11"
+        ],
+        "successors": [],
+        "reachable": true,
+        "entry_assumptions": null,
+        "block_verdict": null,
+        "scope_note": "metadata_only; analyzer has no sound independent-block API"
+      }
+    ],
+    "reachable_order": [
+      "bb_0",
+      "bb_c",
+      "bb_6",
+      "bb_11",
+      "bb_12"
+    ]
+  },
+  "units": [
+    {
+      "scope_id": "program",
+      "analyzer": "legacy_whole_program_analyzer",
+      "analyzer_scope": "whole_program",
+      "abstract_verdict": "UNKNOWN",
+      "abstract_duration_ms": 103.356178,
+      "abstract_reason": "Conservative UNKNOWN: unsupported instruction at 0: w0 = 0x2",
+      "abstract_error": null,
+      "symbolic_invoked": true,
+      "fallback_invoked": true,
+      "fallback_scope": "whole_program",
+      "symbolic_verdict": "SAFE",
+      "symbolic_duration_ms": 756.032845,
+      "symbolic_reason": "existing extract_krakenguard_verdict; response status=success",
+      "symbolic_error": null,
+      "disposition": "symbolic_pass",
+      "overall_verdict": "SAFE"
+    }
+  ],
+  "source_provenance": {
+    "integration_base_commit": "9250b53243714f00868f8c73a3c794634cfc5ad2",
+    "prototype_source_commit": "0d81b13a03c6294051620c6157b10b8d36922a81",
+    "experiment_script": "research/experiments/scripts/split_analyze_bypass.py"
+  },
+  "run_configuration": {
+    "mode": "whole_hybrid",
+    "abstract_timeout_seconds": 60.0,
+    "symbolic_timeout_seconds": 120.0,
+    "baseline_dir": "/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/baselines/krakenguard/artifact",
+    "socket_path": "research/baselines/krakenguard/artifact/socket/krakenguard.sock"
+  },
+  "tool_versions": {
+    "python": "3.14.7",
+    "platform": "Linux-7.2.8-arch1-2-x86_64-with-glibc2.44",
+    "abstract_analyzer_git_blob": "ca07c1ad340e4220f227a8051b91a62faa0dce5d",
+    "krakenguard_expected_commit": "e7bd84005b304c5a10efcdb04914d1882b3cccf7"
+  },
+  "limits": {
+    "abstract_timeout_seconds": 60.0,
+    "symbolic_timeout_seconds": 120.0
+  },
+  "experiment_mode": "whole_hybrid"
+}
