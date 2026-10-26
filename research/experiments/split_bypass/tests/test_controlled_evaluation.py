@@ -52,10 +52,74 @@ class SummaryTests(unittest.TestCase):
             {"program_id": "p2", "pipeline": "baseline", "reference_verdict": "SAFE",
              "overall_verdict": "VIOLATION", "end_to_end_duration_ms": 3},
         ], bootstrap_samples=100, seed=7)
+        by_prog = {r["program_id"]: r for r in report["per_program_pipeline"]}
+        self.assertEqual(len(by_prog), 2)
+        # p1: reference VIOLATION but produced SAFE -> false_safe_count is 1
+        self.assertEqual(by_prog["p1"]["false_safe_count"], 1)
+        self.assertEqual(by_prog["p1"]["false_reject_count"], 0)
+        self.assertEqual(by_prog["p1"]["oracle_agreement_rate"], 0.0)
+        # p2: reference SAFE but produced VIOLATION -> false_reject_count is 1
+        self.assertEqual(by_prog["p2"]["false_safe_count"], 0)
+        self.assertEqual(by_prog["p2"]["false_reject_count"], 1)
+        self.assertEqual(by_prog["p2"]["oracle_agreement_rate"], 0.0)
+
+    def test_multiple_programs_maintain_independent_aggregates(self):
+        report = summarize([
+            {"program_id": "p1", "pipeline": "baseline", "reference_verdict": "SAFE",
+             "overall_verdict": "SAFE", "end_to_end_duration_ms": 10},
+            {"program_id": "p2", "pipeline": "baseline", "reference_verdict": "VIOLATION",
+             "overall_verdict": "VIOLATION", "end_to_end_duration_ms": 20},
+        ], bootstrap_samples=100, seed=7)
+        by_prog = {r["program_id"]: r for r in report["per_program_pipeline"]}
+        self.assertEqual(len(by_prog), 2)
+        self.assertEqual(by_prog["p1"]["oracle_agreement_rate"], 1.0)
+        self.assertEqual(by_prog["p2"]["oracle_agreement_rate"], 1.0)
+        self.assertEqual(by_prog["p1"]["end_to_end_ms_median"], 10.0)
+        self.assertEqual(by_prog["p2"]["end_to_end_ms_median"], 20.0)
+
+    def test_single_program_multiple_runs_accumulates_errors(self):
+        report = summarize([
+            {"program_id": "p1", "pipeline": "baseline", "reference_verdict": "VIOLATION",
+             "overall_verdict": "SAFE", "end_to_end_duration_ms": 2},
+            {"program_id": "p1", "pipeline": "baseline", "reference_verdict": "SAFE",
+             "overall_verdict": "VIOLATION", "end_to_end_duration_ms": 3},
+        ], bootstrap_samples=100, seed=7)
+        self.assertEqual(len(report["per_program_pipeline"]), 1)
         row = report["per_program_pipeline"][0]
         self.assertEqual(row["false_safe_count"], 1)
         self.assertEqual(row["false_reject_count"], 1)
+        self.assertEqual(row["run_count"], 2)
         self.assertEqual(row["oracle_agreement_rate"], 0.0)
+
+    def test_timeouts_and_errors_counted_as_unresolved(self):
+        report = summarize([
+            {"program_id": "p1", "pipeline": "baseline", "overall_verdict": "TIMEOUT"},
+            {"program_id": "p1", "pipeline": "baseline", "overall_verdict": "ERROR"},
+            {"program_id": "p1", "pipeline": "baseline", "overall_verdict": "UNKNOWN"},
+        ], bootstrap_samples=100, seed=7)
+        row = report["per_program_pipeline"][0]
+        self.assertEqual(row["unknown_or_unresolved_count"], 3)
+        self.assertEqual(row["unknown_count"], 1)
+        self.assertEqual(row["timeout_count"], 1)
+        self.assertEqual(row["error_count"], 1)
+        self.assertEqual(row["oracle_comparisons"], 0)
+
+    def test_warmup_runs_excluded_from_latency_metrics(self):
+        report = summarize([
+            {"program_id": "p1", "pipeline": "baseline", "end_to_end_duration_ms": 100.0,
+             "is_warmup": True},
+            {"program_id": "p1", "pipeline": "baseline", "end_to_end_duration_ms": 10.0,
+             "is_warmup": False},
+            {"program_id": "p1", "pipeline": "baseline", "end_to_end_duration_ms": 12.0,
+             "is_warmup": False},
+        ], bootstrap_samples=100, seed=7)
+        row = report["per_program_pipeline"][0]
+        self.assertEqual(row["run_count"], 3)
+        self.assertEqual(row["warmup_count"], 1)
+        self.assertEqual(row["measured_count"], 2)
+        # Median of [10.0, 12.0] is 11.0; 100.0 warmup must be excluded
+        self.assertEqual(row["end_to_end_ms_median"], 11.0)
+        self.assertEqual(row["end_to_end_ms_mean"], 11.0)
 
     def test_only_explicit_pair_ids_create_paired_estimates(self):
         rows = [

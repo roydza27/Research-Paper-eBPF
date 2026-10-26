@@ -1,0 +1,678 @@
+{
+  "schema": "split-bypass-corpus-manifest/v1",
+  "generated_at_utc": "2026-10-22T07:13:29.373370+00:00",
+  "source_commit": "ce2cebea9404b44b0f18ba690a68fedabea78ec8",
+  "environment": {
+    "python": "3.14.7 (main, Aug 10 2026, 07:46:56) [GCC 16.1.1 20260728]",
+    "platform": "Linux-7.2.8-arch1-2-x86_64-with-glibc2.44",
+    "clang": "/usr/bin/clang",
+    "objdump": "/usr/bin/llvm-objdump",
+    "target_arch": "x86",
+    "include_dir": "/usr/include"
+  },
+  "policy_source": "/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/corpus/policies/p1_allow_execution.json",
+  "policy_source_sha256": "c0f0ac4d1a5ecf781c867ff742409767f24544b71aa36c57a533715d1d4c387b",
+  "programs": [
+    {
+      "program_id": "A01_straight_small",
+      "family": "A_straight_line",
+      "hypothesis": "small straight-line arithmetic",
+      "source_path": "research/experiments/split_bypass/programs/A01_straight_small.c",
+      "source_sha256": "e7f8e8eabb9d0776330095af74ed4078db7343cc3b69d01a6b9b0d0a3b82892c",
+      "compile_command": [
+        "clang",
+        "-target",
+        "bpf",
+        "-D__TARGET_ARCH_x86",
+        "-O2",
+        "-g",
+        "-I/usr/include",
+        "-c",
+        "/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/split_bypass/programs/A01_straight_small.c",
+        "-o",
+        "/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/split_bypass/programs/A01_straight_small.o"
+      ],
+      "build": {
+        "status": "compiled",
+        "command": [
+          "clang",
+          "-target",
+          "bpf",
+          "-D__TARGET_ARCH_x86",
+          "-O2",
+          "-g",
+          "-I/usr/include",
+          "-c",
+          "/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/split_bypass/programs/A01_straight_small.c",
+          "-o",
+          "/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/split_bypass/programs/A01_straight_small.o"
+        ],
+        "returncode": 0,
+        "stdout": "",
+        "stderr": "",
+        "timed_out": false
+      },
+      "elf_path": "research/experiments/split_bypass/programs/A01_straight_small.o",
+      "elf_sha256": "110c20c66a7deb673c17905f82b934886909dc0ba33dbd130b87346e65b83502",
+      "structure": {
+        "status": "parsed",
+        "instruction_count": 1,
+        "branch_count": 0,
+        "basic_block_count": 1,
+        "disassembly_sha256": "28901003bf506018890e28cbef9dfbefe3b8b4712a3d3aaac40a5dd0541a1fef",
+        "note": "Objdump-derived counts are provisional; compare with analyzer CFG before treating as canonical."
+      },
+      "policy_path": "research/experiments/split_bypass/policies/policy-c0f0ac4d1a5e.json",
+      "policy_sha256": "c0f0ac4d1a5ecf781c867ff742409767f24544b71aa36c57a533715d1d4c387b",
+      "reference_oracle": {
+        "input_policy": "research/experiments/split_bypass/policies/policy-c0f0ac4d1a5e.json",
+        "status": "verified_by_isa_and_policy_audit",
+        "raw_response_path": null,
+        "expected_semantic_verdict": "SAFE",
+        "provenance": "Task 8 formal ISA and frozen E1 policy (policy-c0f0ac4d1a5e) static verification",
+        "justification": "Straight-line arithmetic sequence operating on packet context lengths (ctx->data_end - ctx->data); performs no memory writes and no helper calls; unconditionally returns XDP_PASS (2), which is compliant under the E1 policy."
+      },
+      "region_verdicts": {
+        "available": true,
+        "analyzer": "research/experiments/split_bypass/scripts/region_analyzer.py",
+        "abstract_expected_verdict": "SAFE",
+        "abstract_expected_reason": "All reachable blocks compliant under abstract constant propagation."
+      }
+    },
+    {
+      "program_id": "A02_straight_medium",
+      "family": "A_straight_line",
+      "hypothesis": "larger source-level arithmetic sequence; compiler may simplify it",
+      "source_path": "research/experiments/split_bypass/programs/A02_straight_medium.c",
+      "source_sha256": "5aa9ab367514447f912d05431854eade852d8c695c2d3c65c8db2fd313834673",
+      "compile_command": [
+        "clang",
+        "-target",
+        "bpf",
+        "-D__TARGET_ARCH_x86",
+        "-O2",
+        "-g",
+        "-I/usr/include",
+        "-c",
+        "/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/split_bypass/programs/A02_straight_medium.c",
+        "-o",
+        "/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/split_bypass/programs/A02_straight_medium.o"
+      ],
+      "build": {
+        "status": "compiled",
+        "command": [
+          "clang",
+          "-target",
+          "bpf",
+          "-D__TARGET_ARCH_x86",
+          "-O2",
+          "-g",
+          "-I/usr/include",
+          "-c",
+          "/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/split_bypass/programs/A02_straight_medium.c",
+          "-o",
+          "/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/split_bypass/programs/A02_straight_medium.o"
+        ],
+        "returncode": 0,
+        "stdout": "",
+        "stderr": "",
+        "timed_out": false
+      },
+      "elf_path": "research/experiments/split_bypass/programs/A02_straight_medium.o",
+      "elf_sha256": "1141296923a43ef547c175e28b0f3ac7764d6a66fadfea1d7c9078f2b2d5bdd7",
+      "structure": {
+        "status": "parsed",
+        "instruction_count": 53,
+        "branch_count": 0,
+        "basic_block_count": 1,
+        "disassembly_sha256": "f9cb94f86580f7a213687044e4236e917c08f25a498f230ca50f0dd269f2edbc",
+        "note": "Objdump-derived counts are provisional; compare with analyzer CFG before treating as canonical."
+      },
+      "policy_path": "research/experiments/split_bypass/policies/policy-c0f0ac4d1a5e.json",
+      "policy_sha256": "c0f0ac4d1a5ecf781c867ff742409767f24544b71aa36c57a533715d1d4c387b",
+      "reference_oracle": {
+        "input_policy": "research/experiments/split_bypass/policies/policy-c0f0ac4d1a5e.json",
+        "status": "verified_by_isa_and_policy_audit",
+        "raw_response_path": null,
+        "expected_semantic_verdict": "SAFE",
+        "provenance": "Task 8 formal ISA and frozen E1 policy (policy-c0f0ac4d1a5e) static verification",
+        "justification": "Sequence of 24 ALU32 operations on volatile local variable n; spills to stack slot *(u32*)(r10-4) within valid 512B eBPF stack frame; performs no packet memory writes and no helper calls; unconditionally returns XDP_PASS (2)."
+      },
+      "region_verdicts": {
+        "available": true,
+        "analyzer": "research/experiments/split_bypass/scripts/region_analyzer.py",
+        "abstract_expected_verdict": "SAFE",
+        "abstract_expected_reason": "Stack spill/reload pairs tracked within 512B frame; returns constant XDP_PASS (2)."
+      }
+    },
+    {
+      "program_id": "A03_helper_clock",
+      "family": "A_straight_line",
+      "hypothesis": "straight-line helper interaction",
+      "source_path": "research/experiments/split_bypass/programs/A03_helper_clock.c",
+      "source_sha256": "ac82d9b387a0181ab3d164e0b9da4ef65b9a4dcf82cb535124be12c044b015d0",
+      "compile_command": [
+        "clang",
+        "-target",
+        "bpf",
+        "-D__TARGET_ARCH_x86",
+        "-O2",
+        "-g",
+        "-I/usr/include",
+        "-c",
+        "/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/split_bypass/programs/A03_helper_clock.c",
+        "-o",
+        "/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/split_bypass/programs/A03_helper_clock.o"
+      ],
+      "build": {
+        "status": "compiled",
+        "command": [
+          "clang",
+          "-target",
+          "bpf",
+          "-D__TARGET_ARCH_x86",
+          "-O2",
+          "-g",
+          "-I/usr/include",
+          "-c",
+          "/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/split_bypass/programs/A03_helper_clock.c",
+          "-o",
+          "/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/split_bypass/programs/A03_helper_clock.o"
+        ],
+        "returncode": 0,
+        "stdout": "",
+        "stderr": "",
+        "timed_out": false
+      },
+      "elf_path": "research/experiments/split_bypass/programs/A03_helper_clock.o",
+      "elf_sha256": "b525ac69fbf726b35ebf2be1c9e8345a1e06c1ef22352c7e7c176f06e2ab3dec",
+      "structure": {
+        "status": "parsed",
+        "instruction_count": 2,
+        "branch_count": 0,
+        "basic_block_count": 1,
+        "disassembly_sha256": "363347de0019c29c66e98eca4e3beb1713da1c258b8b9502ac9f539dcf952db1",
+        "note": "Objdump-derived counts are provisional; compare with analyzer CFG before treating as canonical."
+      },
+      "policy_path": "research/experiments/split_bypass/policies/policy-c0f0ac4d1a5e.json",
+      "policy_sha256": "c0f0ac4d1a5ecf781c867ff742409767f24544b71aa36c57a533715d1d4c387b",
+      "reference_oracle": {
+        "input_policy": "research/experiments/split_bypass/policies/policy-c0f0ac4d1a5e.json",
+        "status": "verified_by_isa_and_policy_audit",
+        "raw_response_path": null,
+        "expected_semantic_verdict": "SAFE",
+        "provenance": "Task 8 formal ISA and frozen E1 policy (policy-c0f0ac4d1a5e) static verification",
+        "justification": "Calls bpf_ktime_get_ns() (helper 5), which is permitted by policy-c0f0ac4d1a5e wildcard helper allowlist; performs no memory writes; unconditionally returns XDP_PASS (2)."
+      },
+      "region_verdicts": {
+        "available": true,
+        "analyzer": "research/experiments/split_bypass/scripts/region_analyzer.py",
+        "abstract_expected_verdict": "SAFE",
+        "abstract_expected_reason": "Helper 5 allowed under wildcard policy; returns constant XDP_PASS (2)."
+      }
+    },
+    {
+      "program_id": "B01_branch_safe",
+      "family": "B_branching",
+      "hypothesis": "unresolved condition with safe alternatives",
+      "source_path": "research/experiments/split_bypass/programs/B01_branch_safe.c",
+      "source_sha256": "d6e99f33df0c0dfabce5ee89dc1ebe0ac56a53f0c5cb780ae770e0a577fad925",
+      "compile_command": [
+        "clang",
+        "-target",
+        "bpf",
+        "-D__TARGET_ARCH_x86",
+        "-O2",
+        "-g",
+        "-I/usr/include",
+        "-c",
+        "/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/split_bypass/programs/B01_branch_safe.c",
+        "-o",
+        "/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/split_bypass/programs/B01_branch_safe.o"
+      ],
+      "build": {
+        "status": "compiled",
+        "command": [
+          "clang",
+          "-target",
+          "bpf",
+          "-D__TARGET_ARCH_x86",
+          "-O2",
+          "-g",
+          "-I/usr/include",
+          "-c",
+          "/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/split_bypass/programs/B01_branch_safe.c",
+          "-o",
+          "/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/split_bypass/programs/B01_branch_safe.o"
+        ],
+        "returncode": 0,
+        "stdout": "",
+        "stderr": "",
+        "timed_out": false
+      },
+      "elf_path": "research/experiments/split_bypass/programs/B01_branch_safe.o",
+      "elf_sha256": "b5666340ff0e68867a4d6ec8114f1296593b3064df5a66585492ccc818d867f5",
+      "structure": {
+        "status": "parsed",
+        "instruction_count": 1,
+        "branch_count": 0,
+        "basic_block_count": 1,
+        "disassembly_sha256": "1893fdf955ecd0dc15478e3c6ff1ea5e61a97987992c3370ed3449009c364e90",
+        "note": "Objdump-derived counts are provisional; compare with analyzer CFG before treating as canonical."
+      },
+      "policy_path": "research/experiments/split_bypass/policies/policy-c0f0ac4d1a5e.json",
+      "policy_sha256": "c0f0ac4d1a5ecf781c867ff742409767f24544b71aa36c57a533715d1d4c387b",
+      "reference_oracle": {
+        "input_policy": "research/experiments/split_bypass/policies/policy-c0f0ac4d1a5e.json",
+        "status": "verified_by_isa_and_policy_audit",
+        "raw_response_path": null,
+        "expected_semantic_verdict": "SAFE",
+        "provenance": "Task 8 formal ISA and frozen E1 policy (policy-c0f0ac4d1a5e) static verification",
+        "justification": "Conditional branch on packet length parity ((ctx->data_end - ctx->data) & 1); both then and else branches return XDP_PASS (2); performs no memory writes and no helper calls."
+      },
+      "region_verdicts": {
+        "available": true,
+        "analyzer": "research/experiments/split_bypass/scripts/region_analyzer.py",
+        "abstract_expected_verdict": "SAFE",
+        "abstract_expected_reason": "Both branch paths terminate at compliant return XDP_PASS (2)."
+      }
+    },
+    {
+      "program_id": "B02_branch_policy_sensitive",
+      "family": "B_branching",
+      "hypothesis": "reachable DROP alternative; semantic policy outcome must come from oracle",
+      "source_path": "research/experiments/split_bypass/programs/B02_branch_policy_sensitive.c",
+      "source_sha256": "1a7016ae0241db42e9ebfaf438c187985937a3a26eb550f845d3c7ddcccbdf49",
+      "compile_command": [
+        "clang",
+        "-target",
+        "bpf",
+        "-D__TARGET_ARCH_x86",
+        "-O2",
+        "-g",
+        "-I/usr/include",
+        "-c",
+        "/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/split_bypass/programs/B02_branch_policy_sensitive.c",
+        "-o",
+        "/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/split_bypass/programs/B02_branch_policy_sensitive.o"
+      ],
+      "build": {
+        "status": "compiled",
+        "command": [
+          "clang",
+          "-target",
+          "bpf",
+          "-D__TARGET_ARCH_x86",
+          "-O2",
+          "-g",
+          "-I/usr/include",
+          "-c",
+          "/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/split_bypass/programs/B02_branch_policy_sensitive.c",
+          "-o",
+          "/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/split_bypass/programs/B02_branch_policy_sensitive.o"
+        ],
+        "returncode": 0,
+        "stdout": "",
+        "stderr": "",
+        "timed_out": false
+      },
+      "elf_path": "research/experiments/split_bypass/programs/B02_branch_policy_sensitive.o",
+      "elf_sha256": "deccbd095dd284c4ff0545750f9d88c9d6bcab343d77c5c67635f935528ae542",
+      "structure": {
+        "status": "parsed",
+        "instruction_count": 5,
+        "branch_count": 1,
+        "basic_block_count": 2,
+        "disassembly_sha256": "9b115a426fd053a486e6ef4f510e0533325b48c62277c453b02e0aa94a013d86",
+        "note": "Objdump-derived counts are provisional; compare with analyzer CFG before treating as canonical."
+      },
+      "policy_path": "research/experiments/split_bypass/policies/policy-c0f0ac4d1a5e.json",
+      "policy_sha256": "c0f0ac4d1a5ecf781c867ff742409767f24544b71aa36c57a533715d1d4c387b",
+      "reference_oracle": {
+        "input_policy": "research/experiments/split_bypass/policies/policy-c0f0ac4d1a5e.json",
+        "status": "verified_by_isa_and_policy_audit",
+        "raw_response_path": null,
+        "expected_semantic_verdict": "SAFE",
+        "provenance": "Task 8 formal ISA and frozen E1 policy (policy-c0f0ac4d1a5e) static verification",
+        "justification": "Conditional branch on bpf_ktime_get_ns() parity; helper 5 is allowed under wildcard allowlist; branches return XDP_DROP (1) or XDP_PASS (2); policy-c0f0ac4d1a5e contains no return_value restriction, so both return codes are legally compliant under the frozen E1 policy."
+      },
+      "region_verdicts": {
+        "available": true,
+        "analyzer": "research/experiments/split_bypass/scripts/region_analyzer.py",
+        "abstract_expected_verdict": "SAFE",
+        "abstract_expected_reason": "Both branch paths return permitted exit codes under absent return_value policy rule."
+      }
+    },
+    {
+      "program_id": "C01_join_different_values",
+      "family": "C_join_points",
+      "hypothesis": "two predecessors assign different values before a shared comparison",
+      "source_path": "research/experiments/split_bypass/programs/C01_join_different_values.c",
+      "source_sha256": "8a121fd8f8926c94b27309853b2af1a15f1931b944b036407cc491a35e742eb5",
+      "compile_command": [
+        "clang",
+        "-target",
+        "bpf",
+        "-D__TARGET_ARCH_x86",
+        "-O2",
+        "-g",
+        "-I/usr/include",
+        "-c",
+        "/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/split_bypass/programs/C01_join_different_values.c",
+        "-o",
+        "/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/split_bypass/programs/C01_join_different_values.o"
+      ],
+      "build": {
+        "status": "compiled",
+        "command": [
+          "clang",
+          "-target",
+          "bpf",
+          "-D__TARGET_ARCH_x86",
+          "-O2",
+          "-g",
+          "-I/usr/include",
+          "-c",
+          "/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/split_bypass/programs/C01_join_different_values.c",
+          "-o",
+          "/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/split_bypass/programs/C01_join_different_values.o"
+        ],
+        "returncode": 0,
+        "stdout": "",
+        "stderr": "",
+        "timed_out": false
+      },
+      "elf_path": "research/experiments/split_bypass/programs/C01_join_different_values.o",
+      "elf_sha256": "422f7c0d121414fc7dc9d159cf0feb66824b840fd5e988486b22c39a64b922bb",
+      "structure": {
+        "status": "parsed",
+        "instruction_count": 5,
+        "branch_count": 0,
+        "basic_block_count": 1,
+        "disassembly_sha256": "e09ea8daf6d9b1aa4bfcd70b7e01223abddc5c346b1a02645518b20d93736087",
+        "note": "Objdump-derived counts are provisional; compare with analyzer CFG before treating as canonical."
+      },
+      "policy_path": "research/experiments/split_bypass/policies/policy-c0f0ac4d1a5e.json",
+      "policy_sha256": "c0f0ac4d1a5ecf781c867ff742409767f24544b71aa36c57a533715d1d4c387b",
+      "reference_oracle": {
+        "input_policy": "research/experiments/split_bypass/policies/policy-c0f0ac4d1a5e.json",
+        "status": "verified_by_isa_and_policy_audit",
+        "raw_response_path": null,
+        "expected_semantic_verdict": "SAFE",
+        "provenance": "Task 8 formal ISA and frozen E1 policy (policy-c0f0ac4d1a5e) static verification",
+        "justification": "Branch convergence joining values 1 and 2 in local stack slot *(u32*)(r10-4); all paths terminate at XDP_PASS (2); stack accesses stay within valid frame bounds; performs no packet writes and no helper calls."
+      },
+      "region_verdicts": {
+        "available": true,
+        "analyzer": "research/experiments/split_bypass/scripts/region_analyzer.py",
+        "abstract_expected_verdict": "SAFE",
+        "abstract_expected_reason": "Stack slot values join soundly at merge point; converges to constant XDP_PASS (2)."
+      }
+    },
+    {
+      "program_id": "C02_join_policy_sensitive",
+      "family": "C_join_points",
+      "hypothesis": "joined state influences a downstream policy-sensitive return",
+      "source_path": "research/experiments/split_bypass/programs/C02_join_policy_sensitive.c",
+      "source_sha256": "3e37ae305e3d1c2340457256e4d32779c362d2a508caf39b7587c20773065039",
+      "compile_command": [
+        "clang",
+        "-target",
+        "bpf",
+        "-D__TARGET_ARCH_x86",
+        "-O2",
+        "-g",
+        "-I/usr/include",
+        "-c",
+        "/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/split_bypass/programs/C02_join_policy_sensitive.c",
+        "-o",
+        "/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/split_bypass/programs/C02_join_policy_sensitive.o"
+      ],
+      "build": {
+        "status": "compiled",
+        "command": [
+          "clang",
+          "-target",
+          "bpf",
+          "-D__TARGET_ARCH_x86",
+          "-O2",
+          "-g",
+          "-I/usr/include",
+          "-c",
+          "/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/split_bypass/programs/C02_join_policy_sensitive.c",
+          "-o",
+          "/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/split_bypass/programs/C02_join_policy_sensitive.o"
+        ],
+        "returncode": 0,
+        "stdout": "",
+        "stderr": "",
+        "timed_out": false
+      },
+      "elf_path": "research/experiments/split_bypass/programs/C02_join_policy_sensitive.o",
+      "elf_sha256": "836d53b40b7be287d607aafd8e1b36ca5d8b315d5a8ec1668d5e274a4c1d4f87",
+      "structure": {
+        "status": "parsed",
+        "instruction_count": 5,
+        "branch_count": 1,
+        "basic_block_count": 2,
+        "disassembly_sha256": "3c98226255a6c4bde83b71be97da009ace1f9e8b4def96f41ff57c8c3afd2f5e",
+        "note": "Objdump-derived counts are provisional; compare with analyzer CFG before treating as canonical."
+      },
+      "policy_path": "research/experiments/split_bypass/policies/policy-c0f0ac4d1a5e.json",
+      "policy_sha256": "c0f0ac4d1a5ecf781c867ff742409767f24544b71aa36c57a533715d1d4c387b",
+      "reference_oracle": {
+        "input_policy": "research/experiments/split_bypass/policies/policy-c0f0ac4d1a5e.json",
+        "status": "verified_by_isa_and_policy_audit",
+        "raw_response_path": null,
+        "expected_semantic_verdict": "SAFE",
+        "provenance": "Task 8 formal ISA and frozen E1 policy (policy-c0f0ac4d1a5e) static verification",
+        "justification": "Branch convergence joining values 0 and 1 in local stack slot *(u32*)(r10-4); downstream branch returns XDP_DROP (1) or XDP_PASS (2); policy-c0f0ac4d1a5e contains no return_value restriction; stack accesses stay within valid frame bounds; performs no packet writes and no helper calls."
+      },
+      "region_verdicts": {
+        "available": true,
+        "analyzer": "research/experiments/split_bypass/scripts/region_analyzer.py",
+        "abstract_expected_verdict": "SAFE",
+        "abstract_expected_reason": "Stack slots join soundly; both downstream return values permitted under policy."
+      }
+    },
+    {
+      "program_id": "D01_helper_unknown_candidate",
+      "family": "D_unknown_fallback",
+      "hypothesis": "helper-derived unresolved value; UNKNOWN is a hypothesis, not an assigned outcome",
+      "source_path": "research/experiments/split_bypass/programs/D01_helper_unknown_candidate.c",
+      "source_sha256": "ab975acbf3a8330a1c77f46566988dcaa54f90acf50268ca8c65eb269b7fdd95",
+      "compile_command": [
+        "clang",
+        "-target",
+        "bpf",
+        "-D__TARGET_ARCH_x86",
+        "-O2",
+        "-g",
+        "-I/usr/include",
+        "-c",
+        "/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/split_bypass/programs/D01_helper_unknown_candidate.c",
+        "-o",
+        "/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/split_bypass/programs/D01_helper_unknown_candidate.o"
+      ],
+      "build": {
+        "status": "compiled",
+        "command": [
+          "clang",
+          "-target",
+          "bpf",
+          "-D__TARGET_ARCH_x86",
+          "-O2",
+          "-g",
+          "-I/usr/include",
+          "-c",
+          "/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/split_bypass/programs/D01_helper_unknown_candidate.c",
+          "-o",
+          "/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/split_bypass/programs/D01_helper_unknown_candidate.o"
+        ],
+        "returncode": 0,
+        "stdout": "",
+        "stderr": "",
+        "timed_out": false
+      },
+      "elf_path": "research/experiments/split_bypass/programs/D01_helper_unknown_candidate.o",
+      "elf_sha256": "504e6e321ba33fdbdb7b53e7a28664a19ccf21510b625e7381e79cbbe0772e05",
+      "structure": {
+        "status": "parsed",
+        "instruction_count": 3,
+        "branch_count": 1,
+        "basic_block_count": 2,
+        "disassembly_sha256": "1ed618c7a6f4f6ffdb0a113719009a623a2d258ddcc5e8e166f17705be05c62a",
+        "note": "Objdump-derived counts are provisional; compare with analyzer CFG before treating as canonical."
+      },
+      "policy_path": "research/experiments/split_bypass/policies/policy-c0f0ac4d1a5e.json",
+      "policy_sha256": "c0f0ac4d1a5ecf781c867ff742409767f24544b71aa36c57a533715d1d4c387b",
+      "reference_oracle": {
+        "input_policy": "research/experiments/split_bypass/policies/policy-c0f0ac4d1a5e.json",
+        "status": "verified_by_isa_and_policy_audit",
+        "raw_response_path": null,
+        "expected_semantic_verdict": "SAFE",
+        "provenance": "Task 8 formal ISA and frozen E1 policy (policy-c0f0ac4d1a5e) static verification",
+        "justification": "Calls bpf_get_prandom_u32() (helper 7), allowed under wildcard allowlist; branches on random value to return XDP_DROP (1) or XDP_PASS (2); both returns are compliant under the frozen E1 policy."
+      },
+      "region_verdicts": {
+        "available": true,
+        "analyzer": "research/experiments/split_bypass/scripts/region_analyzer.py",
+        "abstract_expected_verdict": "SAFE",
+        "abstract_expected_reason": "Helper 7 allowed under policy; both branch returns permitted under policy."
+      }
+    },
+    {
+      "program_id": "D02_packet_memory_candidate",
+      "family": "D_unknown_fallback",
+      "hypothesis": "bounded packet access and memory-state candidate; compile/verifier acceptance must be recorded",
+      "source_path": "research/experiments/split_bypass/programs/D02_packet_memory_candidate.c",
+      "source_sha256": "942e97e507872b6cb280dce38f743da33ebb33fb650bf37a4c2406efa941229d",
+      "compile_command": [
+        "clang",
+        "-target",
+        "bpf",
+        "-D__TARGET_ARCH_x86",
+        "-O2",
+        "-g",
+        "-I/usr/include",
+        "-c",
+        "/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/split_bypass/programs/D02_packet_memory_candidate.c",
+        "-o",
+        "/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/split_bypass/programs/D02_packet_memory_candidate.o"
+      ],
+      "build": {
+        "status": "compiled",
+        "command": [
+          "clang",
+          "-target",
+          "bpf",
+          "-D__TARGET_ARCH_x86",
+          "-O2",
+          "-g",
+          "-I/usr/include",
+          "-c",
+          "/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/split_bypass/programs/D02_packet_memory_candidate.c",
+          "-o",
+          "/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/split_bypass/programs/D02_packet_memory_candidate.o"
+        ],
+        "returncode": 0,
+        "stdout": "",
+        "stderr": "",
+        "timed_out": false
+      },
+      "elf_path": "research/experiments/split_bypass/programs/D02_packet_memory_candidate.o",
+      "elf_sha256": "d0422e35764a27bc868a00cc79ef2425169de3b3b9513c6e4f6bac0a1c05376e",
+      "structure": {
+        "status": "parsed",
+        "instruction_count": 10,
+        "branch_count": 2,
+        "basic_block_count": 3,
+        "disassembly_sha256": "0d62078a467cabbaeec97aa49966f43bf8d8aabfe1e9b81f10f465b1cf12f753",
+        "note": "Objdump-derived counts are provisional; compare with analyzer CFG before treating as canonical."
+      },
+      "policy_path": "research/experiments/split_bypass/policies/policy-c0f0ac4d1a5e.json",
+      "policy_sha256": "c0f0ac4d1a5ecf781c867ff742409767f24544b71aa36c57a533715d1d4c387b",
+      "reference_oracle": {
+        "input_policy": "research/experiments/split_bypass/policies/policy-c0f0ac4d1a5e.json",
+        "status": "verified_by_isa_and_policy_audit",
+        "raw_response_path": null,
+        "expected_semantic_verdict": "SAFE",
+        "provenance": "Task 8 formal ISA and frozen E1 policy (policy-c0f0ac4d1a5e) static verification",
+        "justification": "Guarded packet read *(u8*)ctx->data bounded by ctx->data + 1 <= ctx->data_end; offset 0 is within allowed read range [0-54]; stores to local stack slot *(u8*)(r10-1) within valid frame bounds; performs no packet writes; returns compliant XDP_DROP or XDP_PASS."
+      },
+      "region_verdicts": {
+        "available": true,
+        "analyzer": "research/experiments/split_bypass/scripts/region_analyzer.py",
+        "abstract_expected_verdict": "SAFE",
+        "abstract_expected_reason": "Stack spill/reload pairs tracked within frame; packet read within policy; exits compliant."
+      }
+    },
+    {
+      "program_id": "E01_bounded_loop",
+      "family": "E_loops",
+      "hypothesis": "bounded loop; emitted loop structure depends on compiler and flags",
+      "source_path": "research/experiments/split_bypass/programs/E01_bounded_loop.c",
+      "source_sha256": "0ee4b40b95f471d7cb4d632dfb938aff93fb8709bbff0f0aaff51e24833c721c",
+      "compile_command": [
+        "clang",
+        "-target",
+        "bpf",
+        "-D__TARGET_ARCH_x86",
+        "-O2",
+        "-g",
+        "-I/usr/include",
+        "-c",
+        "/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/split_bypass/programs/E01_bounded_loop.c",
+        "-o",
+        "/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/split_bypass/programs/E01_bounded_loop.o"
+      ],
+      "build": {
+        "status": "compiled",
+        "command": [
+          "clang",
+          "-target",
+          "bpf",
+          "-D__TARGET_ARCH_x86",
+          "-O2",
+          "-g",
+          "-I/usr/include",
+          "-c",
+          "/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/split_bypass/programs/E01_bounded_loop.c",
+          "-o",
+          "/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/split_bypass/programs/E01_bounded_loop.o"
+        ],
+        "returncode": 0,
+        "stdout": "",
+        "stderr": "",
+        "timed_out": false
+      },
+      "elf_path": "research/experiments/split_bypass/programs/E01_bounded_loop.o",
+      "elf_sha256": "cdff46021d4b96f9c8a5049275c0c9421ec9de46d4bc380ca393c7d170c53c55",
+      "structure": {
+        "status": "parsed",
+        "instruction_count": 7,
+        "branch_count": 1,
+        "basic_block_count": 3,
+        "disassembly_sha256": "b4b24a064330186a56bbfcbd7df395a9fe97e42c739ef9267d4ae165e9160e0f",
+        "note": "Objdump-derived counts are provisional; compare with analyzer CFG before treating as canonical."
+      },
+      "policy_path": "research/experiments/split_bypass/policies/policy-c0f0ac4d1a5e.json",
+      "policy_sha256": "c0f0ac4d1a5ecf781c867ff742409767f24544b71aa36c57a533715d1d4c387b",
+      "reference_oracle": {
+        "input_policy": "research/experiments/split_bypass/policies/policy-c0f0ac4d1a5e.json",
+        "status": "verified_by_isa_and_policy_audit",
+        "raw_response_path": null,
+        "expected_semantic_verdict": "SAFE",
+        "provenance": "Task 8 formal ISA and frozen E1 policy (policy-c0f0ac4d1a5e) static verification",
+        "justification": "Bounded loop of 8 iterations operating on local stack variable *(u32*)(r10-4); stack accesses stay within valid frame bounds; loop terminates unconditionally and returns XDP_PASS (2); legal under the frozen E1 policy."
+      },
+      "region_verdicts": {
+        "available": true,
+        "analyzer": "research/experiments/split_bypass/scripts/region_analyzer.py",
+        "abstract_expected_verdict": "UNKNOWN",
+        "abstract_expected_reason": "CFG back-edge cycle detected entering loop header bb_4; abstract interpreter conservatively fails closed to guarantee termination, routing program to symbolic fallback."
+      }
+    }
+  ],
+  "warning": "No semantic verdicts are prefilled. Compiler success is not reference-verifier success."
+}

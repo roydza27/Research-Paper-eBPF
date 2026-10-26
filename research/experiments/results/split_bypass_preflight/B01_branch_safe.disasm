@@ -1,0 +1,8 @@
+
+/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/results/split_bypass_preflight/B01_branch_safe.o:	file format elf64-bpf
+
+Disassembly of section xdp:
+
+0000000000000000 <B01_branch_safe>:
+       0:	b4 00 00 00 02 00 00 00	w0 = 0x2
+       1:	95 00 00 00 00 00 00 00	exit

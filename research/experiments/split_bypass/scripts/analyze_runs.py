@@ -26,6 +26,18 @@ def load_records(paths: list[Path]) -> list[dict[str, Any]]:
                 raise ValueError(f"{path}: each run must be a JSON object")
             row = dict(item)
             row.setdefault("raw_path", str(path))
+            metrics = row.get("metrics")
+            if isinstance(metrics, dict):
+                for k in ("end_to_end_duration_ms", "abstract_duration_ms", "symbolic_duration_ms"):
+                    if k not in row and k in metrics:
+                        row[k] = metrics[k]
+                if "symbolic_invoked" not in row and "symbolic_fallback_count" in metrics:
+                    row["symbolic_invoked"] = bool(metrics["symbolic_fallback_count"])
+            if "pipeline" not in row:
+                if "mode" in row:
+                    row["pipeline"] = row["mode"]
+                elif "experiment_mode" in row:
+                    row["pipeline"] = row["experiment_mode"]
             rows.append(row)
     return rows
 
@@ -39,6 +51,8 @@ def _num(row: dict[str, Any], key: str) -> float | None:
 def summarize(records: list[dict[str, Any]], bootstrap_samples: int = 5000,
               seed: int = 20261022) -> dict[str, Any]:
     for index, row in enumerate(records):
+        if not row.get("pipeline") and row.get("mode"):
+            row["pipeline"] = row["mode"]
         if not row.get("program_id") or not row.get("pipeline"):
             raise ValueError(f"run row {index} lacks program_id or pipeline")
     groups: dict[tuple[str, str], list[dict[str, Any]]] = defaultdict(list)
@@ -46,9 +60,12 @@ def summarize(records: list[dict[str, Any]], bootstrap_samples: int = 5000,
         groups[(str(row["program_id"]), str(row["pipeline"]))].append(row)
     per_program = []
     for (program_id, pipeline), rows in sorted(groups.items()):
-        latencies = [x for row in rows if (x := _num(row, "end_to_end_duration_ms")) is not None]
-        abstract_latencies = [x for row in rows if (x := _num(row, "abstract_duration_ms")) is not None]
-        symbolic_latencies = [x for row in rows if (x := _num(row, "symbolic_duration_ms")) is not None]
+        measured_rows = [r for r in rows if not r.get("is_warmup") and not r.get("warmup")]
+        warmup_rows = [r for r in rows if r.get("is_warmup") or r.get("warmup")]
+        latency_rows = measured_rows if measured_rows else rows
+        latencies = [x for row in latency_rows if (x := _num(row, "end_to_end_duration_ms")) is not None]
+        abstract_latencies = [x for row in latency_rows if (x := _num(row, "abstract_duration_ms")) is not None]
+        symbolic_latencies = [x for row in latency_rows if (x := _num(row, "symbolic_duration_ms")) is not None]
         symbolic_calls = sum(bool(r.get("symbolic_invoked")) for r in rows)
         dispositions = [str(r.get("final_verdict", r.get("overall_verdict", r.get("disposition", "unresolved")))).upper()
                         for r in rows]
@@ -58,12 +75,17 @@ def summarize(records: list[dict[str, Any]], bootstrap_samples: int = 5000,
         agreements = sum(normalized(o) == normalized(v) for o, v in compared)
         per_program.append({
             "program_id": program_id, "pipeline": pipeline, "run_count": len(rows),
+            "warmup_count": len(warmup_rows),
+            "measured_count": len(measured_rows) if warmup_rows else len(rows),
             "end_to_end_ms_median": statistics.median(latencies) if latencies else None,
             "end_to_end_ms_mean": statistics.mean(latencies) if latencies else None,
             "abstract_ms_median": statistics.median(abstract_latencies) if abstract_latencies else None,
             "symbolic_ms_median": statistics.median(symbolic_latencies) if symbolic_latencies else None,
             "symbolic_invocation_rate": symbolic_calls / len(rows),
             "unknown_or_unresolved_count": sum(v in {"UNKNOWN", "UNRESOLVED", "TIMEOUT", "ERROR"} for v in dispositions),
+            "unknown_count": sum(v in {"UNKNOWN", "UNRESOLVED"} for v in dispositions),
+            "timeout_count": sum(v == "TIMEOUT" for v in dispositions),
+            "error_count": sum(v == "ERROR" for v in dispositions),
             "oracle_comparisons": len(compared),
             "oracle_agreement_rate": agreements / len(compared) if compared else None,
             "false_safe_count": sum(normalized(o) == "VIOLATION" and normalized(v) == "SAFE" for o, v in compared),
@@ -73,6 +95,8 @@ def summarize(records: list[dict[str, Any]], bootstrap_samples: int = 5000,
     # Paired comparison is only valid when the caller supplies a stable pair_id.
     pair_map: dict[str, dict[str, dict[str, Any]]] = defaultdict(dict)
     for row in records:
+        if row.get("is_warmup") or row.get("warmup"):
+            continue
         pair_id = row.get("pair_id")
         if pair_id:
             pair_map[str(pair_id)][str(row["pipeline"])] = row

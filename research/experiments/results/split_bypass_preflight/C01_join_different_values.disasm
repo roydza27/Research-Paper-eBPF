@@ -1,0 +1,16 @@
+
+/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/results/split_bypass_preflight/C01_join_different_values.o:	file format elf64-bpf
+
+Disassembly of section xdp:
+
+0000000000000000 <C01_join_different_values>:
+       0:	61 12 00 00 00 00 00 00	w2 = *(u32 *)(r1 + 0x0)
+       1:	61 11 04 00 00 00 00 00	w1 = *(u32 *)(r1 + 0x4)
+       2:	1c 21 00 00 00 00 00 00	w1 -= w2
+       3:	54 01 00 00 01 00 00 00	w1 &= 0x1
+       4:	b4 02 00 00 02 00 00 00	w2 = 0x2
+       5:	1c 12 00 00 00 00 00 00	w2 -= w1
+       6:	63 2a fc ff 00 00 00 00	*(u32 *)(r10 - 0x4) = w2
+       7:	61 a1 fc ff 00 00 00 00	w1 = *(u32 *)(r10 - 0x4)
+       8:	b4 00 00 00 02 00 00 00	w0 = 0x2
+       9:	95 00 00 00 00 00 00 00	exit

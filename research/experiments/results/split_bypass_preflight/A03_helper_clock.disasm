@@ -1,0 +1,9 @@
+
+/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/results/split_bypass_preflight/A03_helper_clock.o:	file format elf64-bpf
+
+Disassembly of section xdp:
+
+0000000000000000 <A03_helper_clock>:
+       0:	85 00 00 00 05 00 00 00	call 0x5
+       1:	b4 00 00 00 02 00 00 00	w0 = 0x2
+       2:	95 00 00 00 00 00 00 00	exit

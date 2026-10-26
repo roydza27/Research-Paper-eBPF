@@ -1,0 +1,322 @@
+{
+  "schema": "split-bypass-preflight-fixture-summary/v1",
+  "timestamp_utc": "2026-10-22T07:04:51.194792+00:00",
+  "compiler": {
+    "path": "/usr/bin/clang",
+    "version": "clang version 23.1.1",
+    "flags": [
+      "-target",
+      "bpf",
+      "-D__TARGET_ARCH_x86",
+      "-O2",
+      "-g",
+      "-I/usr/include",
+      "-c"
+    ]
+  },
+  "inspection_tool": {
+    "path": "/usr/bin/llvm-objdump"
+  },
+  "fixtures": [
+    {
+      "program_id": "A01_straight_small",
+      "family": "A_straight_line",
+      "hypothesis": "small straight-line arithmetic",
+      "source_path": "research/experiments/results/split_bypass_preflight/A01_straight_small.c",
+      "source_sha256": "e7f8e8eabb9d0776330095af74ed4078db7343cc3b69d01a6b9b0d0a3b82892c",
+      "compile_status": "COMPILED",
+      "compile_exit_code": 0,
+      "compile_command": [
+        "/usr/bin/clang",
+        "-target",
+        "bpf",
+        "-D__TARGET_ARCH_x86",
+        "-O2",
+        "-g",
+        "-I/usr/include",
+        "-c",
+        "/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/results/split_bypass_preflight/A01_straight_small.c",
+        "-o",
+        "/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/results/split_bypass_preflight/A01_straight_small.o"
+      ],
+      "object_path": "research/experiments/results/split_bypass_preflight/A01_straight_small.o",
+      "object_sha256": "8a1b39aca1a7033a486c9db05fb5a181fab1da915f4f0d469074c9ebfe8afff8",
+      "instruction_count": 2,
+      "branch_count": 0,
+      "loop_count": 0,
+      "optimization_observations": [
+        "Compiler constant-folded ternary condition (XDP_PASS : XDP_PASS) directly to w0 = 2; exit (2 instructions)."
+      ]
+    },
+    {
+      "program_id": "A02_straight_medium",
+      "family": "A_straight_line",
+      "hypothesis": "larger source-level arithmetic sequence; compiler may simplify it",
+      "source_path": "research/experiments/results/split_bypass_preflight/A02_straight_medium.c",
+      "source_sha256": "5aa9ab367514447f912d05431854eade852d8c695c2d3c65c8db2fd313834673",
+      "compile_status": "COMPILED",
+      "compile_exit_code": 0,
+      "compile_command": [
+        "/usr/bin/clang",
+        "-target",
+        "bpf",
+        "-D__TARGET_ARCH_x86",
+        "-O2",
+        "-g",
+        "-I/usr/include",
+        "-c",
+        "/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/results/split_bypass_preflight/A02_straight_medium.c",
+        "-o",
+        "/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/results/split_bypass_preflight/A02_straight_medium.o"
+      ],
+      "object_path": "research/experiments/results/split_bypass_preflight/A02_straight_medium.o",
+      "object_sha256": "8560f225b8e1479d902cf0ffd09b948dc94bc06195545276f6a0f5595dc488b4",
+      "instruction_count": 100,
+      "branch_count": 0,
+      "loop_count": 0,
+      "optimization_observations": [
+        "24 volatile arithmetic operations preserved in bytecode (100 instructions)."
+      ]
+    },
+    {
+      "program_id": "A03_helper_clock",
+      "family": "A_straight_line",
+      "hypothesis": "straight-line helper interaction",
+      "source_path": "research/experiments/results/split_bypass_preflight/A03_helper_clock.c",
+      "source_sha256": "ac82d9b387a0181ab3d164e0b9da4ef65b9a4dcf82cb535124be12c044b015d0",
+      "compile_status": "COMPILED",
+      "compile_exit_code": 0,
+      "compile_command": [
+        "/usr/bin/clang",
+        "-target",
+        "bpf",
+        "-D__TARGET_ARCH_x86",
+        "-O2",
+        "-g",
+        "-I/usr/include",
+        "-c",
+        "/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/results/split_bypass_preflight/A03_helper_clock.c",
+        "-o",
+        "/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/results/split_bypass_preflight/A03_helper_clock.o"
+      ],
+      "object_path": "research/experiments/results/split_bypass_preflight/A03_helper_clock.o",
+      "object_sha256": "863b4e554bad9e2f78f4497eccd4662cff8593f4c02b7e2dc4dfef1b73e9ee05",
+      "instruction_count": 3,
+      "branch_count": 0,
+      "loop_count": 0,
+      "optimization_observations": [
+        "Single call to bpf_ktime_get_ns() (helper 5) preserved, followed by bitwise ops and exit."
+      ]
+    },
+    {
+      "program_id": "B01_branch_safe",
+      "family": "B_branching",
+      "hypothesis": "unresolved condition with safe alternatives",
+      "source_path": "research/experiments/results/split_bypass_preflight/B01_branch_safe.c",
+      "source_sha256": "d6e99f33df0c0dfabce5ee89dc1ebe0ac56a53f0c5cb780ae770e0a577fad925",
+      "compile_status": "COMPILED",
+      "compile_exit_code": 0,
+      "compile_command": [
+        "/usr/bin/clang",
+        "-target",
+        "bpf",
+        "-D__TARGET_ARCH_x86",
+        "-O2",
+        "-g",
+        "-I/usr/include",
+        "-c",
+        "/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/results/split_bypass_preflight/B01_branch_safe.c",
+        "-o",
+        "/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/results/split_bypass_preflight/B01_branch_safe.o"
+      ],
+      "object_path": "research/experiments/results/split_bypass_preflight/B01_branch_safe.o",
+      "object_sha256": "34ed82bb06b8afd8f014d0abda0211256a410fabbd2aef8dbca7d166fdb49aaa",
+      "instruction_count": 2,
+      "branch_count": 0,
+      "loop_count": 0,
+      "optimization_observations": [
+        "Compiler removed condition (if (len & 1)) completely because both branches returned XDP_PASS (folded to 2 instructions)."
+      ]
+    },
+    {
+      "program_id": "B02_branch_policy_sensitive",
+      "family": "B_branching",
+      "hypothesis": "reachable DROP alternative; semantic policy outcome must come from oracle",
+      "source_path": "research/experiments/results/split_bypass_preflight/B02_branch_policy_sensitive.c",
+      "source_sha256": "1a7016ae0241db42e9ebfaf438c187985937a3a26eb550f845d3c7ddcccbdf49",
+      "compile_status": "COMPILED",
+      "compile_exit_code": 0,
+      "compile_command": [
+        "/usr/bin/clang",
+        "-target",
+        "bpf",
+        "-D__TARGET_ARCH_x86",
+        "-O2",
+        "-g",
+        "-I/usr/include",
+        "-c",
+        "/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/results/split_bypass_preflight/B02_branch_policy_sensitive.c",
+        "-o",
+        "/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/results/split_bypass_preflight/B02_branch_policy_sensitive.o"
+      ],
+      "object_path": "research/experiments/results/split_bypass_preflight/B02_branch_policy_sensitive.o",
+      "object_sha256": "88c0ab35f2a6c88168612c5645e19cc7feaace0eb2f7128f6834aa161ef23a3b",
+      "instruction_count": 7,
+      "branch_count": 1,
+      "loop_count": 0,
+      "optimization_observations": [
+        "Conditional branch preserved (if now & 1 goto DROP else PASS) resulting in distinct basic blocks."
+      ]
+    },
+    {
+      "program_id": "C01_join_different_values",
+      "family": "C_join_points",
+      "hypothesis": "two predecessors assign different values before a shared comparison",
+      "source_path": "research/experiments/results/split_bypass_preflight/C01_join_different_values.c",
+      "source_sha256": "8a121fd8f8926c94b27309853b2af1a15f1931b944b036407cc491a35e742eb5",
+      "compile_status": "COMPILED",
+      "compile_exit_code": 0,
+      "compile_command": [
+        "/usr/bin/clang",
+        "-target",
+        "bpf",
+        "-D__TARGET_ARCH_x86",
+        "-O2",
+        "-g",
+        "-I/usr/include",
+        "-c",
+        "/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/results/split_bypass_preflight/C01_join_different_values.c",
+        "-o",
+        "/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/results/split_bypass_preflight/C01_join_different_values.o"
+      ],
+      "object_path": "research/experiments/results/split_bypass_preflight/C01_join_different_values.o",
+      "object_sha256": "062a390791e508691ad457f39be5bd9e54b99434bf4b6eb32df5a48183e69441",
+      "instruction_count": 10,
+      "branch_count": 0,
+      "loop_count": 0,
+      "optimization_observations": [
+        "Two predecessor branches assign joined volatile register before downstream check; branch and join structure preserved."
+      ]
+    },
+    {
+      "program_id": "C02_join_policy_sensitive",
+      "family": "C_join_points",
+      "hypothesis": "joined state influences a downstream policy-sensitive return",
+      "source_path": "research/experiments/results/split_bypass_preflight/C02_join_policy_sensitive.c",
+      "source_sha256": "3e37ae305e3d1c2340457256e4d32779c362d2a508caf39b7587c20773065039",
+      "compile_status": "COMPILED",
+      "compile_exit_code": 0,
+      "compile_command": [
+        "/usr/bin/clang",
+        "-target",
+        "bpf",
+        "-D__TARGET_ARCH_x86",
+        "-O2",
+        "-g",
+        "-I/usr/include",
+        "-c",
+        "/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/results/split_bypass_preflight/C02_join_policy_sensitive.c",
+        "-o",
+        "/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/results/split_bypass_preflight/C02_join_policy_sensitive.o"
+      ],
+      "object_path": "research/experiments/results/split_bypass_preflight/C02_join_policy_sensitive.o",
+      "object_sha256": "60e6257b4a10eb760aa570715952ad1c74aa1c17eebf7f722bde0e6bb40f6537",
+      "instruction_count": 9,
+      "branch_count": 1,
+      "loop_count": 0,
+      "optimization_observations": [
+        "Join point preserved; joined variable dictates conditional jump to DROP vs PASS."
+      ]
+    },
+    {
+      "program_id": "D01_helper_unknown_candidate",
+      "family": "D_unknown_fallback",
+      "hypothesis": "helper-derived unresolved value; UNKNOWN is a hypothesis, not an assigned outcome",
+      "source_path": "research/experiments/results/split_bypass_preflight/D01_helper_unknown_candidate.c",
+      "source_sha256": "ab975acbf3a8330a1c77f46566988dcaa54f90acf50268ca8c65eb269b7fdd95",
+      "compile_status": "COMPILED",
+      "compile_exit_code": 0,
+      "compile_command": [
+        "/usr/bin/clang",
+        "-target",
+        "bpf",
+        "-D__TARGET_ARCH_x86",
+        "-O2",
+        "-g",
+        "-I/usr/include",
+        "-c",
+        "/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/results/split_bypass_preflight/D01_helper_unknown_candidate.c",
+        "-o",
+        "/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/results/split_bypass_preflight/D01_helper_unknown_candidate.o"
+      ],
+      "object_path": "research/experiments/results/split_bypass_preflight/D01_helper_unknown_candidate.o",
+      "object_sha256": "231182270a3f09421c9bb776521522834f6ca56bb9544a997aa8961000469df9",
+      "instruction_count": 6,
+      "branch_count": 1,
+      "loop_count": 0,
+      "optimization_observations": [
+        "Call to bpf_get_prandom_u32() (helper 7) preserved; branch on random return value."
+      ]
+    },
+    {
+      "program_id": "D02_packet_memory_candidate",
+      "family": "D_unknown_fallback",
+      "hypothesis": "bounded packet access and memory-state candidate; compile/verifier acceptance must be recorded",
+      "source_path": "research/experiments/results/split_bypass_preflight/D02_packet_memory_candidate.c",
+      "source_sha256": "942e97e507872b6cb280dce38f743da33ebb33fb650bf37a4c2406efa941229d",
+      "compile_status": "COMPILED",
+      "compile_exit_code": 0,
+      "compile_command": [
+        "/usr/bin/clang",
+        "-target",
+        "bpf",
+        "-D__TARGET_ARCH_x86",
+        "-O2",
+        "-g",
+        "-I/usr/include",
+        "-c",
+        "/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/results/split_bypass_preflight/D02_packet_memory_candidate.c",
+        "-o",
+        "/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/results/split_bypass_preflight/D02_packet_memory_candidate.o"
+      ],
+      "object_path": "research/experiments/results/split_bypass_preflight/D02_packet_memory_candidate.o",
+      "object_sha256": "400e8318a33db52eb675018834c7fce31b1447679e06e8e9e2d1fe977a5303c3",
+      "instruction_count": 13,
+      "branch_count": 2,
+      "loop_count": 0,
+      "optimization_observations": [
+        "Packet bounds check (data + 1 > data_end) followed by byte load from packet memory preserved."
+      ]
+    },
+    {
+      "program_id": "E01_bounded_loop",
+      "family": "E_loops",
+      "hypothesis": "bounded loop; emitted loop structure depends on compiler and flags",
+      "source_path": "research/experiments/results/split_bypass_preflight/E01_bounded_loop.c",
+      "source_sha256": "0ee4b40b95f471d7cb4d632dfb938aff93fb8709bbff0f0aaff51e24833c721c",
+      "compile_status": "COMPILED",
+      "compile_exit_code": 0,
+      "compile_command": [
+        "/usr/bin/clang",
+        "-target",
+        "bpf",
+        "-D__TARGET_ARCH_x86",
+        "-O2",
+        "-g",
+        "-I/usr/include",
+        "-c",
+        "/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/results/split_bypass_preflight/E01_bounded_loop.c",
+        "-o",
+        "/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/results/split_bypass_preflight/E01_bounded_loop.o"
+      ],
+      "object_path": "research/experiments/results/split_bypass_preflight/E01_bounded_loop.o",
+      "object_sha256": "05d0f4cbcfaf20f710d567c38b55eeb631ef589296244509326ddc5a9ed5205c",
+      "instruction_count": 12,
+      "branch_count": 1,
+      "loop_count": 1,
+      "optimization_observations": [
+        "Backward jump (if w1 != 0x8 goto -0x6) preserved; forms bounded loop of 8 iterations in bytecode."
+      ]
+    }
+  ]
+}

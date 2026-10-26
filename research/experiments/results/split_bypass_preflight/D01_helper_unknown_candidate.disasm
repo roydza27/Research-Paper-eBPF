@@ -1,0 +1,13 @@
+
+/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/results/split_bypass_preflight/D01_helper_unknown_candidate.o:	file format elf64-bpf
+
+Disassembly of section xdp:
+
+0000000000000000 <D01_helper_unknown_candidate>:
+       0:	85 00 00 00 07 00 00 00	call 0x7
+       1:	bc 01 00 00 00 00 00 00	w1 = w0
+       2:	b4 00 00 00 01 00 00 00	w0 = 0x1
+       3:	16 01 01 00 79 35 01 00	if w1 == 0x13579 goto +0x1 <L0>
+       4:	b4 00 00 00 02 00 00 00	w0 = 0x2
+<L0>:
+       5:	95 00 00 00 00 00 00 00	exit

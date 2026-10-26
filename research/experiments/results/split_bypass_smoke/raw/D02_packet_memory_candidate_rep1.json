@@ -1,0 +1,212 @@
+{
+  "schema": "split-bypass-smoke-record/v1",
+  "run_id": "D02_packet_memory_candidate_rep1",
+  "program_id": "D02_packet_memory_candidate",
+  "fixture_family": "D_unknown_fallback",
+  "policy_id": "c0f0ac4d1a5e",
+  "pipeline": "split_bypass",
+  "mode": "hybrid",
+  "repetition": 1,
+  "is_warmup": false,
+  "abstract_verdict": "UNKNOWN",
+  "symbolic_verdict": "UNKNOWN",
+  "overall_verdict": "UNKNOWN",
+  "routed_to_symbolic": true,
+  "symbolic_invoked": true,
+  "disposition": "unresolved",
+  "unresolved_reason": "worker exit 1: Traceback (most recent call last):\n  File \"/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/scripts/split_analyze_bypass.py\", line 349, in <module>\n    raise SystemExit(main())\n                     ~~~~^^\n  File \"/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/scripts/split_analyze_bypass.py\", line 330, in main\n    return _symbolic_worker(args)\n  File \"/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/scripts/split_analyze_bypass.py\", line 192, in _symbolic_worker\n    passed, verdict = extract_verdict(response)\n                      ~~~~~~~~~~~~~~~^^^^^^^^^^\n  File \"/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/scripts/validate-phase5-corpus.py\", line 176, in extract_krakenguard_verdict\n    if ref_resp.execution.return_code != 0:\n       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAttributeError: 'NoneType' object has no attribute 'return_code'\n",
+  "fallback_scope": "whole_program",
+  "abstract_duration_ms": 109.544384,
+  "symbolic_duration_ms": 238.197514,
+  "end_to_end_duration_ms": 348.060163,
+  "cfg_block_count": 5,
+  "reachable_block_count": 5,
+  "prototype_record": {
+    "schema": "split-analyze-bypass-prototype/v1",
+    "program_id": "D02_packet_memory_candidate",
+    "source_provenance": {
+      "integration_base_commit": "9250b53243714f00868f8c73a3c794634cfc5ad2",
+      "prototype_source_commit": "0d81b13a03c6294051620c6157b10b8d36922a81",
+      "experiment_script": "research/experiments/scripts/split_analyze_bypass.py"
+    },
+    "run_configuration": {
+      "abstract_timeout_seconds": 60.0,
+      "symbolic_timeout_seconds": 120.0,
+      "baseline_dir": "/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/baselines/krakenguard/artifact",
+      "socket_path": "research/baselines/krakenguard/artifact/socket/krakenguard.sock"
+    },
+    "scope": "whole_program",
+    "scope_limitation": "The analyzer cannot classify extracted blocks independently. CFG is metadata only; no per-block verdicts are fabricated.",
+    "object": "/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/split_bypass/programs/D02_packet_memory_candidate.o",
+    "policy": "/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/split_bypass/policies/policy-c0f0ac4d1a5e.json",
+    "entry_assumptions": {
+      "scope": "whole_program_entry",
+      "registers": {
+        "r0": "unknown",
+        "r1": "unknown",
+        "r2": "unknown",
+        "r3": "unknown",
+        "r4": "unknown",
+        "r5": "unknown",
+        "r6": "unknown",
+        "r7": "unknown",
+        "r8": "unknown",
+        "r9": "unknown",
+        "r10": {
+          "kind": "const",
+          "value": 0
+        }
+      },
+      "path_constraints": [],
+      "memory_and_map_state": "not represented as a complete entry-state object by the current analyzer",
+      "note": "Per-block entry assumptions remain null; no block-state propagation is implemented."
+    },
+    "cfg": {
+      "blocks": [
+        {
+          "block_id": "bb_0",
+          "start_pc": 0,
+          "end_pc": 5,
+          "instruction_pcs": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "predecessors": [],
+          "successors": [
+            "bb_c",
+            "bb_6"
+          ],
+          "reachable": true,
+          "entry_assumptions": null,
+          "block_verdict": null,
+          "scope_note": "metadata_only; analyzer has no sound independent-block API"
+        },
+        {
+          "block_id": "bb_6",
+          "start_pc": 6,
+          "end_pc": 16,
+          "instruction_pcs": [
+            6,
+            7,
+            8,
+            9,
+            16
+          ],
+          "predecessors": [
+            "bb_0"
+          ],
+          "successors": [
+            "bb_12",
+            "bb_11"
+          ],
+          "reachable": true,
+          "entry_assumptions": null,
+          "block_verdict": null,
+          "scope_note": "metadata_only; analyzer has no sound independent-block API"
+        },
+        {
+          "block_id": "bb_c",
+          "start_pc": 12,
+          "end_pc": null,
+          "instruction_pcs": [],
+          "predecessors": [
+            "bb_0"
+          ],
+          "successors": [],
+          "reachable": true,
+          "entry_assumptions": null,
+          "block_verdict": null,
+          "scope_note": "metadata_only; analyzer has no sound independent-block API"
+        },
+        {
+          "block_id": "bb_11",
+          "start_pc": 17,
+          "end_pc": 17,
+          "instruction_pcs": [
+            17
+          ],
+          "predecessors": [
+            "bb_6"
+          ],
+          "successors": [
+            "bb_12"
+          ],
+          "reachable": true,
+          "entry_assumptions": null,
+          "block_verdict": null,
+          "scope_note": "metadata_only; analyzer has no sound independent-block API"
+        },
+        {
+          "block_id": "bb_12",
+          "start_pc": 18,
+          "end_pc": 18,
+          "instruction_pcs": [
+            18
+          ],
+          "predecessors": [
+            "bb_6",
+            "bb_11"
+          ],
+          "successors": [],
+          "reachable": true,
+          "entry_assumptions": null,
+          "block_verdict": null,
+          "scope_note": "metadata_only; analyzer has no sound independent-block API"
+        }
+      ],
+      "reachable_order": [
+        "bb_0",
+        "bb_c",
+        "bb_6",
+        "bb_11",
+        "bb_12"
+      ]
+    },
+    "units": [
+      {
+        "scope_id": "program",
+        "abstract_verdict": "UNKNOWN",
+        "abstract_duration_ms": 109.544384,
+        "abstract_reason": "Conservative UNKNOWN: unsupported instruction at 0: w0 = 0x2",
+        "abstract_error": null,
+        "symbolic_invoked": true,
+        "symbolic_verdict": "UNKNOWN",
+        "symbolic_duration_ms": 238.197514,
+        "symbolic_reason": "symbolic worker failed",
+        "symbolic_error": "worker exit 1: Traceback (most recent call last):\n  File \"/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/scripts/split_analyze_bypass.py\", line 349, in <module>\n    raise SystemExit(main())\n                     ~~~~^^\n  File \"/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/scripts/split_analyze_bypass.py\", line 330, in main\n    return _symbolic_worker(args)\n  File \"/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/scripts/split_analyze_bypass.py\", line 192, in _symbolic_worker\n    passed, verdict = extract_verdict(response)\n                      ~~~~~~~~~~~~~~~^^^^^^^^^^\n  File \"/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/scripts/validate-phase5-corpus.py\", line 176, in extract_krakenguard_verdict\n    if ref_resp.execution.return_code != 0:\n       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAttributeError: 'NoneType' object has no attribute 'return_code'\n",
+        "disposition": "unresolved"
+      }
+    ],
+    "overall_status": "unresolved",
+    "overall_verdict": "UNKNOWN",
+    "errors": [
+      "worker exit 1: Traceback (most recent call last):\n  File \"/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/scripts/split_analyze_bypass.py\", line 349, in <module>\n    raise SystemExit(main())\n                     ~~~~^^\n  File \"/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/scripts/split_analyze_bypass.py\", line 330, in main\n    return _symbolic_worker(args)\n  File \"/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/scripts/split_analyze_bypass.py\", line 192, in _symbolic_worker\n    passed, verdict = extract_verdict(response)\n                      ~~~~~~~~~~~~~~~^^^^^^^^^^\n  File \"/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/scripts/validate-phase5-corpus.py\", line 176, in extract_krakenguard_verdict\n    if ref_resp.execution.return_code != 0:\n       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAttributeError: 'NoneType' object has no attribute 'return_code'\n"
+    ],
+    "metrics": {
+      "end_to_end_duration_ms": 348.060163,
+      "cfg_block_count": 5,
+      "reachable_block_count": 5,
+      "units_processed": 1,
+      "abstract_pass_count": 0,
+      "symbolic_fallback_count": 1,
+      "symbolic_pass_count": 0,
+      "violation_count": 0,
+      "unresolved_count": 1
+    },
+    "tool_versions": {
+      "python": "3.14.7",
+      "platform": "Linux-7.2.8-arch1-2-x86_64-with-glibc2.44",
+      "abstract_analyzer_git_blob": "ca07c1ad340e4220f227a8051b91a62faa0dce5d",
+      "krakenguard_expected_commit": "e7bd84005b304c5a10efcdb04914d1882b3cccf7"
+    },
+    "limits": {
+      "abstract_timeout_seconds": 60.0,
+      "symbolic_timeout_seconds": 120.0
+    },
+    "experiment_mode": "program_scope_safety_wrapper_not_block_level"
+  }
+}

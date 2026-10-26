@@ -1,0 +1,14 @@
+
+/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/results/split_bypass_preflight/B02_branch_policy_sensitive.o:	file format elf64-bpf
+
+Disassembly of section xdp:
+
+0000000000000000 <B02_branch_policy_sensitive>:
+       0:	85 00 00 00 05 00 00 00	call 0x5
+       1:	bf 01 00 00 00 00 00 00	r1 = r0
+       2:	57 01 00 00 01 00 00 00	r1 &= 0x1
+       3:	b4 00 00 00 02 00 00 00	w0 = 0x2
+       4:	15 01 01 00 00 00 00 00	if r1 == 0x0 goto +0x1 <L0>
+       5:	b4 00 00 00 01 00 00 00	w0 = 0x1
+<L0>:
+       6:	95 00 00 00 00 00 00 00	exit

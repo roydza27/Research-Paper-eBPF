@@ -1,0 +1,16 @@
+
+/home/cy3pher/Documents/WorkSpace-Research/eBPF/research/experiments/results/split_bypass_preflight/C02_join_policy_sensitive.o:	file format elf64-bpf
+
+Disassembly of section xdp:
+
+0000000000000000 <C02_join_policy_sensitive>:
+       0:	61 11 0c 00 00 00 00 00	w1 = *(u32 *)(r1 + 0xc)
+       1:	a4 01 00 00 ff ff ff ff	w1 ^= -0x1
+       2:	54 01 00 00 01 00 00 00	w1 &= 0x1
+       3:	63 1a fc ff 00 00 00 00	*(u32 *)(r10 - 0x4) = w1
+       4:	b4 00 00 00 02 00 00 00	w0 = 0x2
+       5:	61 a1 fc ff 00 00 00 00	w1 = *(u32 *)(r10 - 0x4)
+       6:	16 01 01 00 00 00 00 00	if w1 == 0x0 goto +0x1 <L0>
+       7:	b4 00 00 00 01 00 00 00	w0 = 0x1
+<L0>:
+       8:	95 00 00 00 00 00 00 00	exit
